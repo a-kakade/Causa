@@ -1,0 +1,12 @@
+# Raw Olist dataset — download separately per README, do not commit
+data/raw/olist/*.csv
+data/raw/olist/_profile_summary.json
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# Jupyter
+.ipynb_checkpoints/
