@@ -1,0 +1,33 @@
+# product_category_overrides.yaml
+#
+# Curated English translations for Portuguese product categories that appear in
+# products.product_category_name but are missing from the official Olist
+# `category_translation` table (product_category_name_translation.csv).
+#
+# This file is a manually curated reference, not derived data — every entry must be
+# added deliberately, with a reason, when a new gap is found. It is read by
+# data_pipeline/preprocessing/product_categories.py and is the ONLY place override
+# translations are defined; they must never be hard-coded into application/agent code.
+#
+# Schema per entry:
+#   <product_category_name_pt>: <english translation>
+#
+# Provenance / rationale for each entry is recorded below the mapping so the source of
+# each translation is auditable.
+
+overrides:
+  pc_gamer: gaming_pc
+  portateis_cozinha_e_preparadores_de_alimentos: kitchen_portables_and_food_preparators
+
+# Rationale for each override (not consumed by code — human-readable audit trail):
+#
+# pc_gamer -> gaming_pc
+#   "PC gamer" is already a direct Portuguese/English loanword for a gaming desktop
+#   computer; "gaming_pc" mirrors the snake_case, English-language convention used by
+#   every other row in product_category_name_translation.csv (e.g. "eletronicos" ->
+#   "electronics").
+#
+# portateis_cozinha_e_preparadores_de_alimentos -> kitchen_portables_and_food_preparators
+#   Literal translation: "portateis" = portables, "cozinha" = kitchen, "preparadores
+#   de alimentos" = food preparators/processors. Rendered in the same snake_case style
+#   as the official translation table.
