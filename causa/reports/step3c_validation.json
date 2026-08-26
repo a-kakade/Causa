@@ -1,0 +1,236 @@
+{
+  "step": "3C",
+  "scope": "Materiality and anomaly detection engine (deterministic/statistical) over the Step 3A/3B governed KPI contracts. No PVM, causal inference, RAG, LLM, agents, recommendations, or frontend exist in this module.",
+  "baseline_strategies_implemented": [
+    "previous_period",
+    "rolling_mean",
+    "rolling_median",
+    "rolling_std",
+    "ewma",
+    "seasonal"
+  ],
+  "statistical_methods_implemented": [
+    "z_score",
+    "robust_z_score (median/MAD)",
+    "percentile_rank"
+  ],
+  "historical_sufficiency": {
+    "fallback_ladder": [
+      "entity",
+      "category",
+      "regional",
+      "global"
+    ],
+    "gate": "A level is usable only if it has >=3 non-null historical periods AND its total underlying observations (sum of sample_size across periods) meets the KPI contract's own materiality.minimum_observations. Never fabricates a baseline from an insufficient level; a level failing every rung returns INSUFFICIENT_DATA."
+  },
+  "materiality_decision_model": {
+    "dimensions": [
+      "magnitude",
+      "statistical_abnormality",
+      "business_impact"
+    ],
+    "combination": "median of the three dimensions' tiers (0=NORMAL..3=CRITICAL) -- requires at least two independent dimensions to agree before elevating the verdict; NOT a product/multiplication of the three.",
+    "caps": [
+      "baseline_confidence in (LOW, NONE) caps the verdict at WATCH",
+      "low current-period sample size / coverage caps the verdict at WATCH"
+    ],
+    "disagreement_rule": "If independent baseline methods' magnitude tiers span >= 2 tiers (e.g. one says NORMAL, another says MATERIAL), verdict = BASELINE_DISAGREEMENT -- the engine does not pick a winner. Exempt: when the primary baseline is 'seasonal', a season-naive baseline (previous_period) is EXPECTED to diverge for a genuine seasonal peak, so that divergence alone does not trigger this rule."
+  },
+  "november_2017": {
+    "revenue_october": 664219.43,
+    "revenue_november_observed": 1010271.3699999999,
+    "baseline_method": "rolling_mean",
+    "baseline_value": 549955.67,
+    "baseline_confidence": "HIGH",
+    "movement_absolute": 460315.69999999984,
+    "movement_percentage": 83.70050989746134,
+    "z_score": 5.317625144682472,
+    "robust_z_score": 5.0198421394447115,
+    "verdict": "CRITICAL",
+    "score": 1.0,
+    "reasons": [
+      "Combined from magnitude tier=3, statistical tier=3, business-impact tier=3 (median of the three, requiring at least two independent dimensions to agree before elevating the verdict)."
+    ],
+    "full_result": {
+      "kpi_id": "revenue",
+      "period": "2017-11",
+      "observed_value": 1010271.3699999999,
+      "baseline": {
+        "baseline_method": "rolling_mean",
+        "baseline_value": 549955.67,
+        "history_periods": 10,
+        "minimum_history_required": 3,
+        "baseline_level": "global",
+        "baseline_confidence": "HIGH",
+        "fallback_reason": null,
+        "all_methods": {
+          "previous_period": 664219.43,
+          "rolling_mean": 549955.67,
+          "ewma": 617515.5965039062,
+          "seasonal": null
+        }
+      },
+      "movement": {
+        "absolute": 460315.69999999984,
+        "percentage": 83.70050989746134,
+        "previous_period_value": 664219.43,
+        "previous_period_change_pct": 52.09903901787393
+      },
+      "statistical_signals": {
+        "z_score": 5.317625144682472,
+        "robust_z_score": 5.0198421394447115,
+        "percentile": 100.0,
+        "signals_agree": true,
+        "assumptions": [
+          "z_score assumes the historical distribution is approximately symmetric; it is a heuristic magnitude-of-surprise measure, not a formal significance test.",
+          "robust_z_score (median/MAD) is less sensitive to outlier history points than z_score, but the two are expected to broadly agree -- large divergence between them indicates skewed or outlier-contaminated history, not necessarily a real signal.",
+          "percentile is purely empirical (no distribution assumed) and is unstable with few historical points.",
+          "percentile computed from only 6 points -- coarse-grained by construction."
+        ]
+      },
+      "business_impact": {
+        "kpi_kind": "additive",
+        "magnitude": 460315.69999999984,
+        "affected_population": 8665,
+        "denominator": 8665,
+        "business_interpretation": "Revenue moved by +460,315.70 versus its baseline (observed value 1,010,271.37).",
+        "meets_minimum_business_impact": true
+      },
+      "persistence": {
+        "persistence_class": "UNKNOWN",
+        "periods_affected": 1,
+        "detail": "No subsequent-period data supplied -- cannot yet determine whether this movement persists, reverses, or trends. Re-evaluate once the next period is available."
+      },
+      "data_quality": {
+        "current_period_sample_size": 8665,
+        "current_period_coverage": 0.9876723223753977,
+        "baseline_history_periods": 10,
+        "baseline_level_used": "global",
+        "downgraded": false,
+        "reasons": []
+      },
+      "materiality": {
+        "verdict": "CRITICAL",
+        "score": 1.0,
+        "tier_magnitude": 3,
+        "tier_statistical": 3,
+        "tier_business_impact": 3,
+        "baseline_signals": {
+          "primary_baseline_method": "rolling_mean",
+          "primary_baseline_change_pct": 83.70050989746134,
+          "rolling_zscore": 5.317625144682472,
+          "robust_zscore": 5.0198421394447115,
+          "percentile": 100.0,
+          "previous_period_change_pct": 52.09903901787393
+        },
+        "reasons": [
+          "Combined from magnitude tier=3, statistical tier=3, business-impact tier=3 (median of the three, requiring at least two independent dimensions to agree before elevating the verdict)."
+        ]
+      },
+      "warnings": []
+    }
+  },
+  "sparse_entity_real_data": {
+    "product_id": "0030e635639c898b323826589761cf23",
+    "category": "garden_tools",
+    "observed_period": "2018-06",
+    "observed_value": 153.0,
+    "result": {
+      "kpi_id": "revenue",
+      "period": "2018-06",
+      "observed_value": 153.0,
+      "baseline": {
+        "baseline_method": "rolling_mean",
+        "baseline_value": 30346.454999999998,
+        "history_periods": 18,
+        "minimum_history_required": 3,
+        "baseline_level": "category",
+        "baseline_confidence": "MEDIUM",
+        "fallback_reason": "entity_history_insufficient",
+        "all_methods": {
+          "previous_period": 37863.18,
+          "rolling_mean": 30346.454999999998,
+          "ewma": 34644.25457069397,
+          "seasonal": null
+        }
+      },
+      "movement": {
+        "absolute": -30193.454999999998,
+        "percentage": -99.49582249392887,
+        "previous_period_value": 37863.18,
+        "previous_period_change_pct": -99.5959134969646
+      },
+      "statistical_signals": {
+        "z_score": -6.260539412279713,
+        "robust_z_score": -26.013347643168604,
+        "percentile": 0.0,
+        "signals_agree": false,
+        "assumptions": [
+          "z_score assumes the historical distribution is approximately symmetric; it is a heuristic magnitude-of-surprise measure, not a formal significance test.",
+          "robust_z_score (median/MAD) is less sensitive to outlier history points than z_score, but the two are expected to broadly agree -- large divergence between them indicates skewed or outlier-contaminated history, not necessarily a real signal.",
+          "percentile is purely empirical (no distribution assumed) and is unstable with few historical points.",
+          "percentile computed from only 6 points -- coarse-grained by construction."
+        ]
+      },
+      "business_impact": {
+        "kpi_kind": "additive",
+        "magnitude": -30193.454999999998,
+        "affected_population": 1,
+        "denominator": 1,
+        "business_interpretation": "Revenue moved by -30,193.45 versus its baseline (observed value 153.00).",
+        "meets_minimum_business_impact": true
+      },
+      "persistence": {
+        "persistence_class": "UNKNOWN",
+        "periods_affected": 1,
+        "detail": "No subsequent-period data supplied -- cannot yet determine whether this movement persists, reverses, or trends. Re-evaluate once the next period is available."
+      },
+      "data_quality": {
+        "current_period_sample_size": 1,
+        "current_period_coverage": 0.01,
+        "baseline_history_periods": 18,
+        "baseline_level_used": "category",
+        "downgraded": true,
+        "reasons": [
+          "Current period sample size (1) is below the contract's minimum_observations (30).",
+          "Current period coverage (1.0%) is below the contract's HIGH-confidence threshold (95.0%)."
+        ]
+      },
+      "materiality": {
+        "verdict": "WATCH",
+        "score": 0.889,
+        "tier_magnitude": 3,
+        "tier_statistical": 3,
+        "tier_business_impact": 2,
+        "baseline_signals": {
+          "primary_baseline_method": "rolling_mean",
+          "primary_baseline_change_pct": -99.49582249392887,
+          "rolling_zscore": -6.260539412279713,
+          "robust_zscore": -26.013347643168604,
+          "percentile": 0.0,
+          "previous_period_change_pct": -99.5959134969646
+        },
+        "reasons": [
+          "Current-period data quality is low -- verdict capped at WATCH (computed tier was CRITICAL).",
+          "Current period sample size (1) is below the contract's minimum_observations (30).",
+          "Current period coverage (1.0%) is below the contract's HIGH-confidence threshold (95.0%)."
+        ]
+      },
+      "warnings": [
+        "Baseline was computed at the 'category' level (fallback: entity_history_insufficient) -- its value is that level's own aggregate, not scaled to this entity's typical size. Read movement/business-impact figures below as coarse, not precise."
+      ]
+    }
+  },
+  "test_results": {
+    "returncode": 0,
+    "n_passed": 81,
+    "n_failed": 0,
+    "failed_tests": [],
+    "all_passed": true
+  },
+  "cache_stats": {
+    "entries": 11,
+    "hits": 0,
+    "misses": 11
+  }
+}

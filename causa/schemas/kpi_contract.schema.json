@@ -1,0 +1,212 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://causa.internal/schemas/kpi_contract.schema.json",
+  "title": "Causa KPI Semantic Contract",
+  "description": "Governed, machine-readable contract for a single KPI. This schema defines what a KPI means, how it is calculated, and what an LLM or any other consumer is and is not allowed to assume about it. This schema does NOT define how to compute a KPI value at runtime -- Step 3A produces definitions only, no calculation engine.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "kpi_id", "name", "category", "description", "business_purpose",
+    "business_definition", "formula", "source_tables", "source_columns",
+    "base_grain", "aggregation", "time_column", "valid_time_window",
+    "dimensions", "filters", "null_behavior", "data_quality_requirements",
+    "drivers", "materiality", "supported_methods", "lineage", "security", "status"
+  ],
+  "properties": {
+    "kpi_id": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9_]*$",
+      "description": "Stable snake_case identifier. This is the ONLY identifier a future LLM layer should reference -- never a display name."
+    },
+    "name": { "type": "string", "minLength": 1 },
+    "category": { "type": "string", "enum": ["primary", "supporting"] },
+    "description": { "type": "string", "minLength": 1 },
+    "business_purpose": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Why this KPI exists -- what business question it answers. Required so no KPI is added merely for completeness."
+    },
+    "business_definition": { "type": "string", "minLength": 1 },
+    "formula": { "type": "string", "minLength": 1 },
+    "ratio": {
+      "type": "object",
+      "description": "Present only for ratio/ derived KPIs (e.g. AOV, On-Time Delivery Rate, Repeat Purchase Rate). Numerator and denominator must each resolve to another kpi_id or an explicit inline expression.",
+      "additionalProperties": false,
+      "required": ["numerator", "denominator", "zero_denominator_behavior"],
+      "properties": {
+        "numerator": { "type": "string" },
+        "denominator": { "type": "string" },
+        "zero_denominator_behavior": { "type": "string" }
+      }
+    },
+    "source_tables": {
+      "type": "array", "minItems": 1, "items": { "type": "string" }
+    },
+    "source_columns": {
+      "type": "array", "minItems": 1,
+      "items": { "type": "string", "pattern": "^[a-z_]+\\.[a-z_]+$" }
+    },
+    "base_grain": { "type": "string", "minLength": 1 },
+    "aggregation": {
+      "type": "string",
+      "enum": ["SUM", "COUNT", "COUNT_DISTINCT", "MEAN", "RATIO", "DERIVED_RATIO"]
+    },
+    "time_column": {
+      "type": ["string", "null"],
+      "description": "null only if the KPI is genuinely non-temporal, which none of the 10 KPIs in this registry are."
+    },
+    "valid_time_window": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["default_start", "default_end", "full_data_start", "full_data_end", "window_is_a_filter_not_a_deletion", "source_doc"],
+      "properties": {
+        "default_start": { "type": "string" },
+        "default_end": { "type": "string" },
+        "full_data_start": { "type": "string" },
+        "full_data_end": { "type": "string" },
+        "window_is_a_filter_not_a_deletion": { "type": "boolean", "const": true },
+        "source_doc": { "type": "string" }
+      }
+    },
+    "dimensions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["name", "source_table", "source_column", "supported", "security_classification"],
+        "properties": {
+          "name": { "type": "string" },
+          "source_table": { "type": "string" },
+          "source_column": { "type": "string" },
+          "supported": { "type": "boolean" },
+          "unsupported_reason": { "type": "string" },
+          "notes": { "type": "string" },
+          "security_classification": { "type": "string", "enum": ["PUBLIC_ANALYTICAL", "INTERNAL", "RESTRICTED"] }
+        }
+      }
+    },
+    "filters": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["name", "source_column", "applied_by_default", "description"],
+        "properties": {
+          "name": { "type": "string" },
+          "source_column": { "type": "string" },
+          "applied_by_default": { "type": "boolean" },
+          "default_value": {},
+          "description": { "type": "string" }
+        }
+      }
+    },
+    "null_behavior": { "type": "string", "minLength": 1 },
+    "data_quality_requirements": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "required_fields", "minimum_observations", "missing_data_treatment",
+        "invalid_data_treatment", "coverage_threshold_pct", "confidence_implications"
+      ],
+      "properties": {
+        "required_fields": { "type": "array", "items": { "type": "string" } },
+        "minimum_observations": { "type": "integer", "minimum": 1 },
+        "missing_data_treatment": { "type": "string" },
+        "invalid_data_treatment": { "type": "string" },
+        "coverage_threshold_pct": { "type": "number", "minimum": 0, "maximum": 100 },
+        "confidence_implications": { "type": "string" }
+      }
+    },
+    "drivers": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["driver_name", "relationship_type", "description", "is_causal_claim"],
+        "properties": {
+          "driver_name": { "type": "string" },
+          "relationship_type": { "type": "string", "enum": ["deterministic_decomposition", "statistical_association", "qualitative_evidence"] },
+          "description": { "type": "string" },
+          "is_causal_claim": { "type": "boolean", "const": false }
+        }
+      }
+    },
+    "materiality": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "absolute_threshold", "relative_threshold", "statistical_threshold",
+        "minimum_observations", "minimum_business_impact", "persistence_periods",
+        "implemented", "note"
+      ],
+      "properties": {
+        "absolute_threshold": { "type": ["number", "null"] },
+        "relative_threshold": { "type": ["number", "null"] },
+        "statistical_threshold": { "type": ["number", "null"] },
+        "minimum_observations": { "type": ["integer", "null"] },
+        "minimum_business_impact": { "type": ["number", "null"] },
+        "persistence_periods": { "type": ["integer", "null"] },
+        "implemented": { "type": "boolean", "const": false },
+        "note": { "type": "string" }
+      }
+    },
+    "supported_methods": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Analytical methods this KPI's shape supports IN THE FUTURE. None are implemented in Step 3A -- this is a declaration of compatibility, not a working feature."
+    },
+    "lineage": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["chain", "traceable_to_raw"],
+      "properties": {
+        "chain": {
+          "type": "array", "minItems": 1,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["layer", "reference"],
+            "properties": {
+              "layer": { "type": "string", "enum": ["kpi", "semantic_definition", "canonical_table_field", "raw_table_column"] },
+              "reference": { "type": "string" }
+            }
+          }
+        },
+        "traceable_to_raw": { "type": "boolean", "const": true }
+      }
+    },
+    "security": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kpi_classification", "rationale", "excluded_from_llm_context_by_default"],
+      "properties": {
+        "kpi_classification": { "type": "string", "enum": ["PUBLIC_ANALYTICAL", "INTERNAL", "RESTRICTED"] },
+        "rationale": { "type": "string" },
+        "excluded_from_llm_context_by_default": { "type": "boolean" }
+      }
+    },
+    "review_governance_reference": { "type": "string" },
+    "aggregation_variants": {
+      "type": "array",
+      "description": "Used only when a KPI genuinely has more than one distinct, non-interchangeable aggregation (e.g. Average Review Score's order-level representative score vs. review-level average score). Exactly one variant must have is_default true.",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["variant_id", "grain", "source", "formula", "is_default", "description"],
+        "properties": {
+          "variant_id": { "type": "string" },
+          "grain": { "type": "string" },
+          "source": { "type": "string" },
+          "formula": { "type": "string" },
+          "is_default": { "type": "boolean" },
+          "description": { "type": "string" }
+        }
+      }
+    },
+    "unresolved_semantic_decisions": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "status": { "type": "string", "enum": ["governed"] }
+  }
+}

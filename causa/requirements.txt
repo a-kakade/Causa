@@ -5,3 +5,7 @@ seaborn>=0.12
 jupyter>=1.0
 ipykernel>=6.0
 tabulate>=0.9
+langdetect>=1.0.9
+pyarrow>=14.0
+PyYAML>=6.0
+jsonschema>=4.20

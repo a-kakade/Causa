@@ -1,0 +1,187 @@
+{
+  "definitions": {
+    "A_item_price_total": "SUM(order_items.price) per order -- excludes freight",
+    "A_item_gmv_total": "SUM(order_items.price) + SUM(order_items.freight_value) per order",
+    "B_payment_total": "SUM(order_payments.payment_value) per order"
+  },
+  "coverage": {
+    "orders_with_both_items_and_payments": 98665,
+    "orders_with_items_only_no_payment": 1,
+    "orders_with_payment_only_no_items": 775,
+    "orders_with_neither": 0
+  },
+  "reconciliation_item_gmv_vs_payment_total": {
+    "matched_within_1_cent": 98284,
+    "matched_pct": 99.6138,
+    "mismatched_count": 381,
+    "mismatched_pct": 0.3862,
+    "pct_of_mismatches_where_payment_exceeds_items": 0.29,
+    "pct_of_mismatches_where_payment_is_less_than_items": 0.09
+  },
+  "diff_distribution": {
+    "count": 381,
+    "mean_abs_diff": 8.58,
+    "median_abs_diff": 3.77,
+    "p90_abs_diff": 21.89,
+    "max_abs_diff": 182.81,
+    "mean_rel_diff_pct": 7.09
+  },
+  "mismatch_breakdown_by_order_status": {
+    "delivered": 375,
+    "shipped": 3,
+    "canceled": 2,
+    "invoiced": 1
+  },
+  "mismatch_breakdown_by_dominant_payment_type": {
+    "credit_card": 339,
+    "boleto": 26,
+    "debit_card": 9,
+    "voucher": 7
+  },
+  "mismatch_breakdown_by_max_installments_bucket": {
+    "0": 0,
+    "1": 63,
+    "2-3": 73,
+    "4-6": 119,
+    "7-12": 120,
+    "13+": 6
+  },
+  "largest_15_mismatches": [
+    {
+      "order_id": "ce6d150fb29ada17d2082f4847107665",
+      "order_status": "delivered",
+      "item_gmv_total": 1403.66,
+      "payment_total": 1586.47,
+      "abs_diff": 182.80999999999995,
+      "dominant_payment_type": "credit_card",
+      "max_installments": 10.0
+    },
+    {
+      "order_id": "6e5fe7366a2e1bfbf3257dba0af1267f",
+      "order_status": "delivered",
+      "item_gmv_total": 287.90999999999997,
+      "payment_total": 406.92,
+      "abs_diff": 119.01000000000005,
+      "dominant_payment_type": "credit_card",
+      "max_installments": 10.0
+    },
+    {
+      "order_id": "70b742795bc441e94a44a084b6d9ce7a",
+      "order_status": "delivered",
+      "item_gmv_total": 466.93,
+      "payment_total": 578.82,
+      "abs_diff": 111.89000000000004,
+      "dominant_payment_type": "credit_card",
+      "max_installments": 20.0
+    },
+    {
+      "order_id": "996c7e73600ad3723e8627ab7bef81e4",
+      "order_status": "delivered",
+      "item_gmv_total": 587.9,
+      "payment_total": 664.43,
+      "abs_diff": 76.52999999999997,
+      "dominant_payment_type": "credit_card",
+      "max_installments": 10.0
+    },
+    {
+      "order_id": "70b7e94ea46d3e8b5bc12a50186edaf0",
+      "order_status": "delivered",
+      "item_gmv_total": 213.14999999999998,
+      "payment_total": 274.84,
+      "abs_diff": 61.69,
+      "dominant_payment_type": "credit_card",
+      "max_installments": 24.0
+    },
+    {
+      "order_id": "bc2c82b0ef78d2252b6176d1972db7c9",
+      "order_status": "delivered",
+      "item_gmv_total": 242.01,
+      "payment_total": 303.02,
+      "abs_diff": 61.00999999999999,
+      "dominant_payment_type": "credit_card",
+      "max_installments": 21.0
+    },
+    {
+      "order_id": "af9ffff2ce6b3defd34fd4c78857a379",
+      "order_status": "delivered",
+      "item_gmv_total": 413.16999999999996,
+      "payment_total": 466.97,
+      "abs_diff": 53.80000000000007,
+      "dominant_payment_type": "credit_card",
+      "max_installments": 10.0
+    },
+    {
+      "order_id": "262118ce178bb3e4590a3adcf6d62e6b",
+      "order_status": "delivered",
+      "item_gmv_total": 177.74,
+      "payment_total": 126.12,
+      "abs_diff": 51.620000000000005,
+      "dominant_payment_type": "credit_card",
+      "max_installments": 5.0
+    },
+    {
+      "order_id": "bfdb5bbb06458d600a33d61f5f287472",
+      "order_status": "delivered",
+      "item_gmv_total": 348.93,
+      "payment_total": 394.36,
+      "abs_diff": 45.43000000000001,
+      "dominant_payment_type": "credit_card",
+      "max_installments": 10.0
+    },
+    {
+      "order_id": "8d9c0dc8d5a2ce804f6b925d8f8e6c1d",
+      "order_status": "delivered",
+      "item_gmv_total": 254.45000000000002,
+      "payment_total": 293.89,
+      "abs_diff": 39.43999999999997,
+      "dominant_payment_type": "credit_card",
+      "max_installments": 12.0
+    },
+    {
+      "order_id": "b7579d24f5b2dd3e20f2e57d0e07d170",
+      "order_status": "delivered",
+      "item_gmv_total": 466.28,
+      "payment_total": 504.37,
+      "abs_diff": 38.09000000000003,
+      "dominant_payment_type": "credit_card",
+      "max_installments": 6.0
+    },
+    {
+      "order_id": "abf1130bc676c9dcadf91e24f5e30a30",
+      "order_status": "delivered",
+      "item_gmv_total": 459.36,
+      "payment_total": 496.89,
+      "abs_diff": 37.52999999999997,
+      "dominant_payment_type": "credit_card",
+      "max_installments": 6.0
+    },
+    {
+      "order_id": "b76190a2c095fba255ab46987545a660",
+      "order_status": "delivered",
+      "item_gmv_total": 227.91000000000003,
+      "payment_total": 263.24,
+      "abs_diff": 35.329999999999984,
+      "dominant_payment_type": "credit_card",
+      "max_installments": 12.0
+    },
+    {
+      "order_id": "32720c0c8b42f4c2cdb07cee5ec2444b",
+      "order_status": "delivered",
+      "item_gmv_total": 224.75,
+      "payment_total": 259.59,
+      "abs_diff": 34.839999999999975,
+      "dominant_payment_type": "credit_card",
+      "max_installments": 12.0
+    },
+    {
+      "order_id": "6b0ac1bdea322c7060eea92feb9e9a6f",
+      "order_status": "delivered",
+      "item_gmv_total": 327.87,
+      "payment_total": 362.56,
+      "abs_diff": 34.69,
+      "dominant_payment_type": "credit_card",
+      "max_installments": 8.0
+    }
+  ],
+  "interpretation": "0.29% of mismatches have payment_total > item_gmv_total (consistent with financing/installment interest being captured in order_payments but not in order_items.price, since order_items has no interest field). This directionality supports treating order_items.price as the cleaner, decomposable 'what was actually sold' figure, and order_payments.payment_value as 'what was actually collected, including financing cost' -- two legitimate but different numbers, not a defect in either."
+}

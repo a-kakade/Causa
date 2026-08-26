@@ -1,10 +1,16 @@
 # Causa Data Model — Proposed (Draft, Olist Foundation)
 
 Status: **draft, confirmed against `DATA_QUALITY_REPORT.md` findings from the dataset in
-`data/raw/olist/`** (profiled 2026-08-25). This document proposes how the raw Olist
-tables map to entities/grain for the future Causa data model and KPI layer. No
-implementation (database, ETL, application code) happens in this milestone — this is a
-design artifact only.
+`data/raw/olist/`** (profiled 2026-08-25, re-verified 2026-08-26). This document proposes
+how the raw Olist tables map to entities/grain for the future Causa data model and KPI
+layer. No implementation (database, ETL, application code) happens in this milestone —
+this is a design artifact only.
+
+See also: `RELATIONSHIP_GRAPH.md` (join coverage tables, cardinality, and a concretely
+reproduced revenue-fan-out example for every relationship below) and `DATA_LINEAGE.md`
+(multi-grain/cadence analysis and the deterministic source→KPI lineage). Those two
+documents supersede this file's ER sketch with verified numbers; this file remains the
+narrative design rationale.
 
 ## Purpose
 
@@ -72,13 +78,33 @@ edge cases against `DATA_QUALITY_REPORT.md` before treating as authoritative.)*
 - Review/satisfaction: average review score by category, seller, delivery performance.
 - Logistics: freight cost as % of item price, delivery time distributions.
 
-## Open design questions
+## Open design questions — resolved by the 2026-08-26 EDA pass
 
-- [ ] Should `order_payments` be pre-aggregated to one row per order before entering the model, or kept at native grain with a separate payment-method breakdown? (103,886 payment rows vs. 99,440 distinct orders paid — most orders have exactly one payment row, but a meaningful minority split across methods/installments.)
-- [ ] How should the ~3% of orders with `order_status` other than "delivered" (625 canceled, 609 unavailable, 1,107 shipped, 314 invoiced, 301 processing, 5 created, 2 approved) be treated in revenue/KPI calculations?
-- [ ] Is `geolocation` needed as a dimension at all for early KPIs, or can `customer_state`/`seller_state` suffice initially? (State-level data is already clean and directly usable with zero modeling overhead; zip-level geolocation requires the aggregation step noted above.)
-- [ ] How to handle the 610 products (1.85%) with null `product_category_name`?
-- [ ] What is the review dedup rule for the 547 orders with multiple review rows — latest `review_answer_timestamp`, highest score, or model as a proper 1:many fact?
+- [x] **Revenue source of truth**: `SUM(order_items.price)`, aggregated to order grain
+      BEFORE joining to `order_payments`/`order_reviews` — reconciles with
+      `payment_value` for 99.61% of orders and avoids the confirmed 4.04% join-fan-out
+      inflation. See `RELATIONSHIP_GRAPH.md`.
+- [x] **Review dedup rule**: keep the row with the latest `review_answer_timestamp` per
+      `order_id` when a single review-per-order is required (used in all KPI computations
+      in `KPI_CANDIDATES.md`).
+- [x] **`order_status` handling**: exclude non-`delivered` orders from revenue-realized
+      and delivery-time KPIs (documented per-KPI in `KPI_CANDIDATES.md`); include them in
+      operational/funnel KPIs where relevant. Not yet implemented as code — this is the
+      design decision, not the build.
+- [x] **`geolocation` need**: NOT required for state-level KPIs — `customer_state`/
+      `seller_state` are already clean, directly usable columns. Only needed if/when a
+      city or zip-level view is built, at which point the dedup step is mandatory.
+- [x] **Null `product_category_name` (610 products, 1.85%)**: model as an explicit
+      "uncategorized" bucket, never silently dropped or null-propagated through joins.
+
+## Open design questions — still open
+
+- [ ] Should `order_payments` be pre-aggregated to one row per order before entering the
+      model, or kept at native grain with a separate payment-method breakdown for
+      financing-behavior analysis? (103,886 payment rows vs. 99,440 distinct orders paid.)
+- [ ] Should the review fact be modeled as strictly 1:1 with orders (post-dedup) or as a
+      proper 1:many fact preserving all 99,224 raw rows for cases where multiple reviews
+      per order are themselves meaningful (e.g., a customer amending their review)?
 
 ## Next steps
 

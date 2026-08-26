@@ -1,0 +1,119 @@
+{
+  "join_fanout_demo": {
+    "correct_total_revenue_sum_order_items_price": 13591643.7,
+    "naive_revenue_if_price_summed_after_joining_items_payments_reviews": 14141001.32,
+    "inflation_ratio": 1.0404,
+    "concrete_example_order": {
+      "order_id": "03ecec245220b63fd7f68c1737ba99ba",
+      "n_order_items": 2,
+      "n_payment_rows": 2,
+      "true_item_price_total": 298.9,
+      "rows_after_naive_items_x_payments_join": 4,
+      "price_sum_if_naively_summed_over_that_join": 597.8,
+      "inflation_factor": 2
+    },
+    "rule": "Revenue MUST be aggregated (groupby order_id, sum price) BEFORE joining to order_payments or order_reviews. Joining first and summing price after multiplies revenue by the payment/review row count for that order. This is a real, reproducible risk in this schema, not a hypothetical -- order_payments has up to 29 rows for a single order_id (installment rows) and order_reviews up to 3."
+  },
+  "pvm_decomposition_oct_to_nov_2017": {
+    "period_old": "2017-10",
+    "period_new": "2017-11",
+    "revenue_old": 664219.43,
+    "revenue_new": 1010271.37,
+    "delta_revenue": 346051.94,
+    "qty_old": 5322,
+    "qty_new": 8665,
+    "volume_effect": 417227.65,
+    "price_effect": 4674.63,
+    "mix_effect": -75850.34,
+    "check_sum_matches_delta": 0.0,
+    "top_10_category_revenue_contributors": {
+      "cama_mesa_banho": 43214.54,
+      "beleza_saude": 37204.68,
+      "moveis_decoracao": 32996.46,
+      "relogios_presentes": 31765.04,
+      "brinquedos": 29687.88,
+      "informatica_acessorios": 28633.91,
+      "ferramentas_jardim": 19993.44,
+      "utilidades_domesticas": 18858.69,
+      "esporte_lazer": 15122.6,
+      "perfumaria": 14847.19
+    },
+    "bottom_5_category_revenue_contributors": {
+      "moveis_quarto": -320.9,
+      "construcao_ferramentas_ferramentas": -749.1,
+      "telefonia_fixa": -2807.9,
+      "uncategorized": -4684.5,
+      "pcs": -30625.92
+    },
+    "n_categories_involved": 68,
+    "grain_used": "product_category_name (73 raw categories incl. nulls->uncategorized)",
+    "caveat": "This decomposition is fully deterministic and reproducible from order_items + products alone -- no fabricated data. Category-level avg_price mixes genuinely different SKUs within a category, so 'price effect' here is a price-per-category-unit shift, not a true like-for-like SKU price change (no promotional-price / list-price field exists in this schema to isolate discounting from mix within-category)."
+  },
+  "delivery_vs_review_contradiction_scan": {
+    "correlation_delivery_days_vs_review_score_across_months": -0.942,
+    "interpretation": "Negative correlation expected (slower delivery -> lower score) if delivery is a real driver of satisfaction; a weak/positive correlation would itself be a noteworthy contradiction worth investigating via review text.",
+    "window_around_nov_2017_spike": {
+      "2017-09": {
+        "avg_delivery_days": 11.85,
+        "avg_review_score": 4.189,
+        "orders": 4285
+      },
+      "2017-10": {
+        "avg_delivery_days": 11.86,
+        "avg_review_score": 4.124,
+        "orders": 4631
+      },
+      "2017-11": {
+        "avg_delivery_days": 15.16,
+        "avg_review_score": 3.911,
+        "orders": 7544
+      },
+      "2017-12": {
+        "avg_delivery_days": 15.39,
+        "avg_review_score": 4.02,
+        "orders": 5673
+      },
+      "2018-01": {
+        "avg_delivery_days": 14.08,
+        "avg_review_score": 4.041,
+        "orders": 7269
+      },
+      "2018-02": {
+        "avg_delivery_days": 16.95,
+        "avg_review_score": 3.829,
+        "orders": 6728
+      }
+    }
+  },
+  "nov_2017_spike_breakdown": {
+    "n_orders_oct_2017": 4631,
+    "n_orders_nov_2017": 7544,
+    "n_states_with_orders_oct": 27,
+    "n_states_with_orders_nov": 27,
+    "top_10_states_by_order_count_nov": {
+      "SP": 3012,
+      "RJ": 1048,
+      "MG": 943,
+      "RS": 422,
+      "PR": 378,
+      "SC": 303,
+      "BA": 250,
+      "ES": 170,
+      "DF": 168,
+      "GO": 157
+    },
+    "top_10_categories_by_absolute_item_growth_nov_vs_oct": {
+      "cama_mesa_banho": 430,
+      "moveis_decoracao": 404,
+      "ferramentas_jardim": 269,
+      "beleza_saude": 223,
+      "informatica_acessorios": 210,
+      "brinquedos": 205,
+      "utilidades_domesticas": 188,
+      "relogios_presentes": 155,
+      "esporte_lazer": 141,
+      "telefonia": 130
+    },
+    "conclusion": "growth pattern computed directly from the data -- see whether growth is spread across most states/categories (broad platform-level demand event, e.g. Black Friday) or concentrated in a handful (segment-specific event)."
+  }
+}

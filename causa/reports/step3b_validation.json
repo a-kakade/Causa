@@ -1,0 +1,105 @@
+{
+  "step": "3B",
+  "scope": "Deterministic KPI computation engine implementing the Step 3A contracts. No anomaly detection, PVM, causal inference, RAG, agents, or recommendations.",
+  "november_2017_validation": {
+    "revenue": {
+      "october_value": 664219.43,
+      "october_expected": 664219.43,
+      "october_matches": true,
+      "november_value": 1010271.37,
+      "november_expected": 1010271.37,
+      "november_matches": true,
+      "change_value": 346051.94,
+      "change_expected": 346051.94,
+      "change_matches": true,
+      "pct_change_value": 52.1,
+      "pct_change_expected": 52.1,
+      "pct_change_matches": true
+    },
+    "orders": {
+      "october_value": 4631.0,
+      "october_expected": 4631,
+      "october_matches": true,
+      "november_value": 7544.0,
+      "november_expected": 7544,
+      "november_matches": true,
+      "pct_change_value": 62.9,
+      "pct_change_expected": 62.9,
+      "pct_change_matches": true
+    }
+  },
+  "all_validation_checks_pass": true,
+  "note": "Every value above is computed live by src/kpi/engine.py against data/processed/*.parquet -- none are hardcoded.",
+  "kpi_samples_november_2017": {
+    "aov": {
+      "value": 135.58869547711714,
+      "sample_size": 7451,
+      "coverage": 0.9876723223753977,
+      "data_quality": "HIGH",
+      "warnings": []
+    },
+    "avg_delivery_days": {
+      "value": 15.161131699241777,
+      "sample_size": 7288,
+      "coverage": 0.9660657476139979,
+      "data_quality": "HIGH",
+      "warnings": [
+        "256 rows excluded due to missing/invalid delivery timestamps."
+      ]
+    },
+    "avg_review_score": {
+      "value": 3.9106951871657754,
+      "sample_size": 7480,
+      "coverage": 0.9915164369034994,
+      "data_quality": "HIGH",
+      "warnings": []
+    },
+    "freight_revenue": {
+      "value": 168872.4,
+      "sample_size": 8665,
+      "coverage": 0.9876723223753977,
+      "data_quality": "HIGH",
+      "warnings": []
+    },
+    "review_volume": {
+      "value": 4786.0,
+      "sample_size": 4786,
+      "coverage": 1.0,
+      "data_quality": "HIGH",
+      "warnings": []
+    },
+    "on_time_delivery_rate": {
+      "value": 0.8568880351262349,
+      "sample_size": 7288,
+      "coverage": 0.9660657476139979,
+      "data_quality": "HIGH",
+      "warnings": []
+    },
+    "quantity_sold": {
+      "value": 8665.0,
+      "sample_size": 8665,
+      "coverage": 1.0,
+      "data_quality": "HIGH",
+      "warnings": []
+    },
+    "repeat_purchase_rate": {
+      "value": 0.031187562437562436,
+      "sample_size": 96096,
+      "coverage": 1.0,
+      "data_quality": "HIGH",
+      "warnings": []
+    }
+  },
+  "cache_stats": {
+    "entries": 12,
+    "hits": 4,
+    "misses": 12
+  },
+  "test_results": {
+    "returncode": 0,
+    "n_passed": 122,
+    "n_failed": 0,
+    "failed_tests": [],
+    "all_passed": true
+  }
+}

@@ -1,0 +1,100 @@
+{
+  "analytical_window": {
+    "start": "2017-01",
+    "end": "2018-08"
+  },
+  "raw_row_counts": {
+    "customers": 99441,
+    "orders": 99441,
+    "order_items": 112650,
+    "order_payments": 103886,
+    "order_reviews": 99224,
+    "products": 32951,
+    "sellers": 3095,
+    "geolocation": 1000163,
+    "category_translation": 71
+  },
+  "canonical_row_counts": {
+    "dim_customer": 99441,
+    "dim_product": 32951,
+    "dim_seller": 3095,
+    "fact_orders": 99441,
+    "fact_order_items": 112650,
+    "fact_payments": 103886,
+    "fact_reviews": 99224,
+    "agg_order_items": 98666,
+    "agg_order_payments": 99440,
+    "agg_order_reviews": 98673
+  },
+  "row_count_reconciliation": {
+    "fact_orders_vs_raw_orders": {
+      "raw": 99441,
+      "canonical": 99441,
+      "dropped": 0,
+      "reason": "no rows dropped -- fact_orders is 1:1 with raw orders by design"
+    },
+    "fact_order_items_vs_raw_order_items": {
+      "raw": 112650,
+      "canonical": 112650,
+      "dropped": 0,
+      "reason": "no rows dropped -- native grain preserved exactly"
+    },
+    "fact_payments_vs_raw_order_payments": {
+      "raw": 103886,
+      "canonical": 103886,
+      "dropped": 0,
+      "reason": "no rows dropped -- native grain preserved exactly"
+    },
+    "fact_reviews_vs_raw_order_reviews": {
+      "raw": 99224,
+      "canonical": 99224,
+      "dropped": 0,
+      "reason": "no rows dropped -- native grain preserved exactly, including 814 duplicate review_id rows and all 547 multi-review orders; a surrogate review_row_id was ADDED (not a drop) as the real PK"
+    },
+    "agg_order_items_vs_raw_orders": {
+      "raw": 99441,
+      "canonical": 98666,
+      "dropped": 775,
+      "reason": "775 orders have zero order_items rows and are therefore absent from this order-level aggregate by construction (NOT zero-filled) -- see fact_orders.has_items to detect these"
+    },
+    "agg_order_payments_vs_raw_orders": {
+      "raw": 99441,
+      "canonical": 99440,
+      "dropped": 1,
+      "reason": "1 order(s) have zero payment rows and are therefore absent (NOT zero-filled) -- see fact_orders.has_payment"
+    },
+    "agg_order_reviews_vs_raw_orders": {
+      "raw": 99441,
+      "canonical": 98673,
+      "dropped": 768,
+      "reason": "768 orders have zero review rows and are therefore absent (NOT zero-filled) -- see fact_orders.has_review"
+    },
+    "dim_product_category_resolution": {
+      "TRANSLATED": 32328,
+      "NULL_CATEGORY": 610,
+      "UNTRANSLATED": 13
+    }
+  },
+  "transformed_records": {
+    "fact_orders_delivery_flags": {
+      "VALID": 96310,
+      "MISSING_CUSTOMER_DATE": 2964,
+      "INVALID_SEQUENCE": 166,
+      "MISSING_CARRIER_DATE": 1
+    },
+    "fact_orders_in_analytical_window": 99092,
+    "fact_orders_outside_analytical_window": 349,
+    "invalid_sequence_orders_sample": [
+      "b9afddbdcfadc9a87b41a83271c3e888",
+      "ad133696906f6a78826daa0911b7daec",
+      "74e033208dc13a7b8127eb8e73d09b76",
+      "a6b58794fd2ba533359a76c08df576e3",
+      "5792e0b1c8c8a2bf53af468c9a422c88",
+      "c3eb293fd154223498b6551a728203e8",
+      "b0c2a7d04b165525254254a728c50a4e",
+      "2033a4586b5bec3229ebc1675a8ae092",
+      "08adcddad19d3acf37d1fa01cb9ded1e",
+      "dee6298ce7d1fb2645141ef9972157aa"
+    ]
+  }
+}

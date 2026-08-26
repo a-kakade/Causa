@@ -1,0 +1,371 @@
+{
+  "revenue_reconciliation": {
+    "n_orders_total": 99441,
+    "n_orders_with_items": 98666,
+    "n_orders_without_items": 775,
+    "n_orders_with_payments": 99440,
+    "n_orders_without_payments": 1,
+    "n_orders_in_both_items_and_payments": 98665,
+    "n_orders_items_only_no_payment_row": 1,
+    "n_orders_payment_only_no_item_row": 775,
+    "n_matched_within_1_cent": 98284,
+    "matched_rate_of_both": 0.9961,
+    "n_mismatched": 381,
+    "mismatch_abs_diff_mean": 8.58,
+    "mismatch_abs_diff_median": 3.77,
+    "mismatch_abs_diff_max": 182.81,
+    "top_10_mismatches": [
+      {
+        "order_id": "ce6d150fb29ada17d2082f4847107665",
+        "order_items_total": 1403.66,
+        "payment_total": 1586.47,
+        "diff": 182.80999999999995
+      },
+      {
+        "order_id": "6e5fe7366a2e1bfbf3257dba0af1267f",
+        "order_items_total": 287.90999999999997,
+        "payment_total": 406.92,
+        "diff": 119.01000000000005
+      },
+      {
+        "order_id": "70b742795bc441e94a44a084b6d9ce7a",
+        "order_items_total": 466.93,
+        "payment_total": 578.82,
+        "diff": 111.89000000000004
+      },
+      {
+        "order_id": "996c7e73600ad3723e8627ab7bef81e4",
+        "order_items_total": 587.9,
+        "payment_total": 664.43,
+        "diff": 76.52999999999997
+      },
+      {
+        "order_id": "70b7e94ea46d3e8b5bc12a50186edaf0",
+        "order_items_total": 213.14999999999998,
+        "payment_total": 274.84,
+        "diff": 61.69
+      },
+      {
+        "order_id": "bc2c82b0ef78d2252b6176d1972db7c9",
+        "order_items_total": 242.01,
+        "payment_total": 303.02,
+        "diff": 61.00999999999999
+      },
+      {
+        "order_id": "af9ffff2ce6b3defd34fd4c78857a379",
+        "order_items_total": 413.16999999999996,
+        "payment_total": 466.97,
+        "diff": 53.80000000000007
+      },
+      {
+        "order_id": "262118ce178bb3e4590a3adcf6d62e6b",
+        "order_items_total": 177.74,
+        "payment_total": 126.12,
+        "diff": -51.620000000000005
+      },
+      {
+        "order_id": "bfdb5bbb06458d600a33d61f5f287472",
+        "order_items_total": 348.93,
+        "payment_total": 394.36,
+        "diff": 45.43000000000001
+      },
+      {
+        "order_id": "8d9c0dc8d5a2ce804f6b925d8f8e6c1d",
+        "order_items_total": 254.45000000000002,
+        "payment_total": 293.89,
+        "diff": 39.43999999999997
+      }
+    ]
+  },
+  "material_movements_monthly_ge15pct": [
+    {
+      "kpi": "revenue",
+      "period": "2017-01-01",
+      "value": 120312.87,
+      "pct_change_mom": 1103687.8,
+      "orders_that_month": 800
+    },
+    {
+      "kpi": "orders",
+      "period": "2017-01-01",
+      "value": 800.0,
+      "pct_change_mom": 79900.0,
+      "orders_that_month": 800
+    },
+    {
+      "kpi": "revenue",
+      "period": "2016-10-01",
+      "value": 49507.66,
+      "pct_change_mom": 18417.23,
+      "orders_that_month": 324
+    },
+    {
+      "kpi": "orders",
+      "period": "2016-10-01",
+      "value": 324.0,
+      "pct_change_mom": 8000.0,
+      "orders_that_month": 324
+    },
+    {
+      "kpi": "aov",
+      "period": "2017-01-01",
+      "value": 150.39,
+      "pct_change_mom": 1279.73,
+      "orders_that_month": 800
+    },
+    {
+      "kpi": "avg_review_score",
+      "period": "2016-10-01",
+      "value": 3.56,
+      "pct_change_mom": 256.11,
+      "orders_that_month": 324
+    },
+    {
+      "kpi": "avg_delivery_days",
+      "period": "2017-01-01",
+      "value": 12.65,
+      "pct_change_mom": 169.49,
+      "orders_that_month": 800
+    },
+    {
+      "kpi": "aov",
+      "period": "2016-10-01",
+      "value": 152.8,
+      "pct_change_mom": 128.61,
+      "orders_that_month": 324
+    },
+    {
+      "kpi": "orders",
+      "period": "2017-02-01",
+      "value": 1780.0,
+      "pct_change_mom": 122.5,
+      "orders_that_month": 1780
+    },
+    {
+      "kpi": "revenue",
+      "period": "2017-02-01",
+      "value": 247303.02,
+      "pct_change_mom": 105.55,
+      "orders_that_month": 1780
+    },
+    {
+      "kpi": "avg_delivery_days",
+      "period": "2016-10-01",
+      "value": 19.58,
+      "pct_change_mom": -64.28,
+      "orders_that_month": 324
+    },
+    {
+      "kpi": "orders",
+      "period": "2017-11-01",
+      "value": 7544.0,
+      "pct_change_mom": 62.9,
+      "orders_that_month": 7544
+    },
+    {
+      "kpi": "orders",
+      "period": "2017-05-01",
+      "value": 3700.0,
+      "pct_change_mom": 53.91,
+      "orders_that_month": 3700
+    },
+    {
+      "kpi": "revenue",
+      "period": "2017-11-01",
+      "value": 1010271.37,
+      "pct_change_mom": 52.1,
+      "orders_that_month": 7544
+    },
+    {
+      "kpi": "revenue",
+      "period": "2017-03-01",
+      "value": 374344.3,
+      "pct_change_mom": 51.37,
+      "orders_that_month": 2682
+    },
+    {
+      "kpi": "orders",
+      "period": "2017-03-01",
+      "value": 2682.0,
+      "pct_change_mom": 50.67,
+      "orders_that_month": 2682
+    },
+    {
+      "kpi": "revenue",
+      "period": "2017-05-01",
+      "value": 506071.14,
+      "pct_change_mom": 40.6,
+      "orders_that_month": 3700
+    },
+    {
+      "kpi": "avg_delivery_days",
+      "period": "2018-04-01",
+      "value": 11.5,
+      "pct_change_mom": -29.46,
+      "orders_that_month": 6939
+    },
+    {
+      "kpi": "orders",
+      "period": "2018-01-01",
+      "value": 7269.0,
+      "pct_change_mom": 28.13,
+      "orders_that_month": 7269
+    },
+    {
+      "kpi": "avg_delivery_days",
+      "period": "2017-11-01",
+      "value": 15.16,
+      "pct_change_mom": 27.87,
+      "orders_that_month": 7544
+    },
+    {
+      "kpi": "revenue",
+      "period": "2018-01-01",
+      "value": 950030.36,
+      "pct_change_mom": 27.71,
+      "orders_that_month": 7269
+    },
+    {
+      "kpi": "revenue",
+      "period": "2017-12-01",
+      "value": 743914.17,
+      "pct_change_mom": -26.36,
+      "orders_that_month": 5673
+    },
+    {
+      "kpi": "orders",
+      "period": "2017-12-01",
+      "value": 5673.0,
+      "pct_change_mom": -24.8,
+      "orders_that_month": 5673
+    },
+    {
+      "kpi": "avg_delivery_days",
+      "period": "2017-05-01",
+      "value": 11.32,
+      "pct_change_mom": -24.1,
+      "orders_that_month": 3700
+    },
+    {
+      "kpi": "orders",
+      "period": "2017-07-01",
+      "value": 4026.0,
+      "pct_change_mom": 24.07,
+      "orders_that_month": 4026
+    }
+  ],
+  "sparse_history": {
+    "products": {
+      "n_entities": 32216,
+      "lt_30_obs": 31840,
+      "lt_90_obs": 32149,
+      "lt_180_obs": 32199,
+      "pct_lt_30": 98.83,
+      "pct_lt_90": 99.79,
+      "median_obs": 1.0
+    },
+    "sellers": {
+      "n_entities": 2970,
+      "lt_30_obs": 2288,
+      "lt_90_obs": 2701,
+      "lt_180_obs": 2854,
+      "pct_lt_30": 77.04,
+      "pct_lt_90": 90.94,
+      "median_obs": 8.0
+    },
+    "products_with_zero_delivered_transactions": 735,
+    "sellers_with_zero_delivered_transactions": 125,
+    "n_categories": 73,
+    "categories_lt_30_obs": 8,
+    "smallest_5_categories": {
+      "seguros_e_servicos": 2,
+      "fashion_roupa_infanto_juvenil": 7,
+      "pc_gamer": 8,
+      "la_cuisine": 14,
+      "cds_dvds_musicais": 14
+    },
+    "largest_5_categories": {
+      "informatica_acessorios": 7644,
+      "moveis_decoracao": 8160,
+      "esporte_lazer": 8431,
+      "beleza_saude": 9465,
+      "cama_mesa_banho": 10953
+    }
+  },
+  "segmentation_cardinality": {
+    "n_seller_states": 23,
+    "n_customer_states": 27,
+    "n_product_categories": 73,
+    "n_sellers": 3095,
+    "revenue_by_seller_state": {
+      "SP": 8509511.46,
+      "PR": 1232096.99,
+      "MG": 977866.31,
+      "RJ": 820611.59,
+      "SC": 613591.65,
+      "RS": 373412.08,
+      "BA": 277925.51,
+      "DF": 94840.31,
+      "PE": 91164.15,
+      "GO": 64806.59,
+      "ES": 46941.64,
+      "MA": 36097.98,
+      "CE": 19517.84,
+      "MT": 17007.82,
+      "PB": 16395.5,
+      "RN": 9992.6,
+      "MS": 8551.69,
+      "RO": 4762.2,
+      "PI": 2383.0,
+      "SE": 1606.2,
+      "PA": 1238.0,
+      "AM": 1177.0
+    },
+    "orders_by_customer_state": {
+      "SP": 40501,
+      "RJ": 12350,
+      "MG": 11354,
+      "RS": 5345,
+      "PR": 4923,
+      "SC": 3546,
+      "BA": 3256,
+      "DF": 2080,
+      "ES": 1995,
+      "GO": 1957,
+      "PE": 1593,
+      "CE": 1279,
+      "PA": 946,
+      "MT": 886,
+      "MA": 717,
+      "MS": 701,
+      "PB": 517,
+      "PI": 476,
+      "RN": 474,
+      "AL": 397,
+      "SE": 335,
+      "TO": 274,
+      "RO": 243,
+      "AM": 145,
+      "AC": 80,
+      "AP": 67,
+      "RR": 41
+    },
+    "top_20_sellers_share_of_revenue_pct": 21.28
+  },
+  "date_anomalies": {
+    "order_purchase_timestamp_max": "2018-10-17 17:30:18",
+    "shipping_limit_date_max": "2020-04-09 22:35:08",
+    "n_items_with_shipping_limit_after_last_order": 4
+  },
+  "order_status_value_counts": {
+    "delivered": 96478,
+    "shipped": 1107,
+    "canceled": 625,
+    "unavailable": 609,
+    "invoiced": 314,
+    "processing": 301,
+    "created": 5,
+    "approved": 2
+  },
+  "orders_missing_from_order_items": 775
+}

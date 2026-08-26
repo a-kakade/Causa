@@ -1,0 +1,320 @@
+{
+  "step": "3A",
+  "scope": "KPI semantic layer definitions only -- no KPI value calculation, no anomaly detection, no PVM, no RAG/LLM, no agents.",
+  "contracts_valid": true,
+  "validation_error": null,
+  "n_kpis": 10,
+  "kpi_ids": [
+    "revenue",
+    "orders",
+    "aov",
+    "avg_delivery_days",
+    "avg_review_score",
+    "freight_revenue",
+    "review_volume",
+    "on_time_delivery_rate",
+    "quantity_sold",
+    "repeat_purchase_rate"
+  ],
+  "primary_kpis": [
+    "revenue",
+    "orders",
+    "aov",
+    "avg_delivery_days",
+    "avg_review_score"
+  ],
+  "supporting_kpis": [
+    "freight_revenue",
+    "review_volume",
+    "on_time_delivery_rate",
+    "quantity_sold",
+    "repeat_purchase_rate"
+  ],
+  "kpi_summaries": [
+    {
+      "kpi_id": "revenue",
+      "name": "Revenue",
+      "category": "primary",
+      "base_grain": "order (pre-aggregated from order_item grain -- fact_order_items is never summed after a join to order_payments/order_reviews; see docs/CANONICAL_DATA_MODEL.md Anti-fan-out)",
+      "aggregation": "SUM",
+      "source_tables": [
+        "agg_order_items",
+        "fact_order_items"
+      ],
+      "dimensions_declared": 6,
+      "dimensions_supported": 6,
+      "dimensions_unsupported": [],
+      "drivers": [
+        "volume",
+        "price",
+        "mix"
+      ],
+      "security_classification": "PUBLIC_ANALYTICAL",
+      "has_aggregation_variants": false,
+      "unresolved_semantic_decisions": [
+        "Whether order_status should be filtered by default for a 'recognized revenue' view is not decided at the contract level -- exposed as an explicit, off-by-default filter (impact quantified: -0.72%% if canceled/unavailable excluded)."
+      ]
+    },
+    {
+      "kpi_id": "orders",
+      "name": "Orders",
+      "category": "primary",
+      "base_grain": "order",
+      "aggregation": "COUNT_DISTINCT",
+      "source_tables": [
+        "fact_orders"
+      ],
+      "dimensions_declared": 7,
+      "dimensions_supported": 3,
+      "dimensions_unsupported": [
+        "seller_state",
+        "seller",
+        "product_category",
+        "product"
+      ],
+      "drivers": [
+        "order_status_mix",
+        "new_vs_repeat_customer_mix",
+        "temporal_seasonality"
+      ],
+      "security_classification": "PUBLIC_ANALYTICAL",
+      "has_aggregation_variants": false,
+      "unresolved_semantic_decisions": [
+        "Whether a 'completed orders' variant (excluding canceled/unavailable) should become a second, separately-named KPI rather than a filter is not decided -- current design treats it as a filter on this one KPI."
+      ]
+    },
+    {
+      "kpi_id": "aov",
+      "name": "Average Order Value (AOV)",
+      "category": "primary",
+      "base_grain": "order (post pre-aggregation, restricted to orders with item data)",
+      "aggregation": "DERIVED_RATIO",
+      "source_tables": [
+        "agg_order_items"
+      ],
+      "dimensions_declared": 6,
+      "dimensions_supported": 2,
+      "dimensions_unsupported": [
+        "seller_state",
+        "seller",
+        "product_category",
+        "product"
+      ],
+      "drivers": [
+        "price",
+        "category_mix",
+        "items_per_order"
+      ],
+      "security_classification": "PUBLIC_ANALYTICAL",
+      "has_aggregation_variants": false,
+      "unresolved_semantic_decisions": []
+    },
+    {
+      "kpi_id": "avg_delivery_days",
+      "name": "Average Delivery Days",
+      "category": "primary",
+      "base_grain": "order",
+      "aggregation": "MEAN",
+      "source_tables": [
+        "fact_orders"
+      ],
+      "dimensions_declared": 6,
+      "dimensions_supported": 2,
+      "dimensions_unsupported": [
+        "seller_state",
+        "seller",
+        "product_category",
+        "product"
+      ],
+      "drivers": [
+        "carrier_days",
+        "fulfillment_delay",
+        "estimated_vs_actual_delay"
+      ],
+      "security_classification": "PUBLIC_ANALYTICAL",
+      "has_aggregation_variants": false,
+      "unresolved_semantic_decisions": []
+    },
+    {
+      "kpi_id": "avg_review_score",
+      "name": "Average Review Score",
+      "category": "primary",
+      "base_grain": "order (default variant) -- see aggregation_variants for the review-grain alternative",
+      "aggregation": "MEAN",
+      "source_tables": [
+        "agg_order_reviews",
+        "fact_reviews"
+      ],
+      "dimensions_declared": 6,
+      "dimensions_supported": 2,
+      "dimensions_unsupported": [
+        "seller_state",
+        "seller",
+        "product_category",
+        "product"
+      ],
+      "drivers": [
+        "score_distribution",
+        "low_score_share",
+        "review_text_evidence"
+      ],
+      "security_classification": "PUBLIC_ANALYTICAL",
+      "has_aggregation_variants": true,
+      "unresolved_semantic_decisions": []
+    },
+    {
+      "kpi_id": "freight_revenue",
+      "name": "Freight Revenue",
+      "category": "supporting",
+      "base_grain": "order (pre-aggregated from order_item grain, same as Revenue)",
+      "aggregation": "SUM",
+      "source_tables": [
+        "agg_order_items",
+        "fact_order_items"
+      ],
+      "dimensions_declared": 6,
+      "dimensions_supported": 6,
+      "dimensions_unsupported": [],
+      "drivers": [
+        "shipping_volume",
+        "freight_per_item_rate",
+        "seller_state_geography_mix"
+      ],
+      "security_classification": "PUBLIC_ANALYTICAL",
+      "has_aggregation_variants": false,
+      "unresolved_semantic_decisions": []
+    },
+    {
+      "kpi_id": "review_volume",
+      "name": "Review Volume",
+      "category": "supporting",
+      "base_grain": "review (1 row per raw review record)",
+      "aggregation": "COUNT",
+      "source_tables": [
+        "fact_reviews"
+      ],
+      "dimensions_declared": 6,
+      "dimensions_supported": 2,
+      "dimensions_unsupported": [
+        "seller_state",
+        "seller",
+        "product_category",
+        "product"
+      ],
+      "drivers": [
+        "order_volume_lagged",
+        "review_request_response_rate"
+      ],
+      "security_classification": "PUBLIC_ANALYTICAL",
+      "has_aggregation_variants": false,
+      "unresolved_semantic_decisions": []
+    },
+    {
+      "kpi_id": "on_time_delivery_rate",
+      "name": "On-Time Delivery Rate",
+      "category": "supporting",
+      "base_grain": "order",
+      "aggregation": "RATIO",
+      "source_tables": [
+        "fact_orders"
+      ],
+      "dimensions_declared": 6,
+      "dimensions_supported": 2,
+      "dimensions_unsupported": [
+        "seller_state",
+        "seller",
+        "product_category",
+        "product"
+      ],
+      "drivers": [
+        "delivery_delay_days_distribution",
+        "carrier_performance_variability",
+        "estimate_calibration"
+      ],
+      "security_classification": "PUBLIC_ANALYTICAL",
+      "has_aggregation_variants": false,
+      "unresolved_semantic_decisions": []
+    },
+    {
+      "kpi_id": "quantity_sold",
+      "name": "Quantity Sold",
+      "category": "supporting",
+      "base_grain": "order_item (native line-item grain, the finest grain in the canonical layer)",
+      "aggregation": "COUNT",
+      "source_tables": [
+        "fact_order_items",
+        "agg_order_items"
+      ],
+      "dimensions_declared": 6,
+      "dimensions_supported": 6,
+      "dimensions_unsupported": [],
+      "drivers": [
+        "order_volume",
+        "items_per_order",
+        "category_demand_mix"
+      ],
+      "security_classification": "PUBLIC_ANALYTICAL",
+      "has_aggregation_variants": false,
+      "unresolved_semantic_decisions": []
+    },
+    {
+      "kpi_id": "repeat_purchase_rate",
+      "name": "Repeat Purchase Rate",
+      "category": "supporting",
+      "base_grain": "customer_unique_id (person-level -- NOT order grain and NOT customer_id grain)",
+      "aggregation": "RATIO",
+      "source_tables": [
+        "dim_customer",
+        "fact_orders"
+      ],
+      "dimensions_declared": 6,
+      "dimensions_supported": 1,
+      "dimensions_unsupported": [
+        "customer_state",
+        "seller_state",
+        "seller",
+        "product_category",
+        "product"
+      ],
+      "drivers": [
+        "customer_tenure",
+        "category_stickiness",
+        "first_order_experience"
+      ],
+      "security_classification": "PUBLIC_ANALYTICAL",
+      "has_aggregation_variants": false,
+      "unresolved_semantic_decisions": [
+        "Cohort-month bucketing logic (grouping customers by first-order month) is declared supported at the data level but not implemented as a ready query in this contract.",
+        "Whether canceled orders should count toward a customer's order_count is not decided -- currently they do, by default, matching the Orders KPI."
+      ]
+    }
+  ],
+  "test_results": {
+    "returncode": 0,
+    "n_passed": 30,
+    "n_failed": 0,
+    "failed_tests": [],
+    "all_passed": true
+  },
+  "governing_documents": [
+    "DATA_FOUNDATION_REPORT.md",
+    "STEP2_VALIDATION.md",
+    "docs/CANONICAL_DATA_MODEL.md",
+    "docs/DATA_LINEAGE_V2.md",
+    "docs/KPI_SEMANTICS_PREVIEW.md",
+    "docs/REVIEW_GOVERNANCE.md",
+    "docs/ANALYTICAL_WINDOW.md"
+  ],
+  "unresolved_semantic_decisions_by_kpi": {
+    "revenue": [
+      "Whether order_status should be filtered by default for a 'recognized revenue' view is not decided at the contract level -- exposed as an explicit, off-by-default filter (impact quantified: -0.72%% if canceled/unavailable excluded)."
+    ],
+    "orders": [
+      "Whether a 'completed orders' variant (excluding canceled/unavailable) should become a second, separately-named KPI rather than a filter is not decided -- current design treats it as a filter on this one KPI."
+    ],
+    "repeat_purchase_rate": [
+      "Cohort-month bucketing logic (grouping customers by first-order month) is declared supported at the data level but not implemented as a ready query in this contract.",
+      "Whether canceled orders should count toward a customer's order_count is not decided -- currently they do, by default, matching the Orders KPI."
+    ]
+  }
+}

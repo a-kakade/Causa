@@ -1,12 +1,21 @@
 # Raw Olist dataset — download separately per README, do not commit
 data/raw/olist/*.csv
 data/raw/olist/_profile_summary.json
+archive.zip
+
+# Processed canonical layer (Step 2) — regenerate via scripts/step2_04_build_canonical.py,
+# do not commit (large, fully reproducible from raw data + scripts)
+data/processed/*.parquet
 
 # Python
 __pycache__/
 *.pyc
 .venv/
 venv/
+.pytest_cache/
 
 # Jupyter
 .ipynb_checkpoints/
+
+# macOS
+.DS_Store

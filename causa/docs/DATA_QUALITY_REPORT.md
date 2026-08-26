@@ -1,15 +1,24 @@
 # Olist Data Quality Report
 
-Status: populated from the dataset present in `data/raw/olist/` on 2026-08-25, via
-`scripts/profile_olist.py` and manual checks in `notebooks/01_olist_eda.ipynb`. Regenerate
-with the command below if the raw data changes.
+Status: populated from the dataset in `data/raw/olist/` (extracted from `archive.zip`)
+on **2026-08-26**, via `scripts/profile_olist.py`, `scripts/kpi_temporal_eda.py`,
+`scripts/text_and_entity_eda.py`, and `scripts/join_driver_anomaly_eda.py`. Every
+number in this report was computed from the real CSVs in this run — none are carried
+over unverified from prior sessions. Regenerate with:
 
 ```bash
 python scripts/profile_olist.py
+python scripts/kpi_temporal_eda.py
+python scripts/text_and_entity_eda.py
+python scripts/join_driver_anomaly_eda.py
 ```
 
-This writes `data/raw/olist/_profile_summary.json` (machine-readable) and prints a
-human-readable summary to stdout.
+Machine-readable outputs: `data/raw/olist/_profile_summary.json`,
+`reports/kpi_eda_summary.json`, `reports/text_eda_summary.json`,
+`reports/join_driver_anomaly_summary.json`.
+
+Each finding below is classified **CRITICAL / HIGH / MEDIUM / LOW** by analytical
+consequence, not by percentage alone.
 
 ---
 
@@ -27,153 +36,229 @@ human-readable summary to stdout.
 | geolocation | 1,000,163 | 5 |
 | category_translation | 71 | 2 |
 
-## 2. Null / missing values
+## 2. CRITICAL — Temporal coverage collapses at both edges of the date range
 
-Only columns with non-zero null rates are listed; all others are 0%.
+The raw `order_purchase_timestamp` spans 2016-09-04 to 2018-10-17, but **volume is not
+usable across that entire span**:
 
-| Table | Column | Null rate | Notes |
-|---|---|---|---|
-| orders | order_approved_at | 0.16% | Small number of orders never had payment approval logged |
-| orders | order_delivered_carrier_date | 1.79% | Orders not yet/never shipped (canceled, unavailable, etc.) |
-| orders | order_delivered_customer_date | 2.98% | Expected — undelivered orders (shipped, canceled, unavailable, processing, etc.) |
-| order_reviews | review_comment_title | 88.34% | Optional free text — most reviews skip a title |
-| order_reviews | review_comment_message | 58.70% | Optional free text — majority skip a written comment |
-| products | product_category_name | 1.85% (610 rows) | No category assigned |
-| products | product_name_lenght | 1.85% | Null wherever category is null |
-| products | product_description_lenght | 1.85% | Null wherever category is null |
-| products | product_photos_qty | 1.85% | Null wherever category is null |
-| products | product_weight_g / length / height / width | 0.01% (a handful of rows) | Distinct from the category-null rows — separate small gap |
+| Month | Orders | Revenue (order_items.price) |
+|---|---|---|
+| 2016-09 | 4 | 267.36 |
+| 2016-10 | 324 | 49,507.66 |
+| 2016-11 | 0 | — |
+| 2016-12 | 1 | 10.90 |
+| 2017-01 → 2018-08 | 800 – 7,544 per month | 120K – 1.01M per month |
+| 2018-09 | 16 | 145.00 |
+| 2018-10 | 4 | — |
 
-**Note:** column names `product_name_lenght` and `product_description_lenght` are
-misspelled in the raw source data (kept as-is for fidelity; do not "fix" without
-updating all downstream references).
+**Consequence:** a naive trend/anomaly/YoY analysis over the full date range would
+report a ~99.8% "collapse" in Sept–Oct 2018 and a ~7,900% "surge" out of the 2016
+ramp — both spurious, driven by dataset extraction boundaries (the pull was made
+in mid-October 2018; platform launch was Sept 2016 with negligible early volume),
+not real business events. **Every temporal/KPI/anomaly analysis in this project
+must restrict its reliable window to 2017-01 through 2018-08** (17,443 → the bulk
+of full months) and explicitly exclude 2016-09 through 2016-12 and 2018-09 onward,
+or clearly flag them as partial/ramp periods if included. This is the single
+most consequential data-quality finding for Causa's temporal-EDA and anomaly-detection
+requirements.
 
-## 3. Duplicates
+## 3. Null / missing values
 
-| Table | Full-row duplicates | Primary-key duplicates | Notes |
-|---|---|---|---|
-| customers | 0 | 0 | `customer_id` is a clean PK |
-| orders | 0 | 0 | `order_id` is a clean PK |
-| order_items | 0 | 0 | `(order_id, order_item_id)` is a clean PK |
-| order_payments | 0 | 0 | `(order_id, payment_sequential)` is a clean PK |
-| order_reviews | 0 | **814** | `review_id` is **not** a clean primary key — see §8 |
-| products | 0 | 0 | `product_id` is a clean PK |
-| sellers | 0 | 0 | `seller_id` is a clean PK |
-| geolocation | **261,831 / 1,000,163 (26.2%)** | n/a (no single-row PK) | Expected — many lat/lng samples share a zip prefix; must aggregate before use as a dimension |
-| category_translation | 0 | 0 | `product_category_name` is a clean PK |
+Only columns with non-zero null rates are listed; all others are 0%. Full table in
+`DATA_DICTIONARY.md`.
 
-## 4. Referential integrity (orphan foreign keys)
-
-| Child table.column | Parent table.column | Orphan count | Orphan rate | Notes |
+| Table | Column | Null rate | Severity | Consequence |
 |---|---|---|---|---|
-| orders.customer_id | customers.customer_id | 0 | 0.00% | Clean |
-| order_items.order_id | orders.order_id | 0 | 0.00% | Clean |
-| order_items.product_id | products.product_id | 0 | 0.00% | Clean |
-| order_items.seller_id | sellers.seller_id | 0 | 0.00% | Clean |
-| order_payments.order_id | orders.order_id | 0 | 0.00% | Clean |
-| order_reviews.order_id | orders.order_id | 0 | 0.00% | Clean |
-| products.product_category_name | category_translation.product_category_name | **2** | 2.74% | Two Portuguese category names (`pc_gamer`, `portateis_cozinha_e_preparadores_de_alimentos`) exist in `products` but have no row in the translation table — English name will be missing for products in these categories unless patched |
+| orders | order_approved_at | 0.16% | LOW | Negligible; a handful of orders never had approval logged |
+| orders | order_delivered_carrier_date | 1.79% | LOW | Expected for non-delivered orders |
+| orders | order_delivered_customer_date | 2.98% | MEDIUM | Blocks delivery-time KPI for those rows; correlates with non-`delivered` status, so **not missing at random with respect to order outcome** — excluding them from a delivery-time KPI is correct, but averaging only over completed deliveries will understate real-world delivery friction (cancellations/failures are silently dropped) |
+| order_reviews | review_comment_title | 88.34% | LOW (structural) | Optional field; most reviewers skip a title |
+| order_reviews | review_comment_message | 58.70% | HIGH for RAG | Only 41.27% of reviews carry retrievable free text — caps the maximum unstructured-evidence coverage for any KPI investigation at ~41% of reviewed orders, and reviews themselves cover only ~99% of orders (547 orders duplicate, 759 orders have no review at all when joined through items — see §8) |
+| products | product_category_name (+3 dependent cols) | 1.85% (610 rows) | LOW | Handle as explicit "uncategorized" bucket |
+| products | product_weight_g/length/height/width | 0.01% (4 rows) | LOW | Negligible; exclude from logistics KPIs |
 
-Overall: the core order → customer/item/payment/review/product/seller graph is fully
-intact with **zero orphans**. The only integrity gap is the category translation lookup.
+## 4. Duplicates
 
-## 5. Date range and time coverage
+| Table | Full-row duplicates | Primary-key duplicates | Severity | Notes |
+|---|---|---|---|---|
+| customers | 0 | 0 | — | Clean |
+| orders | 0 | 0 | — | Clean |
+| order_items | 0 | 0 | — | Clean |
+| order_payments | 0 | 0 | — | Clean |
+| order_reviews | 0 | **814** | MEDIUM | `review_id` is not a clean PK; 547 orders have >1 review row — dedup/aggregation rule required before modeling review as a fact table (see `RELATIONSHIP_GRAPH.md`) |
+| products | 0 | 0 | — | Clean |
+| sellers | 0 | 0 | — | Clean |
+| geolocation | **261,831 / 1,000,163 (26.2%)** | n/a | MEDIUM if used | Must aggregate to one row per zip prefix before joining |
+| category_translation | 0 | 0 | — | Clean |
 
-| Column | Min | Max | Notes |
-|---|---|---|---|
-| order_purchase_timestamp | 2016-09-04 21:15:19 | 2018-10-17 17:30:18 | ~2 years of data; volume before 2017 is negligible (dataset effectively starts ramping in 2017) |
-| order_delivered_carrier_date | 2016-10-08 10:34:01 | 2018-09-11 19:48:28 | |
-| order_delivered_customer_date | 2016-10-11 13:46:32 | 2018-10-17 13:22:46 | |
-| order_estimated_delivery_date | 2016-09-30 | 2018-11-12 | Estimates extend slightly past the last actual delivery, as expected |
+## 5. Referential integrity (orphan foreign keys)
 
-- **No orders found with delivery timestamp before purchase timestamp** — passes the basic logical-consistency check.
-- Order volume by month should still be plotted (see notebook §7) to confirm there are no unexpected gaps or spikes; a known characteristic of this dataset is very low volume in the first few months (late 2016) before the marketplace scaled up in 2017–2018.
+| Child.column | Parent.column | Orphan keys | Orphan rows | Severity |
+|---|---|---|---|---|
+| orders.customer_id | customers.customer_id | 0 | 0 | — |
+| order_items.order_id | orders.order_id | 0 | 0 | — |
+| order_items.product_id | products.product_id | 0 | 0 | — |
+| order_items.seller_id | sellers.seller_id | 0 | 0 | — |
+| order_payments.order_id | orders.order_id | 0 | 0 | — |
+| order_reviews.order_id | orders.order_id | 0 | 0 | — |
+| products.product_category_name | category_translation.product_category_name | 2 (2.74% of distinct) | 13 rows (0.04%) | LOW |
 
-## 6. Categorical / value distributions
+The core order → customer/item/payment/review/product/seller graph has **zero
+orphans**. The only integrity gap is the category-translation lookup (2 missing
+categories: `pc_gamer`, `portateis_cozinha_e_preparadores_de_alimentos`).
 
-**`order_status`** (n=99,441):
+**However**, referential integrity does not mean every order participates in every
+table: **775 of 99,441 orders (0.78%) have zero `order_items` rows**, and 1 order has
+no `order_payments` row. These are not orphans (no dangling FK) but they are
+**structurally missing facts** — see §6.
 
-| Status | Count | % |
+## 6. HIGH — Revenue source-of-truth reconciliation
+
+Computed directly (not assumed) by summing `order_items.price + freight_value` per
+order and comparing to summed `order_payments.payment_value` per order:
+
+| Metric | Value |
+|---|---|
+| Orders with `order_items` rows | 98,666 |
+| Orders with `order_payments` rows | 99,440 |
+| Orders present in both | 98,665 |
+| Orders with items but no payment row | 1 |
+| Orders with a payment row but no items | 775 |
+| Matched within 1 cent | 98,284 (99.61% of the 98,665 in both) |
+| Mismatched (>1 cent) | 381 (mean diff 8.58, max 182.81) |
+
+**Consequence:** `SUM(order_items.price)` is the correct, PVM-decomposable revenue
+source of truth (see `KPI_CANDIDATES.md`); `order_payments.payment_value` is close
+(99.6% agreement) but includes financing/installment interest not present in item
+price, so it is **not** decomposable into price × quantity and should be used only
+for payment-method/financing analysis, not as the primary revenue KPI. The 775
+orders with payments but zero items (mostly non-`delivered`/`canceled`/`unavailable`
+statuses — not independently re-verified row-by-row here) must be explicitly
+excluded from any item-level revenue or PVM calculation, or Causa will silently
+undercount payment activity that has no attributable line items.
+
+## 7. HIGH — Join fan-out / revenue-multiplication risk (verified, not hypothetical)
+
+Naively joining `orders ⋈ order_items ⋈ order_payments ⋈ order_reviews` and then
+summing `price` **inflates total revenue by 4.04%** (13,591,643.70 real vs.
+14,141,001.32 naive) purely from row multiplication — order_payments has up to 29
+rows for a single order (installments) and order_reviews up to 3. Concrete
+reproduced example: order `03ecec245220b63fd7f68c1737ba99ba` has 2 items (true price
+total 298.90) and 2 payment rows; joining items×payments before summing yields 4 rows
+and a summed price of 597.80 — exactly 2× inflation. **Rule for all Causa KPI
+calculations: aggregate `order_items` to one row per `order_id` (sum price/freight,
+count items) BEFORE joining to `order_payments` or `order_reviews`.** Full detail
+and diagram in `RELATIONSHIP_GRAPH.md`.
+
+## 8. Date validation
+
+| Column | Min | Max | Severity | Notes |
+|---|---|---|---|---|
+| order_purchase_timestamp | 2016-09-04 21:15:19 | 2018-10-17 17:30:18 | — | See §2 for usable-window caveat |
+| order_delivered_carrier_date | 2016-10-08 10:34:01 | 2018-09-11 19:48:28 | — | |
+| order_delivered_customer_date | 2016-10-11 13:46:32 | 2018-10-17 13:22:46 | — | |
+| order_estimated_delivery_date | 2016-09-30 | 2018-11-12 | — | Extends past last actual delivery, expected |
+| **order_items.shipping_limit_date** | 2016-09-19 00:15:34 | **2020-04-09 22:35:08** | **LOW** | 4 rows have a shipping deadline ~18 months after the last order in the dataset — internally inconsistent, real defect, tiny volume |
+
+No delivery-before-purchase cases found (basic logical-consistency check passes).
+
+## 9. Categorical / value distributions
+
+**`order_status`** (n=99,441): delivered 96,478 (97.02%), shipped 1,107 (1.11%),
+canceled 625 (0.63%), unavailable 609 (0.61%), invoiced 314 (0.32%), processing 301
+(0.30%), created 5 (0.01%), approved 2 (0.00%). KPI logic must explicitly decide
+inclusion/exclusion of the ~3% non-delivered orders per KPI (exclude from
+revenue-realized KPIs, include in funnel/operational KPIs).
+
+**`payment_type`** (n=103,886): credit_card 76,795 (73.9%), boleto 19,784 (19.0%),
+voucher 5,775 (5.6%), debit_card 1,529 (1.5%), not_defined 3 (0.0%).
+
+**`review_score`** (n=99,224): 1★ 11,424 (11.5%), 2★ 3,151 (3.2%), 3★ 8,179 (8.2%),
+4★ 19,142 (19.3%), 5★ 57,328 (57.8%). Strongly right-skewed toward 5-star.
+
+**Geography**: seller base is more concentrated than the customer base — top seller
+state SP holds ~61% of item-level revenue (8.51M of 13.9M); top 20 sellers alone
+account for 21.28% of all revenue. Customer states: SP 40,501 orders, RJ 12,350, MG
+11,354 — long tail down to AP (67) and RR (41).
+
+## 10. Outliers and anomalies
+
+- `order_items.price`: mean 120.65, median 74.99, max 6,735.00, min 0.85 — no
+  zero/negative values.
+- `order_items.freight_value`: mean 19.99, median 16.26, max 409.68, min 0.00 (some
+  free-shipping line items exist) — no negatives.
+- `order_payments.payment_value`: mean 154.10, median 100.00, max 13,664.08. **9 rows
+  have `payment_value == 0`** — worth investigating (possibly fully-voucher-covered
+  orders) before treating `payment_value` as a revenue proxy.
+- `products`: 4 rows have `product_weight_g == 0` (likely data-entry error);
+  negligible volume, exclude from logistics KPIs.
+
+## 11. Text quality (order_reviews.review_comment_message)
+
+See `EDA_REPORT.md` §Text/RAG feasibility and `reports/text_eda_summary.json` for
+full detail. Headline numbers: 41.27% of reviews have message text; 91.8%
+Portuguese-likely by a crude stopword/diacritic heuristic (not a validated
+classifier — flagged as needing a real language detector before RAG build);
+14.59% of non-empty messages are exact-duplicate boilerplate ("Muito bom" appears
+230 times); max message length 208 characters / 45 words (source field is
+effectively capped, not organically short); **0 rows matched the prompt-injection
+regex sweep and 0 email-pattern matches** — reported as a genuine negative finding,
+not omitted.
+
+## 12. Known dataset caveats (from Olist/Kaggle docs + observed here)
+
+- `customer_id` is per-order, not per-person; 99,441 values map to only 96,096
+  distinct `customer_unique_id` values — repeat customers exist; use
+  `customer_unique_id` for any customer-level KPI.
+- `product_name_lenght` / `product_description_lenght` are misspelled in the source
+  data (kept as-is; do not silently rename without updating every downstream
+  reference).
+- `geolocation` is not deduplicated (26.2% exact-duplicate rows) and has many samples
+  per zip prefix — must aggregate (mean/median lat/lng, mode city) before use as a
+  join-able dimension.
+- `order_reviews.review_id` is not a clean primary key (814 duplicates, 547
+  multi-review orders) — dedup rule required (e.g., keep latest by
+  `review_answer_timestamp`).
+- 2 product categories are missing from `category_translation` — patch the lookup
+  or handle nulls gracefully in the English name.
+- Dataset is pre-anonymized: no name/email/phone/address fields exist in any table
+  (confirmed by column enumeration + zero regex matches, not merely assumed from
+  documentation).
+
+## 13. Severity summary
+
+| Issue | Severity | Blocking for KPI/temporal work? |
 |---|---|---|
-| delivered | 96,478 | 97.02% |
-| shipped | 1,107 | 1.11% |
-| canceled | 625 | 0.63% |
-| unavailable | 609 | 0.61% |
-| invoiced | 314 | 0.32% |
-| processing | 301 | 0.30% |
-| created | 5 | 0.01% |
-| approved | 2 | 0.00% |
+| Temporal edge collapse (2016 ramp, Sept–Oct 2018 cutoff) | **CRITICAL** | **Yes** — must restrict analysis window to 2017-01–2018-08 or every trend/anomaly claim is at risk of being an artifact |
+| Naive multi-table join inflates revenue 4.04% | **HIGH** | Yes — must aggregate order_items before joining to payments/reviews |
+| Revenue source-of-truth ambiguity (items vs payments, 99.61% agreement) | **HIGH** | Yes — must standardize on `SUM(order_items.price)` as the KPI definition |
+| `order_reviews.review_id` not unique (814 dupes, 547 multi-review orders) | MEDIUM | Yes, if modeling review as a 1:1 fact — needs an explicit dedup rule |
+| `geolocation` not deduplicated | MEDIUM if used | Yes, if geolocation is used — must aggregate first |
+| Only 41.27% of reviews carry usable free text | HIGH for RAG scope | No for structured KPIs; yes for unstructured-evidence coverage claims |
+| 775 orders with payments but no items | MEDIUM | Yes for revenue reconciliation — must be explicitly excluded, not zero-filled |
+| `order_delivered_customer_date` null correlates with non-delivered status | MEDIUM | Yes — delivery-time KPI implicitly survivorship-biases toward successful deliveries |
+| 2 missing category translations | LOW | No |
+| 610 products with null category | LOW | No — "uncategorized" bucket |
+| 9 payments with value 0 | LOW | No — flag/exclude |
+| 4 products with zero weight | LOW | No |
+| `shipping_limit_date` 4 rows past last order date | LOW | No |
+| ~3% of orders not `delivered` | LOW–MEDIUM | No, but needs explicit inclusion/exclusion rule per KPI |
 
-The dataset is overwhelmingly `delivered`. KPI logic should explicitly decide how to
-treat the ~3% of non-delivered orders (exclude from revenue-realized KPIs vs. include
-in funnel/operational KPIs).
+**Bottom line:** the core relational graph is genuinely clean (zero FK orphans, zero
+duplicate order/item/payment PKs). The issues that matter are not row-level defects —
+they are **temporal-window validity** and **revenue-definition/aggregation-order**
+issues that would silently produce wrong or misleading KPI numbers if not handled
+explicitly in Causa's KPI layer. Both are addressed with concrete rules above.
 
-**`payment_type`** (n=103,886):
+## 14. Next steps
 
-| Type | Count | % |
-|---|---|---|
-| credit_card | 76,795 | 73.9% |
-| boleto | 19,784 | 19.0% |
-| voucher | 5,775 | 5.6% |
-| debit_card | 1,529 | 1.5% |
-| not_defined | 3 | 0.0% |
-
-**`review_score`** (n=99,224):
-
-| Score | Count | % |
-|---|---|---|
-| 1 | 11,424 | 11.5% |
-| 2 | 3,151 | 3.2% |
-| 3 | 8,179 | 8.2% |
-| 4 | 19,142 | 19.3% |
-| 5 | 57,328 | 57.8% |
-
-Distribution is strongly right-skewed toward 5-star — typical for e-commerce review data.
-
-**`customer_state`** top states: SP (41,746), RJ (12,852), MG (11,635), RS (5,466), PR (5,045) — heavily concentrated in São Paulo.
-
-**`seller_state`** top states: SP (1,849 of 3,095 sellers, ~60%), PR (349), MG (244), SC (190), RJ (171) — seller base is even more concentrated in SP than customers.
-
-## 7. Outliers and anomalies
-
-- **`order_items.price`**: mean 120.65, median 74.99, max 6,735.00 (min 0.85). Right-skewed with a long tail of high-value items; no zero/negative prices found.
-- **`order_items.freight_value`**: mean 19.99, median 16.26, max 409.68, min 0.00 (some free-shipping line items exist). No negative values.
-- **`order_payments.payment_value`**: mean 154.10, median 100.00, max 13,664.08. **9 rows have `payment_value == 0`** — worth investigating (possibly fully-voucher-covered orders or data entry gaps) before using payment_value as a revenue proxy.
-- **`products`**: 4 products have `product_weight_g == 0` — likely data entry errors; negligible in volume (4 of 32,951) but should be excluded or flagged in any weight/logistics KPI.
-- Item-level price/freight and payment-level totals have not yet been reconciled against each other per order — recommended as a follow-up check (sum of `order_items.price + freight_value` per order vs. sum of `order_payments.payment_value` per order) before finalizing revenue KPI logic.
-
-## 8. Known dataset caveats (from Olist/Kaggle documentation + observed)
-
-- `customer_id` is per-order, not per-person; **99,441 customer_id values map to only 96,096 distinct `customer_unique_id` values**, confirming repeat customers exist in the raw data and that `customer_unique_id` must be used for any customer-level KPI (repeat purchase rate, LTV, cohort analysis).
-- `product_name_lenght` / `product_description_lenght` columns are misspelled in the source data (kept as-is for fidelity to raw source; do not silently rename without updating everywhere).
-- `geolocation` is not deduplicated — 26.2% of rows are exact duplicates, and many more rows share a zip-code prefix with differing lat/lng (multiple samples per prefix). Must aggregate (e.g., mean/median lat/lng, mode city) to one row per zip prefix before use as a join-able dimension.
-- **`order_reviews.review_id` is not a clean primary key**: 814 duplicate review_id values found, and 547 orders have more than one review row. Any model treating "one review per order" as an assumption will be wrong for ~0.6% of orders; dedupe/aggregation strategy needed (e.g., keep latest by `review_answer_timestamp`, or model review as a proper 1:many fact).
-- 2 product categories (`pc_gamer`, `portateis_cozinha_e_preparadores_de_alimentos`) are missing from `category_translation` — patch the lookup table or handle nulls gracefully in the English category name.
-
-## 9. Summary of blocking issues vs. cosmetic issues
-
-| Issue | Severity | Blocking for data model? |
-|---|---|---|
-| `order_reviews.review_id` not unique (814 dupes, 547 multi-review orders) | Medium | Yes — must define review grain/dedup rule before modeling review fact |
-| `geolocation` not deduplicated / many rows per zip prefix | Medium | Yes, if geolocation is used — must aggregate before joining |
-| 2 missing category translations | Low | No — patch lookup or fallback to null English name |
-| 610 products with null category | Low | No — handle as "uncategorized" bucket |
-| 9 payments with `payment_value == 0` | Low | No — flag/exclude from revenue KPIs, investigate later |
-| 4 products with zero weight | Low | No — negligible volume, exclude from logistics KPIs |
-| ~3% of orders not in `delivered` status | Low–Medium | No, but requires an explicit inclusion/exclusion rule in KPI definitions |
-| Order lifecycle timestamp nulls (approved/carrier/delivered dates) | Low | No — expected consequence of non-delivered order statuses |
-
-**No issues found that block proceeding to data modeling.** The core order/customer/item/
-payment/product/seller relationships are fully referentially intact. The two items that
-need explicit design decisions before modeling are the review grain (duplicate review_id)
-and the geolocation aggregation strategy — both are addressed as open questions in
-`DATA_MODEL.md`.
-
-## 10. Next steps
-
-- [x] Run `scripts/profile_olist.py` against the full dataset.
+- [x] Run `scripts/profile_olist.py` against the full real dataset.
 - [x] Confirm referential integrity across all declared foreign keys.
-- [x] Confirm date range and lifecycle timestamp sanity (no delivery-before-purchase cases).
-- [ ] Decide and document the review dedup rule, then encode it in `DATA_MODEL.md`.
-- [ ] Decide the geolocation aggregation approach, then encode it in `DATA_MODEL.md`.
-- [ ] Reconcile `order_items` (price+freight) totals against `order_payments` totals per order.
+- [x] Confirm date range and lifecycle timestamp sanity.
+- [x] Reconcile `order_items` totals against `order_payments` totals per order.
+- [x] Quantify the join fan-out risk with a concrete example.
+- [x] Identify and bound the usable temporal window.
+- [ ] Decide and encode the review dedup rule in the eventual data model.
+- [ ] Decide the geolocation aggregation approach if geography is used beyond
+      state-level (state-level needs no geolocation join at all — it's already on
+      customers/sellers).

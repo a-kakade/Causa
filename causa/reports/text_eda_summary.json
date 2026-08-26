@@ -1,0 +1,109 @@
+{
+  "review_text_quality": {
+    "n_review_rows": 99224,
+    "n_with_title": 11566,
+    "n_with_message": 40950,
+    "pct_with_message": 41.27,
+    "pct_empty_message": 58.73,
+    "length_chars": {
+      "mean": 68.7,
+      "median": 53.0,
+      "p90": 161.0,
+      "max": 208
+    },
+    "length_words": {
+      "mean": 11.7,
+      "median": 9.0,
+      "p90": 28.0,
+      "max": 45
+    },
+    "very_short_le_2_words": 5645,
+    "very_short_pct_of_nonempty": 13.79,
+    "very_long_ge_100_words": 0,
+    "language_guess_distribution_pct": {
+      "undetermined": 8.2,
+      "pt-likely": 91.8,
+      "en-or-other-likely": 0.01
+    },
+    "language_guess_method": "crude stopword/diacritic heuristic on a sample of up to 20k non-empty messages -- NOT a validated language classifier. Sufficient to establish the corpus is overwhelmingly non-English (Brazilian Portuguese), which is an architectural constraint (embedding model / prompts must support pt-BR), but exact per-row language should be re-verified with a real detector (e.g. langdetect/fasttext) before RAG implementation.",
+    "duplicate_nonempty_texts": 1179,
+    "rows_that_are_duplicate_text": 5974,
+    "duplicate_rate_of_nonempty": 14.59,
+    "top_5_duplicate_texts": [
+      {
+        "text": "Muito bom",
+        "count": 230
+      },
+      {
+        "text": "Bom",
+        "count": 189
+      },
+      {
+        "text": "muito bom",
+        "count": 122
+      },
+      {
+        "text": "bom",
+        "count": 107
+      },
+      {
+        "text": "Recomendo",
+        "count": 100
+      }
+    ],
+    "pii_scan": {
+      "rows_with_email_pattern": 0,
+      "rows_with_phone_like_pattern": 4,
+      "rows_with_url": 2,
+      "note": "phone_like_pattern regex is intentionally loose (many false positives from order numbers / prices in text) -- treat as an upper bound requiring manual review, not a confirmed PII count."
+    },
+    "html_or_markup_artifacts": 0,
+    "prompt_injection_like_rows": {
+      "count": 0,
+      "samples": [],
+      "note": "Flagged for security-layer test design per instructions. NOT necessarily malicious -- e.g. 'recomendo' (recommend) can false-positive on 'act as' style regex in rare cases. Each sample must be manually reviewed before use as a security test fixture."
+    }
+  },
+  "entity_linkage": {
+    "n_reviews": 99224,
+    "n_reviews_matching_an_order_with_items": 98465,
+    "n_reviews_with_no_matching_order_items": 759,
+    "n_reviews_unambiguously_linked_to_one_product": 95227,
+    "pct_unambiguously_linked_to_one_product": 95.97,
+    "n_reviews_unambiguously_linked_to_one_seller": 97187,
+    "pct_unambiguously_linked_to_one_seller": 97.95,
+    "n_reviews_spanning_multiple_products_ambiguous": 3238,
+    "pct_ambiguous_multi_product": 3.26,
+    "n_reviews_linked_to_customer": 99224,
+    "note": "review_id/order_id do NOT carry product_id or seller_id directly -- linkage is only possible by joining through order_items, and is unambiguous only for single-item orders (~90% of orders per relationship cardinality profiling). For the ~10% multi-item orders, a review cannot be deterministically attributed to one product/seller from structured data alone."
+  },
+  "pii_structured_scan": {
+    "customers_columns": [
+      "customer_id",
+      "customer_unique_id",
+      "customer_zip_code_prefix",
+      "customer_city",
+      "customer_state"
+    ],
+    "sellers_columns": [
+      "seller_id",
+      "seller_zip_code_prefix",
+      "seller_city",
+      "seller_state"
+    ],
+    "customers_email_pattern_found": {
+      "customer_id": false,
+      "customer_unique_id": false,
+      "customer_zip_code_prefix": false,
+      "customer_city": false,
+      "customer_state": false
+    },
+    "sellers_email_pattern_found": {
+      "seller_id": false,
+      "seller_zip_code_prefix": false,
+      "seller_city": false,
+      "seller_state": false
+    },
+    "note": "Olist's public release is pre-anonymized: no customer/seller name, email, phone, or street address columns exist in any table (only IDs, zip-code prefix, city, state). This is consistent with Kaggle's published documentation and confirmed here by column enumeration -- no email/phone regex matches found in the identifier tables. customer_unique_id and customer_id / seller_id are still classified SENSITIVE (re-identification risk when joined with zip+city+order timing), not PUBLIC."
+  }
+}

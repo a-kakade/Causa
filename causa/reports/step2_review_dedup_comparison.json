@@ -1,0 +1,96 @@
+{
+  "n_total_review_rows": 99224,
+  "n_orders_with_gt1_review": 547,
+  "n_orders_with_review": 98673,
+  "strategies": {
+    "latest_review_answer_timestamp": {
+      "n_rows_in_output": 98673,
+      "n_distinct_orders_represented": 98673,
+      "is_1_to_1_with_orders_that_have_reviews": true,
+      "score_distribution": {
+        "1": 11363,
+        "2": 3131,
+        "3": 8133,
+        "4": 19038,
+        "5": 57008
+      },
+      "mean_score": 4.0864,
+      "text_coverage_pct": 41.3,
+      "orders_affected_by_this_choice": 547,
+      "bias_vs_simple_average_of_all_reviews_for_that_order": {
+        "mean_signed_bias": -0.0734,
+        "pct_rows_where_chosen_gt_average": 16.27,
+        "pct_rows_where_chosen_lt_average": 20.66,
+        "interpretation": "0 = strategy's chosen score exactly matches the simple average across that order's reviews on average; a nonzero mean_signed_bias means this strategy systematically over- or under-states the score for the 547 multi-review orders relative to using all evidence."
+      }
+    },
+    "earliest_review_creation_date": {
+      "n_rows_in_output": 98673,
+      "n_distinct_orders_represented": 98673,
+      "is_1_to_1_with_orders_that_have_reviews": true,
+      "score_distribution": {
+        "1": 11344,
+        "2": 3131,
+        "3": 8120,
+        "4": 19048,
+        "5": 57030
+      },
+      "mean_score": 4.0873,
+      "text_coverage_pct": 41.31,
+      "orders_affected_by_this_choice": 547,
+      "bias_vs_simple_average_of_all_reviews_for_that_order": {
+        "mean_signed_bias": 0.0948,
+        "pct_rows_where_chosen_gt_average": 21.57,
+        "pct_rows_where_chosen_lt_average": 15.36,
+        "interpretation": "0 = strategy's chosen score exactly matches the simple average across that order's reviews on average; a nonzero mean_signed_bias means this strategy systematically over- or under-states the score for the 547 multi-review orders relative to using all evidence."
+      }
+    },
+    "highest_review_score": {
+      "n_rows_in_output": 98673,
+      "n_distinct_orders_represented": 98673,
+      "is_1_to_1_with_orders_that_have_reviews": true,
+      "score_distribution": {
+        "1": 11316,
+        "2": 3121,
+        "3": 8116,
+        "4": 19044,
+        "5": 57076
+      },
+      "mean_score": 4.0889,
+      "text_coverage_pct": 41.27,
+      "orders_affected_by_this_choice": 547,
+      "bias_vs_simple_average_of_all_reviews_for_that_order": {
+        "mean_signed_bias": 0.3763,
+        "pct_rows_where_chosen_gt_average": 36.93,
+        "pct_rows_where_chosen_lt_average": 0.0,
+        "interpretation": "0 = strategy's chosen score exactly matches the simple average across that order's reviews on average; a nonzero mean_signed_bias means this strategy systematically over- or under-states the score for the 547 multi-review orders relative to using all evidence."
+      }
+    },
+    "retain_all_no_dedup": {
+      "n_rows_in_output": 99224,
+      "n_distinct_orders_represented": 98673,
+      "is_1_to_1_with_orders_that_have_reviews": false,
+      "score_distribution": {
+        "1": 11424,
+        "2": 3151,
+        "3": 8179,
+        "4": 19142,
+        "5": 57328
+      },
+      "mean_score": 4.0864,
+      "text_coverage_pct": 41.27,
+      "orders_affected_by_this_choice": 547,
+      "bias_vs_simple_average_of_all_reviews_for_that_order": {
+        "mean_signed_bias": -0.0,
+        "pct_rows_where_chosen_gt_average": 18.49,
+        "pct_rows_where_chosen_lt_average": 18.49,
+        "interpretation": "0 = strategy's chosen score exactly matches the simple average across that order's reviews on average; a nonzero mean_signed_bias means this strategy systematically over- or under-states the score for the 547 multi-review orders relative to using all evidence."
+      }
+    }
+  },
+  "recommendation": {
+    "review_level_text_retrieval_or_future_RAG": "retain_all_no_dedup -- fact_reviews preserves every legitimate row; no information is discarded, since a future retrieval use case may want every review's text, not just one per order.",
+    "order_level_KPI_single_representative_score": "latest_review_answer_timestamp -- represents the most current customer sentiment for that order (a customer who edits/re-reviews presumably wants their latest word to count), and is the standard used in agg_order_reviews.latest_review_score. This is a DECISION, not the only defensible choice -- see bias comparison above for how it differs from a simple average.",
+    "order_level_KPI_general_purpose": "avg_review_score (a true aggregation over ALL reviews for that order) is materialized in agg_order_reviews alongside latest_review_score, because picking one row and averaging all rows are different operations with different biases, and this task explicitly warns against confusing deduplication with aggregation."
+  }
+}

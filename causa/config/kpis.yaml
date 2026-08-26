@@ -1,0 +1,810 @@
+# Causa KPI Semantic Layer — governed contracts
+#
+# This file is the source of truth for what each KPI means, how it is calculated,
+# and what it does and does not support. It conforms to
+# schemas/kpi_contract.schema.json. It is validated (not executed) by
+# src/kpi/semantic_registry.py and tests/tests_kpi_contracts.py.
+#
+# STRICT RULE: no KPI value is computed anywhere in this repository as of Step 3A.
+# This file defines KPIs; it does not calculate them.
+#
+# Governing documents (read before editing):
+#   DATA_FOUNDATION_REPORT.md, STEP2_VALIDATION.md, docs/CANONICAL_DATA_MODEL.md,
+#   docs/DATA_LINEAGE_V2.md, docs/KPI_SEMANTICS_PREVIEW.md, docs/REVIEW_GOVERNANCE.md,
+#   docs/ANALYTICAL_WINDOW.md
+
+version: "1.0"
+generated: "2026-08-26"
+
+shared_valid_time_window: &shared_window
+  default_start: "2017-01"
+  default_end: "2018-08"
+  full_data_start: "2016-09"
+  full_data_end: "2018-10"
+  window_is_a_filter_not_a_deletion: true
+  source_doc: "docs/ANALYTICAL_WINDOW.md"
+
+shared_materiality_note: &materiality_note >-
+  Configuration only -- no anomaly/materiality engine exists yet (explicitly
+  excluded from Step 3A scope). Values are informed starting defaults derived from
+  Step 1's exploratory materiality scan (docs/INVESTIGATION_SCENARIOS.md, e.g. the
+  15%% month-over-month threshold used there to flag candidate movements), not
+  statistically tuned or validated against a real detection backtest. Must be
+  revisited when the anomaly engine (a later step) is built.
+
+kpis:
+
+  # ============================================================
+  # 1. REVENUE (primary)
+  # ============================================================
+  - kpi_id: revenue
+    name: "Revenue"
+    category: primary
+    description: >-
+      Total realized transaction value at the order-item price grain, summed to
+      order grain before any join to another fact table.
+    business_purpose: >-
+      Answers "how much is the marketplace selling" -- the primary top-line
+      commercial metric that AOV, freight-ratio, and category/seller performance
+      views are all built from.
+    business_definition: >-
+      CAUSA_REVENUE as ratified in docs/KPI_SEMANTICS_PREVIEW.md: the sum of
+      order_items.price, aggregated to order grain BEFORE joining to
+      order_payments or order_reviews. Chosen over SUM(order_payments.payment_value)
+      because it is decomposable into Price x Volume x Mix and because the 0.39%%
+      disagreement between the two figures is concentrated in financed
+      installment payments (interest, not a data defect) -- see
+      docs/KPI_SEMANTICS_PREVIEW.md for the full reconciliation.
+    formula: >-
+      SUM(order_items.price) GROUP BY order_id, then summed again by whatever
+      reporting dimension is requested. Equivalent to SUM(agg_order_items.item_price_total).
+    source_tables: ["agg_order_items", "fact_order_items"]
+    source_columns: ["agg_order_items.item_price_total", "fact_order_items.price"]
+    base_grain: >-
+      order (pre-aggregated from order_item grain -- fact_order_items is never
+      summed after a join to order_payments/order_reviews; see
+      docs/CANONICAL_DATA_MODEL.md Anti-fan-out)
+    aggregation: SUM
+    time_column: "fact_orders.purchase_timestamp (joined via order_id)"
+    valid_time_window: *shared_window
+    dimensions:
+      - {name: month, source_table: fact_orders, source_column: purchase_timestamp, supported: true, security_classification: PUBLIC_ANALYTICAL}
+      - {name: product_category, source_table: dim_product, source_column: category_name_en, supported: true, security_classification: PUBLIC_ANALYTICAL, notes: "Joined via fact_order_items.product_id; item-grain slice, safe under multi-category orders."}
+      - {name: customer_state, source_table: fact_orders, source_column: customer_state, supported: true, security_classification: PUBLIC_ANALYTICAL}
+      - {name: seller_state, source_table: dim_seller, source_column: seller_state, supported: true, security_classification: PUBLIC_ANALYTICAL, notes: "Joined via fact_order_items.seller_id; item-grain slice, safe."}
+      - {name: seller, source_table: dim_seller, source_column: seller_id, supported: true, security_classification: INTERNAL, notes: "Business-sensitive (seller-level competitive detail); not customer PII."}
+      - {name: product, source_table: dim_product, source_column: product_id, supported: true, security_classification: PUBLIC_ANALYTICAL}
+    filters:
+      - {name: order_status, source_column: fact_orders.order_status, applied_by_default: false, description: "8 values (delivered/shipped/canceled/unavailable/invoiced/processing/created/approved). NOT decided at contract level whether canceled/unavailable should be excluded by default for a 'recognized revenue' view (impact: -0.72%% of unfiltered total, R$97.2K of R$13.59M) -- exposed as an explicit, off-by-default filter. See unresolved_semantic_decisions."}
+      - {name: in_analytical_window, source_column: fact_orders.in_analytical_window, applied_by_default: true, description: "Recommended default per docs/ANALYTICAL_WINDOW.md; override explicitly for full-history or exploratory queries."}
+    null_behavior: >-
+      Orders without order_items (has_items=False, 775 orders / 0.78%%) contribute
+      NOTHING to this sum -- they are absent from agg_order_items, never
+      zero-filled. Revenue for a segment with zero qualifying orders is
+      NULL/undefined, not 0.
+    data_quality_requirements:
+      required_fields: ["order_items.price", "order_items.order_id"]
+      minimum_observations: 30
+      missing_data_treatment: "Orders with has_items=False are excluded (absent from agg_order_items), never zero-filled."
+      invalid_data_treatment: "No known invalid values in order_items.price per Step 1 audit (min 0.85, no zero/negative values found)."
+      coverage_threshold_pct: 95.0
+      confidence_implications: ">=95%% of in-scope orders have item data => HIGH confidence; 80-95%% => MEDIUM; <80%% => LOW. Full dataset has_items coverage is 99.22%%, so HIGH is the expected default state."
+    drivers:
+      - {driver_name: volume, relationship_type: deterministic_decomposition, description: "Count of order_items sold. Component of the PVM bridge demonstrated in Step 1 (docs/INVESTIGATION_SCENARIOS.md).", is_causal_claim: false}
+      - {driver_name: price, relationship_type: deterministic_decomposition, description: "Average price per item sold, by category. Component of the PVM bridge.", is_causal_claim: false}
+      - {driver_name: mix, relationship_type: deterministic_decomposition, description: "Shift in category/product composition of what was sold. Component of the PVM bridge -- can be negative even when volume and price both rise (observed in the Nov 2017 case study).", is_causal_claim: false}
+    materiality:
+      absolute_threshold: 50000
+      relative_threshold: 15.0
+      statistical_threshold: 2.0
+      minimum_observations: 30
+      minimum_business_impact: 10000
+      persistence_periods: 2
+      implemented: false
+      note: *materiality_note
+    supported_methods: ["time_series_aggregation", "period_over_period_change", "segmentation_by_declared_dimension", "deterministic_pvm_decomposition"]
+    lineage:
+      chain:
+        - {layer: kpi, reference: "revenue"}
+        - {layer: semantic_definition, reference: "docs/KPI_SEMANTICS_PREVIEW.md#causa_revenue"}
+        - {layer: canonical_table_field, reference: "agg_order_items.item_price_total"}
+        - {layer: raw_table_column, reference: "order_items.price"}
+      traceable_to_raw: true
+    security:
+      kpi_classification: PUBLIC_ANALYTICAL
+      rationale: "Aggregate monetary total; carries no individual customer or order-level identifiers at the KPI-value level."
+      excluded_from_llm_context_by_default: false
+    unresolved_semantic_decisions:
+      - "Whether order_status should be filtered by default for a 'recognized revenue' view is not decided at the contract level -- exposed as an explicit, off-by-default filter (impact quantified: -0.72%% if canceled/unavailable excluded)."
+    status: governed
+
+  # ============================================================
+  # 2. ORDERS (primary)
+  # ============================================================
+  - kpi_id: orders
+    name: "Orders"
+    category: primary
+    description: "Count of distinct orders placed."
+    business_purpose: >-
+      Answers "how many transactions is the marketplace processing" -- the volume
+      denominator behind AOV and the base unit for funnel/operational reporting.
+    business_definition: >-
+      COUNT(DISTINCT order_id) over fact_orders. Default scope is ALL orders
+      regardless of status, matching the canonical fact_orders grain (99,441 rows)
+      exactly -- the canonical aggregate includes all orders, and this contract
+      makes that explicit per this task's instruction rather than leaving it
+      implicit.
+    formula: "COUNT(DISTINCT fact_orders.order_id)"
+    source_tables: ["fact_orders"]
+    source_columns: ["fact_orders.order_id"]
+    base_grain: order
+    aggregation: COUNT_DISTINCT
+    time_column: "fact_orders.purchase_timestamp"
+    valid_time_window: *shared_window
+    dimensions:
+      - {name: month, source_table: fact_orders, source_column: purchase_timestamp, supported: true, security_classification: PUBLIC_ANALYTICAL}
+      - {name: order_status, source_table: fact_orders, source_column: order_status, supported: true, security_classification: PUBLIC_ANALYTICAL}
+      - {name: customer_state, source_table: fact_orders, source_column: customer_state, supported: true, security_classification: PUBLIC_ANALYTICAL}
+      - {name: seller_state, source_table: dim_seller, source_column: seller_state, supported: false, security_classification: PUBLIC_ANALYTICAL, unsupported_reason: "Orders is order-grain; seller_state is an item-grain attribute (via fact_order_items.seller_id). ~9.86%% of orders span multiple items and can touch multiple sellers/seller_states. COUNT(DISTINCT order_id) is safe within one slice but per-slice totals will not sum to the KPI's grand total. Use Revenue or Quantity Sold (item-grain-safe) for seller-level analysis."}
+      - {name: seller, source_table: dim_seller, source_column: seller_id, supported: false, security_classification: INTERNAL, unsupported_reason: "Same grain-mismatch reason as seller_state."}
+      - {name: product_category, source_table: dim_product, source_column: category_name_en, supported: false, security_classification: PUBLIC_ANALYTICAL, unsupported_reason: "Same grain-mismatch reason as seller_state (order can span multiple categories)."}
+      - {name: product, source_table: dim_product, source_column: product_id, supported: false, security_classification: PUBLIC_ANALYTICAL, unsupported_reason: "Same grain-mismatch reason as seller_state."}
+    filters:
+      - {name: order_status, source_column: fact_orders.order_status, applied_by_default: false, description: "All 8 statuses included by default, matching the canonical fact_orders grain exactly. Filter explicitly for a 'completed orders only' view."}
+      - {name: in_analytical_window, source_column: fact_orders.in_analytical_window, applied_by_default: true, description: "Recommended default per docs/ANALYTICAL_WINDOW.md."}
+    null_behavior: "order_id is never null in fact_orders (0%% null, 100%% unique, verified by tests/test_keys.py in Step 2) -- no null-handling ambiguity for this KPI's core count."
+    data_quality_requirements:
+      required_fields: ["fact_orders.order_id"]
+      minimum_observations: 1
+      missing_data_treatment: "Not applicable -- order_id cannot be missing by construction."
+      invalid_data_treatment: "Not applicable."
+      coverage_threshold_pct: 100.0
+      confidence_implications: "Always HIGH confidence given verified 0%% null/duplicate order_id. The only source of ambiguity is the order_status filter choice, not data quality."
+    drivers:
+      - {driver_name: order_status_mix, relationship_type: deterministic_decomposition, description: "The literal partition of the count across the 8 order_status values.", is_causal_claim: false}
+      - {driver_name: new_vs_repeat_customer_mix, relationship_type: statistical_association, description: "Share of orders from first-time vs. repeat customers (customer_unique_id order_count >= 2). Only 3.12%% of unique customers repeat, per Step 2's canonical build.", is_causal_claim: false}
+      - {driver_name: temporal_seasonality, relationship_type: qualitative_evidence, description: "Observed calendar-driven demand events, e.g. the Nov 2017 order spike documented in docs/INVESTIGATION_SCENARIOS.md -- a single observed instance, not a validated recurring pattern (only one full annual cycle exists in the reliable window).", is_causal_claim: false}
+    materiality:
+      absolute_threshold: 500
+      relative_threshold: 15.0
+      statistical_threshold: 2.0
+      minimum_observations: 30
+      minimum_business_impact: 500
+      persistence_periods: 2
+      implemented: false
+      note: *materiality_note
+    supported_methods: ["time_series_aggregation", "period_over_period_change", "segmentation_by_declared_dimension"]
+    lineage:
+      chain:
+        - {layer: kpi, reference: "orders"}
+        - {layer: semantic_definition, reference: "config/kpis.yaml#orders"}
+        - {layer: canonical_table_field, reference: "fact_orders.order_id"}
+        - {layer: raw_table_column, reference: "orders.order_id"}
+      traceable_to_raw: true
+    security:
+      kpi_classification: PUBLIC_ANALYTICAL
+      rationale: "A plain count; no identifiers exposed at the KPI-value level."
+      excluded_from_llm_context_by_default: false
+    unresolved_semantic_decisions:
+      - "Whether a 'completed orders' variant (excluding canceled/unavailable) should become a second, separately-named KPI rather than a filter is not decided -- current design treats it as a filter on this one KPI."
+    status: governed
+
+  # ============================================================
+  # 3. AOV (primary)
+  # ============================================================
+  - kpi_id: aov
+    name: "Average Order Value (AOV)"
+    category: primary
+    description: "Average revenue per order, order-weighted (not item-weighted)."
+    business_purpose: >-
+      Answers "how much does a typical transaction generate" -- links Orders and
+      Revenue into one per-transaction economics figure.
+    business_definition: >-
+      Revenue divided by the count of orders that have item data. NEVER computed
+      by averaging order_items.price directly across all line items -- that would
+      be an item-weighted average price, a different and smaller-grain statistic,
+      not AOV. Per this task's explicit instruction.
+    formula: "SUM(order_items.price GROUP BY order_id) / COUNT(DISTINCT order_id WHERE has_items = True), both restricted to the same filter scope"
+    ratio:
+      numerator: "revenue (SUM(agg_order_items.item_price_total) over the filtered scope)"
+      denominator: "COUNT(DISTINCT agg_order_items.order_id) over the SAME filtered scope -- deliberately NOT the 'orders' KPI's population (99,441 orders), which would silently dilute AOV by including the 775 orders with no item data in the denominator while they contribute 0 to the numerator."
+      zero_denominator_behavior: "AOV is NULL/undefined when the denominator is 0 (e.g. a filtered slice with zero qualifying orders) -- never reported as 0 or infinity."
+    source_tables: ["agg_order_items"]
+    source_columns: ["agg_order_items.item_price_total", "agg_order_items.order_id"]
+    base_grain: "order (post pre-aggregation, restricted to orders with item data)"
+    aggregation: DERIVED_RATIO
+    time_column: "fact_orders.purchase_timestamp (joined)"
+    valid_time_window: *shared_window
+    dimensions:
+      - {name: month, source_table: fact_orders, source_column: purchase_timestamp, supported: true, security_classification: PUBLIC_ANALYTICAL}
+      - {name: customer_state, source_table: fact_orders, source_column: customer_state, supported: true, security_classification: PUBLIC_ANALYTICAL}
+      - {name: seller_state, source_table: dim_seller, source_column: seller_state, supported: false, security_classification: PUBLIC_ANALYTICAL, unsupported_reason: "AOV is order-grain (revenue / order count); seller_state is item-grain. A multi-seller order's inclusion in more than one seller_state's order-count denominator makes per-slice AOV values a genuinely different statistic ('AOV among orders touching seller_state X') that this contract does not define. Not supported until that variant is separately specified."}
+      - {name: seller, source_table: dim_seller, source_column: seller_id, supported: false, security_classification: INTERNAL, unsupported_reason: "Same reason as seller_state."}
+      - {name: product_category, source_table: dim_product, source_column: category_name_en, supported: false, security_classification: PUBLIC_ANALYTICAL, unsupported_reason: "Same reason as seller_state."}
+      - {name: product, source_table: dim_product, source_column: product_id, supported: false, security_classification: PUBLIC_ANALYTICAL, unsupported_reason: "Same reason as seller_state."}
+    filters:
+      - {name: order_status, source_column: fact_orders.order_status, applied_by_default: false, description: "Same unresolved default as Revenue -- see revenue.unresolved_semantic_decisions. Numerator and denominator must always share the identical status filter."}
+      - {name: in_analytical_window, source_column: fact_orders.in_analytical_window, applied_by_default: true, description: "Recommended default per docs/ANALYTICAL_WINDOW.md."}
+    null_behavior: "Orders with has_items=False are excluded from BOTH numerator and denominator -- never zero-filled into either."
+    data_quality_requirements:
+      required_fields: ["order_items.price", "order_items.order_id"]
+      minimum_observations: 30
+      missing_data_treatment: "Orders without item data excluded from both numerator and denominator, consistently."
+      invalid_data_treatment: "Inherits Revenue's invalid-data treatment (no known invalid price values)."
+      coverage_threshold_pct: 95.0
+      confidence_implications: "Same coverage logic as Revenue: >=95%% has_items coverage in scope => HIGH."
+    drivers:
+      - {driver_name: price, relationship_type: deterministic_decomposition, description: "Average price per item within the order basket.", is_causal_claim: false}
+      - {driver_name: category_mix, relationship_type: deterministic_decomposition, description: "Composition of higher- vs lower-priced categories in the order.", is_causal_claim: false}
+      - {driver_name: items_per_order, relationship_type: statistical_association, description: "Basket size (item_count) -- more items per order does not mechanically raise AOV unless per-item price also holds, so this is an association, not a decomposition identity.", is_causal_claim: false}
+    materiality:
+      absolute_threshold: 10
+      relative_threshold: 10.0
+      statistical_threshold: 2.0
+      minimum_observations: 30
+      minimum_business_impact: 5
+      persistence_periods: 2
+      implemented: false
+      note: *materiality_note
+    supported_methods: ["time_series_aggregation", "period_over_period_change", "segmentation_by_declared_dimension"]
+    lineage:
+      chain:
+        - {layer: kpi, reference: "aov"}
+        - {layer: semantic_definition, reference: "config/kpis.yaml#aov"}
+        - {layer: canonical_table_field, reference: "agg_order_items.item_price_total, agg_order_items.order_id"}
+        - {layer: raw_table_column, reference: "order_items.price, order_items.order_id"}
+      traceable_to_raw: true
+    security:
+      kpi_classification: PUBLIC_ANALYTICAL
+      rationale: "Aggregate ratio, no identifiers."
+      excluded_from_llm_context_by_default: false
+    status: governed
+
+  # ============================================================
+  # 4. AVERAGE DELIVERY DAYS (primary)
+  # ============================================================
+  - kpi_id: avg_delivery_days
+    name: "Average Delivery Days"
+    category: primary
+    description: "Mean days from order purchase to customer delivery, valid rows only."
+    business_purpose: >-
+      Answers "how long does it take customers to receive their order" -- the
+      primary operational/logistics health metric, and (per Step 1's -0.942
+      monthly correlation finding) a strong statistical driver of review score.
+    business_definition: >-
+      Mean of (customer_delivery_timestamp - purchase_timestamp) in days, computed
+      ONLY over rows where delivery_data_quality_flag = 'VALID'. Missing delivery
+      dates produce NULL (not 0) and are excluded, not zero-filled. Rows with a
+      logically invalid timestamp sequence (INVALID_SEQUENCE) are also excluded,
+      NOT silently dropped without disclosure -- the exclusion count is a required
+      output field (see data_quality_requirements).
+    formula: "MEAN(fact_orders.delivery_days) WHERE fact_orders.delivery_data_quality_flag = 'VALID'"
+    source_tables: ["fact_orders"]
+    source_columns: ["fact_orders.delivery_days", "fact_orders.delivery_data_quality_flag", "fact_orders.purchase_timestamp", "fact_orders.customer_delivery_timestamp"]
+    base_grain: "order"
+    aggregation: MEAN
+    time_column: "fact_orders.purchase_timestamp"
+    valid_time_window: *shared_window
+    dimensions:
+      - {name: month, source_table: fact_orders, source_column: purchase_timestamp, supported: true, security_classification: PUBLIC_ANALYTICAL}
+      - {name: customer_state, source_table: fact_orders, source_column: customer_state, supported: true, security_classification: PUBLIC_ANALYTICAL}
+      - {name: seller_state, source_table: dim_seller, source_column: seller_state, supported: false, security_classification: PUBLIC_ANALYTICAL, unsupported_reason: "delivery_days is an order-grain measure; seller_state is item-grain. Multi-seller orders make per-seller_state attribution of a single delivery timestamp ambiguous (whose seller caused the delivery time?). Not supported without a separately-defined attribution rule."}
+      - {name: seller, source_table: dim_seller, source_column: seller_id, supported: false, security_classification: INTERNAL, unsupported_reason: "Same reason as seller_state."}
+      - {name: product_category, source_table: dim_product, source_column: category_name_en, supported: false, security_classification: PUBLIC_ANALYTICAL, unsupported_reason: "Same reason as seller_state."}
+      - {name: product, source_table: dim_product, source_column: product_id, supported: false, security_classification: PUBLIC_ANALYTICAL, unsupported_reason: "Same reason as seller_state."}
+    filters:
+      - {name: delivery_data_quality_flag, source_column: fact_orders.delivery_data_quality_flag, applied_by_default: true, default_value: "VALID", description: "MANDATORY filter, not optional -- this KPI is undefined outside the VALID population. 96,310 of 99,441 orders (96.86%%) qualify; 3,131 are excluded (2,964 MISSING_CUSTOMER_DATE, 166 INVALID_SEQUENCE, 1 MISSING_CARRIER_DATE)."}
+      - {name: in_analytical_window, source_column: fact_orders.in_analytical_window, applied_by_default: true, description: "Recommended default per docs/ANALYTICAL_WINDOW.md."}
+    null_behavior: >-
+      delivery_days is NULL whenever customer_delivery_timestamp is NULL --
+      verified never coerced to 0 (tests/test_delivery.py::test_missing_dates_produce_null_not_zero,
+      Step 2). NULL rows are excluded from the mean, not treated as 0-day
+      deliveries (which would badly understate the true average).
+    data_quality_requirements:
+      required_fields: ["fact_orders.purchase_timestamp", "fact_orders.customer_delivery_timestamp"]
+      minimum_observations: 30
+      missing_data_treatment: "Rows with delivery_data_quality_flag != VALID (MISSING_CUSTOMER_DATE, MISSING_CARRIER_DATE) are excluded, count exposed via excluded_invalid output field."
+      invalid_data_treatment: >-
+        INVALID_SEQUENCE rows (166, carrier_delivery_timestamp precedes
+        purchase_timestamp -- 121 within 1 hour, plausible clock-sync noise; 2
+        multi-day outliers including one 171-day discrepancy, per
+        docs/CANONICAL_DATA_MODEL.md) are EXCLUDED from this KPI, not silently
+        dropped without disclosure -- excluded_invalid count in output metadata
+        must include them explicitly.
+      coverage_threshold_pct: 90.0
+      confidence_implications: ">=90%% VALID coverage in scope => HIGH (full dataset is 96.86%%); 75-90%% => MEDIUM; <75%% => LOW."
+    drivers:
+      - {driver_name: carrier_days, relationship_type: deterministic_decomposition, description: "Time from purchase to carrier handoff (fact_orders.carrier_days) -- the first leg of total delivery time.", is_causal_claim: false}
+      - {driver_name: fulfillment_delay, relationship_type: deterministic_decomposition, description: "Time from carrier handoff to customer delivery, i.e. delivery_days - carrier_days -- the second leg.", is_causal_claim: false}
+      - {driver_name: estimated_vs_actual_delay, relationship_type: deterministic_decomposition, description: "fact_orders.delivery_delay_days (customer_delivery_timestamp - estimated_delivery_timestamp) -- whether the order beat or missed its promise, a related but distinct measure from raw delivery speed.", is_causal_claim: false}
+    materiality:
+      absolute_threshold: 1.0
+      relative_threshold: 10.0
+      statistical_threshold: 2.0
+      minimum_observations: 30
+      minimum_business_impact: 0.5
+      persistence_periods: 2
+      implemented: false
+      note: *materiality_note
+    supported_methods: ["time_series_aggregation", "period_over_period_change", "segmentation_by_declared_dimension", "distribution_analysis"]
+    lineage:
+      chain:
+        - {layer: kpi, reference: "avg_delivery_days"}
+        - {layer: semantic_definition, reference: "docs/CANONICAL_DATA_MODEL.md#delivery-fields"}
+        - {layer: canonical_table_field, reference: "fact_orders.delivery_days, fact_orders.delivery_data_quality_flag"}
+        - {layer: raw_table_column, reference: "orders.order_purchase_timestamp, orders.order_delivered_customer_date"}
+      traceable_to_raw: true
+    security:
+      kpi_classification: PUBLIC_ANALYTICAL
+      rationale: "Aggregate duration statistic, no identifiers."
+      excluded_from_llm_context_by_default: false
+    status: governed
+
+  # ============================================================
+  # 5. AVERAGE REVIEW SCORE (primary)
+  # ============================================================
+  - kpi_id: avg_review_score
+    name: "Average Review Score"
+    category: primary
+    description: "Mean customer satisfaction rating (1-5 stars), with two explicitly distinct aggregation variants."
+    business_purpose: >-
+      Answers "how satisfied are customers" -- the primary experience-quality
+      counterpart to the commercial KPIs (Revenue, Orders), and the KPI most
+      directly linked to unstructured evidence (review text) for future
+      investigation scenarios.
+    business_definition: >-
+      Per docs/REVIEW_GOVERNANCE.md, deduplication and aggregation are NOT the
+      same operation and are not conflated here. Two distinct, non-interchangeable
+      variants are defined (see aggregation_variants): an order-level
+      representative score (the executive-reporting default, using the
+      'latest review by review_answer_timestamp' dedup strategy ratified in
+      REVIEW_GOVERNANCE.md -- bias -0.0734 vs. the simple per-order average, the
+      smallest-magnitude bias of the three single-value strategies evaluated) and
+      a review-level average (every raw review row weighted equally, including
+      duplicate/multiple reviews per order). NEVER computed via 'highest score per
+      order' -- that strategy was quantitatively evaluated and rejected (bias
+      +0.3763, 0%% of rows biased downward -- cherry-picking, not a neutral choice).
+    formula: >-
+      PRIMARY (executive default): MEAN(agg_order_reviews.latest_review_score).
+      ALTERNATE (review-level): MEAN(fact_reviews.review_score), no dedup.
+    aggregation_variants:
+      - variant_id: order_level_representative
+        grain: "order (1 row per order that has >=1 review, 98,673 of 99,441)"
+        source: "agg_order_reviews.latest_review_score"
+        formula: "MEAN(agg_order_reviews.latest_review_score)"
+        is_default: true
+        description: >-
+          Uses the dedup strategy ratified in docs/REVIEW_GOVERNANCE.md (latest by
+          review_answer_timestamp). This is the default for executive/dashboard
+          reporting because it represents "the order's current, final sentiment"
+          without needing to define a review-level weighting scheme.
+      - variant_id: review_level_average
+        grain: "review (1 row per raw review record, 99,224 total, including 814 duplicate review_ids and all 547 multi-review orders)"
+        source: "fact_reviews.review_score"
+        formula: "MEAN(fact_reviews.review_score)"
+        is_default: false
+        description: >-
+          Every submitted review counts equally, regardless of which order it
+          belongs to. A customer who left 2 reviews for one order is counted
+          twice here, unlike the order-level variant. Must be explicitly labeled
+          "review-level average" whenever surfaced -- never presented as
+          interchangeable with the order-level figure (they differ: 4.0864 vs
+          4.0864 on the unfiltered full dataset, but diverge segment-by-segment
+          for any slice with a different mix of multi-review orders).
+      - variant_id: order_level_true_average
+        grain: "order (98,673)"
+        source: "agg_order_reviews.avg_review_score"
+        formula: "MEAN(agg_order_reviews.avg_review_score)"
+        is_default: false
+        description: >-
+          A third, general-purpose variant: the mean, ACROSS ORDERS, of each
+          order's own average score (itself a true aggregate over that order's
+          reviews, zero bias by construction vs. any single-review-selection
+          strategy). Recommended over the order_level_representative variant for
+          any distributional/statistical use case per docs/REVIEW_GOVERNANCE.md.
+    source_tables: ["agg_order_reviews", "fact_reviews"]
+    source_columns: ["agg_order_reviews.latest_review_score", "agg_order_reviews.avg_review_score", "fact_reviews.review_score"]
+    base_grain: "order (default variant) -- see aggregation_variants for the review-grain alternative"
+    aggregation: MEAN
+    time_column: "fact_orders.purchase_timestamp (joined via order_id) for the order-level variants; fact_reviews.review_creation_date for the review-level variant"
+    valid_time_window: *shared_window
+    dimensions:
+      - {name: month, source_table: fact_orders, source_column: purchase_timestamp, supported: true, security_classification: PUBLIC_ANALYTICAL}
+      - {name: customer_state, source_table: fact_orders, source_column: customer_state, supported: true, security_classification: PUBLIC_ANALYTICAL}
+      - {name: seller_state, source_table: dim_seller, source_column: seller_state, supported: false, security_classification: PUBLIC_ANALYTICAL, unsupported_reason: "A review attaches to an order, not to a specific item/seller. Multi-seller orders make per-seller_state attribution of one review score ambiguous. Not supported without a separately-defined attribution rule."}
+      - {name: seller, source_table: dim_seller, source_column: seller_id, supported: false, security_classification: INTERNAL, unsupported_reason: "Same reason as seller_state."}
+      - {name: product_category, source_table: dim_product, source_column: category_name_en, supported: false, security_classification: PUBLIC_ANALYTICAL, unsupported_reason: "Same reason as seller_state."}
+      - {name: product, source_table: dim_product, source_column: product_id, supported: false, security_classification: PUBLIC_ANALYTICAL, unsupported_reason: "Same reason as seller_state."}
+    filters:
+      - {name: in_analytical_window, source_column: fact_orders.in_analytical_window, applied_by_default: true, description: "Recommended default per docs/ANALYTICAL_WINDOW.md."}
+    null_behavior: >-
+      Orders with has_review=False (768 of 99,441) are absent from
+      agg_order_reviews and excluded from both order-level variants -- never
+      scored as 0 or imputed with a placeholder rating.
+    data_quality_requirements:
+      required_fields: ["order_reviews.review_score", "order_reviews.order_id", "order_reviews.review_answer_timestamp"]
+      minimum_observations: 30
+      missing_data_treatment: "Orders without any review are excluded, not zero/null-score-filled."
+      invalid_data_treatment: "review_score is verified to always fall within 1-5 (Step 1 audit, 0 out-of-range values found)."
+      coverage_threshold_pct: 90.0
+      confidence_implications: ">=90%% has_review coverage in scope => HIGH (full dataset is 99.23%%); 75-90%% => MEDIUM; <75%% => LOW."
+    drivers:
+      - {driver_name: score_distribution, relationship_type: statistical_association, description: "Shape of the 1-5 distribution (this dataset: strongly right-skewed, 57.8%% 5-star) -- a mean alone can mask a bimodal or shifting distribution.", is_causal_claim: false}
+      - {driver_name: low_score_share, relationship_type: statistical_association, description: "Share of reviews scoring 1-2 stars -- can move independently of the mean if the shift is concentrated in the tails.", is_causal_claim: false}
+      - {driver_name: review_text_evidence, relationship_type: qualitative_evidence, description: "review_comment_message content. Step 1 found a concrete case (docs/INVESTIGATION_SCENARIOS.md, Contradiction 1): 7.48%% of orders delivered >=5 days early still scored <=2, and sampled text showed the real complaint was product/fulfillment quality, not delivery speed -- structured score movement alone would not reveal this.", is_causal_claim: false}
+    materiality:
+      absolute_threshold: 0.1
+      relative_threshold: 5.0
+      statistical_threshold: 2.0
+      minimum_observations: 30
+      minimum_business_impact: 0.05
+      persistence_periods: 2
+      implemented: false
+      note: *materiality_note
+    supported_methods: ["time_series_aggregation", "period_over_period_change", "segmentation_by_declared_dimension", "distribution_analysis"]
+    lineage:
+      chain:
+        - {layer: kpi, reference: "avg_review_score"}
+        - {layer: semantic_definition, reference: "docs/REVIEW_GOVERNANCE.md"}
+        - {layer: canonical_table_field, reference: "agg_order_reviews.latest_review_score"}
+        - {layer: raw_table_column, reference: "order_reviews.review_score, order_reviews.review_answer_timestamp"}
+      traceable_to_raw: true
+    security:
+      kpi_classification: PUBLIC_ANALYTICAL
+      rationale: "Aggregate satisfaction statistic; review text (a separate field, not this KPI's value) may carry incidental self-disclosed information per Step 1's PII audit and should be governed separately before any RAG use."
+      excluded_from_llm_context_by_default: false
+    review_governance_reference: "docs/REVIEW_GOVERNANCE.md#decision-use-case-specific-not-one-global-rule"
+    status: governed
+
+  # ============================================================
+  # 6. FREIGHT REVENUE (supporting)
+  # ============================================================
+  - kpi_id: freight_revenue
+    name: "Freight Revenue"
+    category: supporting
+    description: "Total shipping cost charged to customers, order-item grain summed to order grain."
+    business_purpose: >-
+      Answers "how much shipping cost is the marketplace collecting" -- supports
+      logistics-cost and freight-as-share-of-GMV analysis, and is one component of
+      item_gmv_total alongside Revenue.
+    business_definition: "SUM(order_items.freight_value), aggregated to order grain first, same discipline as Revenue."
+    formula: "SUM(order_items.freight_value) GROUP BY order_id, then summed by dimension. Equivalent to SUM(agg_order_items.item_freight_total)."
+    source_tables: ["agg_order_items", "fact_order_items"]
+    source_columns: ["agg_order_items.item_freight_total", "fact_order_items.freight_value"]
+    base_grain: "order (pre-aggregated from order_item grain, same as Revenue)"
+    aggregation: SUM
+    time_column: "fact_orders.purchase_timestamp (joined via order_id)"
+    valid_time_window: *shared_window
+    dimensions:
+      - {name: month, source_table: fact_orders, source_column: purchase_timestamp, supported: true, security_classification: PUBLIC_ANALYTICAL}
+      - {name: product_category, source_table: dim_product, source_column: category_name_en, supported: true, security_classification: PUBLIC_ANALYTICAL}
+      - {name: customer_state, source_table: fact_orders, source_column: customer_state, supported: true, security_classification: PUBLIC_ANALYTICAL}
+      - {name: seller_state, source_table: dim_seller, source_column: seller_state, supported: true, security_classification: PUBLIC_ANALYTICAL}
+      - {name: seller, source_table: dim_seller, source_column: seller_id, supported: true, security_classification: INTERNAL}
+      - {name: product, source_table: dim_product, source_column: product_id, supported: true, security_classification: PUBLIC_ANALYTICAL}
+    filters:
+      - {name: order_status, source_column: fact_orders.order_status, applied_by_default: false, description: "Same unresolved default as Revenue."}
+      - {name: in_analytical_window, source_column: fact_orders.in_analytical_window, applied_by_default: true, description: "Recommended default per docs/ANALYTICAL_WINDOW.md."}
+    null_behavior: "Orders without order_items (775) contribute nothing -- absent, not zero-filled. 383 order_items rows have freight_value == 0 (legitimate free-shipping line items, per Step 1) which IS a valid zero, distinct from missing data."
+    data_quality_requirements:
+      required_fields: ["order_items.freight_value", "order_items.order_id"]
+      minimum_observations: 30
+      missing_data_treatment: "Orders with has_items=False excluded, never zero-filled."
+      invalid_data_treatment: "No negative freight_value found in Step 1 audit."
+      coverage_threshold_pct: 95.0
+      confidence_implications: "Same coverage logic as Revenue (shares the same source rows)."
+    drivers:
+      - {driver_name: shipping_volume, relationship_type: deterministic_decomposition, description: "Count of order_items shipped.", is_causal_claim: false}
+      - {driver_name: freight_per_item_rate, relationship_type: deterministic_decomposition, description: "Average freight charge per item.", is_causal_claim: false}
+      - {driver_name: seller_state_geography_mix, relationship_type: statistical_association, description: "Freight cost plausibly varies with seller-to-customer distance; seller base is heavily concentrated in SP (~61%% of item-level revenue per Step 1), so geography mix shifts could move this KPI.", is_causal_claim: false}
+    materiality:
+      absolute_threshold: 5000
+      relative_threshold: 15.0
+      statistical_threshold: 2.0
+      minimum_observations: 30
+      minimum_business_impact: 2000
+      persistence_periods: 2
+      implemented: false
+      note: *materiality_note
+    supported_methods: ["time_series_aggregation", "period_over_period_change", "segmentation_by_declared_dimension"]
+    lineage:
+      chain:
+        - {layer: kpi, reference: "freight_revenue"}
+        - {layer: semantic_definition, reference: "config/kpis.yaml#freight_revenue"}
+        - {layer: canonical_table_field, reference: "agg_order_items.item_freight_total"}
+        - {layer: raw_table_column, reference: "order_items.freight_value"}
+      traceable_to_raw: true
+    security:
+      kpi_classification: PUBLIC_ANALYTICAL
+      rationale: "Aggregate monetary total, no identifiers."
+      excluded_from_llm_context_by_default: false
+    status: governed
+
+  # ============================================================
+  # 7. REVIEW VOLUME (supporting)
+  # ============================================================
+  - kpi_id: review_volume
+    name: "Review Volume"
+    category: supporting
+    description: "Count of review records submitted, review grain (not deduplicated)."
+    business_purpose: >-
+      Answers "how much customer feedback is being generated" -- an engagement
+      metric distinct from Average Review Score (which measures sentiment, not
+      volume), and the denominator context for any review-score confidence read.
+    business_definition: >-
+      COUNT of raw review rows (fact_reviews), NOT deduplicated to order grain --
+      per docs/REVIEW_GOVERNANCE.md this table intentionally retains all 99,224
+      raw rows including 814 duplicate review_ids and all 547 multi-review orders,
+      because review VOLUME is a review-level, not order-level, concept.
+    formula: "COUNT(fact_reviews.review_row_id)"
+    source_tables: ["fact_reviews"]
+    source_columns: ["fact_reviews.review_row_id", "fact_reviews.review_creation_date"]
+    base_grain: "review (1 row per raw review record)"
+    aggregation: COUNT
+    time_column: "fact_reviews.review_creation_date"
+    valid_time_window: *shared_window
+    dimensions:
+      - {name: month, source_table: fact_reviews, source_column: review_creation_date, supported: true, security_classification: PUBLIC_ANALYTICAL, notes: "Anchored to review_creation_date, NOT the order's purchase month -- a review submitted in month X can correspond to an order purchased in an earlier month. Do not conflate with other KPIs' purchase-month time series without an explicit join."}
+      - {name: customer_state, source_table: fact_orders, source_column: customer_state, supported: true, security_classification: PUBLIC_ANALYTICAL, notes: "Joined via fact_reviews.order_id -> fact_orders.customer_id -> dim_customer -- a 1:1 order attribute, safe."}
+      - {name: seller_state, source_table: dim_seller, source_column: seller_state, supported: false, security_classification: PUBLIC_ANALYTICAL, unsupported_reason: "A review attaches to an order, not a specific item/seller -- same ambiguity as avg_review_score's unsupported dimensions."}
+      - {name: seller, source_table: dim_seller, source_column: seller_id, supported: false, security_classification: INTERNAL, unsupported_reason: "Same reason as seller_state."}
+      - {name: product_category, source_table: dim_product, source_column: category_name_en, supported: false, security_classification: PUBLIC_ANALYTICAL, unsupported_reason: "Same reason as seller_state."}
+      - {name: product, source_table: dim_product, source_column: product_id, supported: false, security_classification: PUBLIC_ANALYTICAL, unsupported_reason: "Same reason as seller_state."}
+    filters:
+      - {name: has_text, source_column: fact_reviews.has_text, applied_by_default: false, description: "Optionally restrict to reviews carrying free text (41.27%% of all reviews per Step 1) -- a materially different, smaller population; off by default because 'review volume' includes score-only reviews."}
+      - {name: in_analytical_window, source_column: fact_orders.in_analytical_window, applied_by_default: true, description: "Recommended default; note this requires the join to fact_orders described in the customer_state dimension, since fact_reviews itself carries no purchase-window flag."}
+    null_behavior: "review_row_id is a generated surrogate key, never null by construction -- every raw row is counted exactly once."
+    data_quality_requirements:
+      required_fields: ["order_reviews.review_id"]
+      minimum_observations: 1
+      missing_data_treatment: "Not applicable -- a count is always well-defined."
+      invalid_data_treatment: "Not applicable."
+      coverage_threshold_pct: 100.0
+      confidence_implications: "Always HIGH confidence -- this is a raw row count with no missingness possible."
+    drivers:
+      - {driver_name: order_volume_lagged, relationship_type: deterministic_decomposition, description: "Reviews are submitted after an order's delivery/purchase, so review volume mechanically tracks order volume with a lag (review_creation_date trails order_purchase_timestamp).", is_causal_claim: false}
+      - {driver_name: review_request_response_rate, relationship_type: statistical_association, description: "Share of delivered orders that ever receive a review (768 of 99,441 orders, 0.77%%, never do).", is_causal_claim: false}
+    materiality:
+      absolute_threshold: 100
+      relative_threshold: 15.0
+      statistical_threshold: 2.0
+      minimum_observations: 30
+      minimum_business_impact: 50
+      persistence_periods: 2
+      implemented: false
+      note: *materiality_note
+    supported_methods: ["time_series_aggregation", "period_over_period_change", "segmentation_by_declared_dimension"]
+    lineage:
+      chain:
+        - {layer: kpi, reference: "review_volume"}
+        - {layer: semantic_definition, reference: "docs/REVIEW_GOVERNANCE.md"}
+        - {layer: canonical_table_field, reference: "fact_reviews.review_row_id"}
+        - {layer: raw_table_column, reference: "order_reviews.review_id"}
+      traceable_to_raw: true
+    security:
+      kpi_classification: PUBLIC_ANALYTICAL
+      rationale: "A count; the underlying review text (a different field) carries its own separate governance per Step 1's PII audit."
+      excluded_from_llm_context_by_default: false
+    review_governance_reference: "docs/REVIEW_GOVERNANCE.md#decision-use-case-specific-not-one-global-rule"
+    status: governed
+
+  # ============================================================
+  # 8. ON-TIME DELIVERY RATE (supporting)
+  # ============================================================
+  - kpi_id: on_time_delivery_rate
+    name: "On-Time Delivery Rate"
+    category: supporting
+    description: "Share of valid-delivery orders delivered on or before the estimated delivery date."
+    business_purpose: >-
+      Answers "does Causa keep its delivery promise" -- a promise-keeping metric
+      distinct from Average Delivery Days (raw speed); an order can be slow in
+      absolute terms yet still on-time if the estimate was conservative.
+    business_definition: >-
+      Among orders with delivery_data_quality_flag = 'VALID' (same population as
+      Average Delivery Days, for consistency), the share where
+      delivery_delay_days <= 0 (i.e. customer_delivery_timestamp <=
+      estimated_delivery_timestamp).
+    formula: "COUNT(orders WHERE flag='VALID' AND delivery_delay_days <= 0) / COUNT(orders WHERE flag='VALID')"
+    ratio:
+      numerator: "COUNT(fact_orders WHERE delivery_data_quality_flag='VALID' AND delivery_delay_days<=0)"
+      denominator: "COUNT(fact_orders WHERE delivery_data_quality_flag='VALID')"
+      zero_denominator_behavior: "NULL/undefined if zero orders in scope have valid delivery data (possible for a heavily filtered slice); never reported as 0%% or 100%%."
+    source_tables: ["fact_orders"]
+    source_columns: ["fact_orders.delivery_delay_days", "fact_orders.delivery_data_quality_flag", "fact_orders.estimated_delivery_timestamp", "fact_orders.customer_delivery_timestamp"]
+    base_grain: "order"
+    aggregation: RATIO
+    time_column: "fact_orders.purchase_timestamp"
+    valid_time_window: *shared_window
+    dimensions:
+      - {name: month, source_table: fact_orders, source_column: purchase_timestamp, supported: true, security_classification: PUBLIC_ANALYTICAL}
+      - {name: customer_state, source_table: fact_orders, source_column: customer_state, supported: true, security_classification: PUBLIC_ANALYTICAL}
+      - {name: seller_state, source_table: dim_seller, source_column: seller_state, supported: false, security_classification: PUBLIC_ANALYTICAL, unsupported_reason: "Same order-vs-item-grain ambiguity as avg_delivery_days."}
+      - {name: seller, source_table: dim_seller, source_column: seller_id, supported: false, security_classification: INTERNAL, unsupported_reason: "Same reason as seller_state."}
+      - {name: product_category, source_table: dim_product, source_column: category_name_en, supported: false, security_classification: PUBLIC_ANALYTICAL, unsupported_reason: "Same reason as seller_state."}
+      - {name: product, source_table: dim_product, source_column: product_id, supported: false, security_classification: PUBLIC_ANALYTICAL, unsupported_reason: "Same reason as seller_state."}
+    filters:
+      - {name: delivery_data_quality_flag, source_column: fact_orders.delivery_data_quality_flag, applied_by_default: true, default_value: "VALID", description: "MANDATORY, same population as avg_delivery_days for consistency between the two delivery KPIs."}
+      - {name: in_analytical_window, source_column: fact_orders.in_analytical_window, applied_by_default: true, description: "Recommended default per docs/ANALYTICAL_WINDOW.md."}
+    null_behavior: "Orders outside the VALID population are excluded from both numerator and denominator, not treated as on-time or late by default."
+    data_quality_requirements:
+      required_fields: ["fact_orders.customer_delivery_timestamp", "fact_orders.estimated_delivery_timestamp"]
+      minimum_observations: 30
+      missing_data_treatment: "Same as avg_delivery_days -- non-VALID rows excluded."
+      invalid_data_treatment: "Same as avg_delivery_days -- INVALID_SEQUENCE rows excluded, count disclosed."
+      coverage_threshold_pct: 90.0
+      confidence_implications: "Same coverage logic as avg_delivery_days."
+    drivers:
+      - {driver_name: delivery_delay_days_distribution, relationship_type: deterministic_decomposition, description: "This rate is a threshold-count (<=0) over the same signed delivery_delay_days distribution avg_delivery_days' driver graph references.", is_causal_claim: false}
+      - {driver_name: carrier_performance_variability, relationship_type: statistical_association, description: "Variability in carrier_days across orders.", is_causal_claim: false}
+      - {driver_name: estimate_calibration, relationship_type: statistical_association, description: "This rate can move because delivery got faster/slower OR because estimated_delivery_timestamp itself became more/less conservative -- the two are observationally different but this KPI alone cannot distinguish them.", is_causal_claim: false}
+    materiality:
+      absolute_threshold: 2.0
+      relative_threshold: 10.0
+      statistical_threshold: 2.0
+      minimum_observations: 30
+      minimum_business_impact: 1.0
+      persistence_periods: 2
+      implemented: false
+      note: *materiality_note
+    supported_methods: ["time_series_aggregation", "period_over_period_change", "segmentation_by_declared_dimension", "distribution_analysis"]
+    lineage:
+      chain:
+        - {layer: kpi, reference: "on_time_delivery_rate"}
+        - {layer: semantic_definition, reference: "docs/CANONICAL_DATA_MODEL.md#delivery-fields"}
+        - {layer: canonical_table_field, reference: "fact_orders.delivery_delay_days, fact_orders.delivery_data_quality_flag"}
+        - {layer: raw_table_column, reference: "orders.order_delivered_customer_date, orders.order_estimated_delivery_date"}
+      traceable_to_raw: true
+    security:
+      kpi_classification: PUBLIC_ANALYTICAL
+      rationale: "Aggregate rate, no identifiers."
+      excluded_from_llm_context_by_default: false
+    status: governed
+
+  # ============================================================
+  # 9. QUANTITY SOLD (supporting)
+  # ============================================================
+  - kpi_id: quantity_sold
+    name: "Quantity Sold"
+    category: supporting
+    description: "Count of order-item units sold, line-item grain."
+    business_purpose: >-
+      Answers "how many units is the marketplace moving" -- the Volume term in
+      the Revenue driver graph (Revenue = Price x Volume x Mix), needed for any
+      future PVM decomposition.
+    business_definition: "COUNT of order_items rows (each row = 1 unit of 1 product sold in 1 order)."
+    formula: "COUNT(order_items.order_item_id)"
+    source_tables: ["fact_order_items", "agg_order_items"]
+    source_columns: ["fact_order_items.order_item_id", "agg_order_items.item_count"]
+    base_grain: "order_item (native line-item grain, the finest grain in the canonical layer)"
+    aggregation: COUNT
+    time_column: "fact_orders.purchase_timestamp (joined via order_id)"
+    valid_time_window: *shared_window
+    dimensions:
+      - {name: month, source_table: fact_orders, source_column: purchase_timestamp, supported: true, security_classification: PUBLIC_ANALYTICAL}
+      - {name: product_category, source_table: dim_product, source_column: category_name_en, supported: true, security_classification: PUBLIC_ANALYTICAL}
+      - {name: customer_state, source_table: fact_orders, source_column: customer_state, supported: true, security_classification: PUBLIC_ANALYTICAL}
+      - {name: seller_state, source_table: dim_seller, source_column: seller_state, supported: true, security_classification: PUBLIC_ANALYTICAL}
+      - {name: seller, source_table: dim_seller, source_column: seller_id, supported: true, security_classification: INTERNAL}
+      - {name: product, source_table: dim_product, source_column: product_id, supported: true, security_classification: PUBLIC_ANALYTICAL}
+    filters:
+      - {name: order_status, source_column: fact_orders.order_status, applied_by_default: false, description: "Same unresolved default as Revenue."}
+      - {name: in_analytical_window, source_column: fact_orders.in_analytical_window, applied_by_default: true, description: "Recommended default per docs/ANALYTICAL_WINDOW.md."}
+    null_behavior: "order_item_id is never null (verified composite-PK uniqueness, Step 2) -- no null-handling ambiguity."
+    data_quality_requirements:
+      required_fields: ["order_items.order_item_id", "order_items.order_id"]
+      minimum_observations: 30
+      missing_data_treatment: "Not applicable at the item grain -- every existing row is counted."
+      invalid_data_treatment: "Not applicable."
+      coverage_threshold_pct: 100.0
+      confidence_implications: "Always HIGH confidence at the item grain; sparse-history caveats (docs/INVESTIGATION_SCENARIOS.md: 98.83%% of products have <30 observed sales, median 1) apply when slicing by product -- a per-product quantity figure with n<30 should be flagged LOW regardless of this KPI's own data quality."
+    drivers:
+      - {driver_name: order_volume, relationship_type: deterministic_decomposition, description: "Quantity = Orders x average items per order.", is_causal_claim: false}
+      - {driver_name: items_per_order, relationship_type: deterministic_decomposition, description: "Average basket size.", is_causal_claim: false}
+      - {driver_name: category_demand_mix, relationship_type: statistical_association, description: "Shift in which categories customers are buying from.", is_causal_claim: false}
+    materiality:
+      absolute_threshold: 500
+      relative_threshold: 15.0
+      statistical_threshold: 2.0
+      minimum_observations: 30
+      minimum_business_impact: 200
+      persistence_periods: 2
+      implemented: false
+      note: *materiality_note
+    supported_methods: ["time_series_aggregation", "period_over_period_change", "segmentation_by_declared_dimension", "deterministic_pvm_decomposition"]
+    lineage:
+      chain:
+        - {layer: kpi, reference: "quantity_sold"}
+        - {layer: semantic_definition, reference: "config/kpis.yaml#quantity_sold"}
+        - {layer: canonical_table_field, reference: "agg_order_items.item_count"}
+        - {layer: raw_table_column, reference: "order_items.order_item_id"}
+      traceable_to_raw: true
+    security:
+      kpi_classification: PUBLIC_ANALYTICAL
+      rationale: "A count, no identifiers."
+      excluded_from_llm_context_by_default: false
+    status: governed
+
+  # ============================================================
+  # 10. REPEAT PURCHASE RATE (supporting)
+  # ============================================================
+  - kpi_id: repeat_purchase_rate
+    name: "Repeat Purchase Rate"
+    category: supporting
+    description: "Share of distinct real customers (by customer_unique_id) who placed 2 or more orders."
+    business_purpose: >-
+      Answers "how much repeat business does Causa generate" -- a loyalty/
+      retention signal. Baseline in this dataset is low (3.12%%), itself a
+      material finding worth surfacing, not just a KPI to compute.
+    business_definition: >-
+      MUST use customer_unique_id (person-level identity), NEVER customer_id
+      (order-scoped identity, re-issued per order) -- using customer_id would
+      mechanically produce a 0.00%% repeat rate by construction, which is a
+      category error, not a real finding. Per this task's explicit instruction
+      and docs/CANONICAL_DATA_MODEL.md's customer-identity design.
+    formula: "COUNT(DISTINCT customer_unique_id WHERE order_count >= 2) / COUNT(DISTINCT customer_unique_id)"
+    ratio:
+      numerator: "COUNT(DISTINCT customer_unique_id) among customers with >=2 orders, computed by joining fact_orders.customer_id -> dim_customer.customer_unique_id and counting orders per customer_unique_id"
+      denominator: "COUNT(DISTINCT customer_unique_id) over the same scope"
+      zero_denominator_behavior: "NULL/undefined if zero customers exist in scope (cannot occur at the full-dataset grain; possible for a heavily filtered slice)."
+    source_tables: ["dim_customer", "fact_orders"]
+    source_columns: ["dim_customer.customer_unique_id", "fact_orders.customer_id", "fact_orders.order_id"]
+    base_grain: "customer_unique_id (person-level -- NOT order grain and NOT customer_id grain)"
+    aggregation: RATIO
+    time_column: "fact_orders.purchase_timestamp (used only for optional cohort-month bucketing by a customer's FIRST order date; this KPI is fundamentally a whole-population/cohort statistic, not a simple point-in-time slice -- see unresolved_semantic_decisions)"
+    valid_time_window: *shared_window
+    dimensions:
+      - {name: month, source_table: fact_orders, source_column: purchase_timestamp, supported: true, security_classification: PUBLIC_ANALYTICAL, notes: "Only meaningful as a COHORT month (customer's first order month), never as a naive per-month slice -- repeat status is a property of a customer's whole history, not any single period. Cohort-month bucketing logic is NOT implemented in this contract; declaring it supported here means 'the source data permits it,' not 'a ready-made query exists.'"}
+      - {name: customer_state, source_table: dim_customer, source_column: customer_state, supported: false, security_classification: PUBLIC_ANALYTICAL, unsupported_reason: "customer_state lives on dim_customer at customer_id (order-scoped) grain, not customer_unique_id grain -- a repeat customer's orders can carry different customer_state values across order rows (e.g. if they moved). No rule is defined here for resolving 'the' state of a customer_unique_id with conflicting per-order states, so this dimension is not supported until one is."}
+      - {name: seller_state, source_table: dim_seller, source_column: seller_state, supported: false, security_classification: PUBLIC_ANALYTICAL, unsupported_reason: "Not a customer-grain attribute at all; would require attributing a customer's repeat status to a seller, which is a different, undefined statistic."}
+      - {name: seller, source_table: dim_seller, source_column: seller_id, supported: false, security_classification: INTERNAL, unsupported_reason: "Same reason as seller_state."}
+      - {name: product_category, source_table: dim_product, source_column: category_name_en, supported: false, security_classification: PUBLIC_ANALYTICAL, unsupported_reason: "Same reason as seller_state -- 'repeat customers of category X' is a real, useful, but different and undefined statistic (e.g. does it mean 2+ orders both containing category X, or 2+ orders where at least one contains it?)."}
+      - {name: product, source_table: dim_product, source_column: product_id, supported: false, security_classification: PUBLIC_ANALYTICAL, unsupported_reason: "Same reason as product_category."}
+    filters:
+      - {name: order_status, source_column: fact_orders.order_status, applied_by_default: false, description: "Whether a canceled order counts toward a customer's order_count is not decided -- off by default (canceled orders currently count, matching the Orders KPI's all-statuses default)."}
+      - {name: in_analytical_window, source_column: fact_orders.in_analytical_window, applied_by_default: false, description: "OFF by default for this KPI specifically -- a customer's 1st order could fall outside the window while their 2nd falls inside (or vice versa); naively filtering fact_orders to the window before counting per-customer order counts would undercount genuine repeat customers whose orders straddle the window boundary. This is the opposite default from every other KPI in this registry and is a deliberate, documented exception."}
+    null_behavior: "customer_unique_id is never null (0%% null, verified Step 1 and Step 2's customer_identity_valid flag) -- no null-handling ambiguity for the identity itself."
+    data_quality_requirements:
+      required_fields: ["customers.customer_unique_id", "customers.customer_id", "orders.customer_id"]
+      minimum_observations: 100
+      missing_data_treatment: "Not applicable -- customer_unique_id has 0%% nulls."
+      invalid_data_treatment: "Not applicable."
+      coverage_threshold_pct: 95.0
+      confidence_implications: >-
+        This is a rare-event rate (3.12%% baseline) -- a segment needs
+        substantially more total customers than a typical mean-based KPI to
+        produce a stable estimate, hence minimum_observations=100 rather than the
+        30 used elsewhere in this registry.
+    drivers:
+      - {driver_name: customer_tenure, relationship_type: statistical_association, description: "Longer-tenured cohorts have had more calendar time to place a 2nd order -- a censoring effect (right-truncation at the dataset's 2018-10 cutoff), not necessarily a change in loyalty behavior. Must be accounted for before comparing cohorts.", is_causal_claim: false}
+      - {driver_name: category_stickiness, relationship_type: statistical_association, description: "Hypothesis: certain product categories (e.g. consumables) may show higher repeat rates than others (e.g. furniture) -- not tested in this registry.", is_causal_claim: false}
+      - {driver_name: first_order_experience, relationship_type: qualitative_evidence, description: "Hypothesis: a customer's first-order review score/delivery experience plausibly correlates with return likelihood -- not tested in this dataset; would require a specific cohort study, not a standard KPI slice.", is_causal_claim: false}
+    materiality:
+      absolute_threshold: 0.5
+      relative_threshold: 10.0
+      statistical_threshold: 2.0
+      minimum_observations: 100
+      minimum_business_impact: 0.2
+      persistence_periods: 3
+      implemented: false
+      note: *materiality_note
+    supported_methods: ["cohort_analysis", "segmentation_by_declared_dimension"]
+    lineage:
+      chain:
+        - {layer: kpi, reference: "repeat_purchase_rate"}
+        - {layer: semantic_definition, reference: "docs/CANONICAL_DATA_MODEL.md#customer-identity-dim_customer"}
+        - {layer: canonical_table_field, reference: "dim_customer.customer_unique_id"}
+        - {layer: raw_table_column, reference: "customers.customer_unique_id, customers.customer_id"}
+      traceable_to_raw: true
+    security:
+      kpi_classification: PUBLIC_ANALYTICAL
+      rationale: >-
+        The RATE (a percentage) is an aggregate with no individual identifiers.
+        The underlying customer_unique_id / customer_id VALUES used to compute it
+        are RESTRICTED (see security.excluded_from_llm_context_by_default) and
+        must never be surfaced individually to any future LLM/agent context --
+        only the final aggregate rate is PUBLIC_ANALYTICAL.
+      excluded_from_llm_context_by_default: false
+    unresolved_semantic_decisions:
+      - "Cohort-month bucketing logic (grouping customers by first-order month) is declared supported at the data level but not implemented as a ready query in this contract."
+      - "Whether canceled orders should count toward a customer's order_count is not decided -- currently they do, by default, matching the Orders KPI."
+    status: governed

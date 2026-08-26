@@ -1,0 +1,162 @@
+{
+  "step": 2,
+  "test_results": {
+    "returncode": 0,
+    "n_passed": 62,
+    "n_failed": 0,
+    "failed_tests": [],
+    "all_passed": true,
+    "raw_summary_tail": [
+      "tests/test_delivery.py ..........                                        [ 16%]",
+      "tests/test_fanout.py .....                                               [ 24%]",
+      "tests/test_keys.py ..............                                        [ 46%]",
+      "tests/test_relationships.py ..................                           [ 75%]",
+      "tests/test_revenue.py .......                                            [ 87%]",
+      "tests/test_reviews.py ........                                           [100%]",
+      "",
+      "============================== 62 passed in 3.66s =============================="
+    ]
+  },
+  "analytical_window_decision": {
+    "start": "2017-01",
+    "end": "2018-08",
+    "method": "10% of the median monthly order count across all months with >0 orders, computed fresh from raw data. Cross-validated against delivery/review/items coverage percentages per month (see cross_validation) rather than trusted on volume alone.",
+    "excluded_months": {
+      "2016-09": 4,
+      "2016-10": 324,
+      "2016-12": 1,
+      "2018-09": 16,
+      "2018-10": 4
+    }
+  },
+  "canonical_row_counts": {
+    "dim_customer": 99441,
+    "dim_product": 32951,
+    "dim_seller": 3095,
+    "fact_orders": 99441,
+    "fact_order_items": 112650,
+    "fact_payments": 103886,
+    "fact_reviews": 99224,
+    "agg_order_items": 98666,
+    "agg_order_payments": 99440,
+    "agg_order_reviews": 98673
+  },
+  "raw_row_counts": {
+    "customers": 99441,
+    "orders": 99441,
+    "order_items": 112650,
+    "order_payments": 103886,
+    "order_reviews": 99224,
+    "products": 32951,
+    "sellers": 3095,
+    "geolocation": 1000163,
+    "category_translation": 71
+  },
+  "row_count_reconciliation": {
+    "fact_orders_vs_raw_orders": {
+      "raw": 99441,
+      "canonical": 99441,
+      "dropped": 0,
+      "reason": "no rows dropped -- fact_orders is 1:1 with raw orders by design"
+    },
+    "fact_order_items_vs_raw_order_items": {
+      "raw": 112650,
+      "canonical": 112650,
+      "dropped": 0,
+      "reason": "no rows dropped -- native grain preserved exactly"
+    },
+    "fact_payments_vs_raw_order_payments": {
+      "raw": 103886,
+      "canonical": 103886,
+      "dropped": 0,
+      "reason": "no rows dropped -- native grain preserved exactly"
+    },
+    "fact_reviews_vs_raw_order_reviews": {
+      "raw": 99224,
+      "canonical": 99224,
+      "dropped": 0,
+      "reason": "no rows dropped -- native grain preserved exactly, including 814 duplicate review_id rows and all 547 multi-review orders; a surrogate review_row_id was ADDED (not a drop) as the real PK"
+    },
+    "agg_order_items_vs_raw_orders": {
+      "raw": 99441,
+      "canonical": 98666,
+      "dropped": 775,
+      "reason": "775 orders have zero order_items rows and are therefore absent from this order-level aggregate by construction (NOT zero-filled) -- see fact_orders.has_items to detect these"
+    },
+    "agg_order_payments_vs_raw_orders": {
+      "raw": 99441,
+      "canonical": 99440,
+      "dropped": 1,
+      "reason": "1 order(s) have zero payment rows and are therefore absent (NOT zero-filled) -- see fact_orders.has_payment"
+    },
+    "agg_order_reviews_vs_raw_orders": {
+      "raw": 99441,
+      "canonical": 98673,
+      "dropped": 768,
+      "reason": "768 orders have zero review rows and are therefore absent (NOT zero-filled) -- see fact_orders.has_review"
+    },
+    "dim_product_category_resolution": {
+      "TRANSLATED": 32328,
+      "NULL_CATEGORY": 610,
+      "UNTRANSLATED": 13
+    }
+  },
+  "transformed_records": {
+    "fact_orders_delivery_flags": {
+      "VALID": 96310,
+      "MISSING_CUSTOMER_DATE": 2964,
+      "INVALID_SEQUENCE": 166,
+      "MISSING_CARRIER_DATE": 1
+    },
+    "fact_orders_in_analytical_window": 99092,
+    "fact_orders_outside_analytical_window": 349,
+    "invalid_sequence_orders_sample": [
+      "b9afddbdcfadc9a87b41a83271c3e888",
+      "ad133696906f6a78826daa0911b7daec",
+      "74e033208dc13a7b8127eb8e73d09b76",
+      "a6b58794fd2ba533359a76c08df576e3",
+      "5792e0b1c8c8a2bf53af468c9a422c88",
+      "c3eb293fd154223498b6551a728203e8",
+      "b0c2a7d04b165525254254a728c50a4e",
+      "2033a4586b5bec3229ebc1675a8ae092",
+      "08adcddad19d3acf37d1fa01cb9ded1e",
+      "dee6298ce7d1fb2645141ef9972157aa"
+    ]
+  },
+  "revenue_reconciliation_summary": {
+    "matched_within_1_cent": 98284,
+    "matched_pct": 99.6138,
+    "mismatched_count": 381,
+    "mismatched_pct": 0.3862,
+    "pct_of_mismatches_where_payment_exceeds_items": 0.29,
+    "pct_of_mismatches_where_payment_is_less_than_items": 0.09
+  },
+  "review_dedup_strategies_summary": {
+    "latest_review_answer_timestamp": {
+      "mean_score": 4.0864,
+      "text_coverage_pct": 41.3,
+      "bias": -0.0734
+    },
+    "earliest_review_creation_date": {
+      "mean_score": 4.0873,
+      "text_coverage_pct": 41.31,
+      "bias": 0.0948
+    },
+    "highest_review_score": {
+      "mean_score": 4.0889,
+      "text_coverage_pct": 41.27,
+      "bias": 0.3763
+    },
+    "retain_all_no_dedup": {
+      "mean_score": 4.0864,
+      "text_coverage_pct": 41.27,
+      "bias": -0.0
+    }
+  },
+  "source_reports": [
+    "reports/step2_window_analysis.json",
+    "reports/step2_revenue_reconciliation.json",
+    "reports/step2_review_dedup_comparison.json",
+    "reports/step2_build_summary.json"
+  ]
+}

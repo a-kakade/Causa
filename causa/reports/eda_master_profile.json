@@ -1,0 +1,1372 @@
+{
+  "meta": {
+    "generated": "2026-08-26",
+    "source": "archive.zip -> data/raw/olist/ (Kaggle Brazilian E-Commerce Public Dataset by Olist)",
+    "reliable_temporal_window": "2017-01 through 2018-08 (see DATA_QUALITY_REPORT.md section 2)",
+    "scripts": [
+      "scripts/profile_olist.py",
+      "scripts/kpi_temporal_eda.py",
+      "scripts/text_and_entity_eda.py",
+      "scripts/join_driver_anomaly_eda.py"
+    ]
+  },
+  "schema_profile": {
+    "tables": {
+      "customers": {
+        "n_rows": 99441,
+        "n_cols": 5,
+        "duplicate_rows": 0,
+        "columns": {
+          "customer_id": {
+            "dtype": "str",
+            "n_null": 0,
+            "null_rate": 0.0,
+            "n_unique": 99441
+          },
+          "customer_unique_id": {
+            "dtype": "str",
+            "n_null": 0,
+            "null_rate": 0.0,
+            "n_unique": 96096
+          },
+          "customer_zip_code_prefix": {
+            "dtype": "int64",
+            "n_null": 0,
+            "null_rate": 0.0,
+            "n_unique": 14994,
+            "min": 1003.0,
+            "max": 99990.0
+          },
+          "customer_city": {
+            "dtype": "str",
+            "n_null": 0,
+            "null_rate": 0.0,
+            "n_unique": 4119
+          },
+          "customer_state": {
+            "dtype": "str",
+            "n_null": 0,
+            "null_rate": 0.0,
+            "n_unique": 27
+          }
+        }
+      },
+      "orders": {
+        "n_rows": 99441,
+        "n_cols": 8,
+        "duplicate_rows": 0,
+        "columns": {
+          "order_id": {
+            "dtype": "str",
+            "n_null": 0,
+            "null_rate": 0.0,
+            "n_unique": 99441
+          },
+          "customer_id": {
+            "dtype": "str",
+            "n_null": 0,
+            "null_rate": 0.0,
+            "n_unique": 99441
+          },
+          "order_status": {
+            "dtype": "str",
+            "n_null": 0,
+            "null_rate": 0.0,
+            "n_unique": 8
+          },
+          "order_purchase_timestamp": {
+            "dtype": "str",
+            "n_null": 0,
+            "null_rate": 0.0,
+            "n_unique": 98875,
+            "min": "2016-09-04 21:15:19",
+            "max": "2018-10-17 17:30:18"
+          },
+          "order_approved_at": {
+            "dtype": "str",
+            "n_null": 160,
+            "null_rate": 0.0016,
+            "n_unique": 90733
+          },
+          "order_delivered_carrier_date": {
+            "dtype": "str",
+            "n_null": 1783,
+            "null_rate": 0.0179,
+            "n_unique": 81018,
+            "min": "2016-10-08 10:34:01",
+            "max": "2018-09-11 19:48:28"
+          },
+          "order_delivered_customer_date": {
+            "dtype": "str",
+            "n_null": 2965,
+            "null_rate": 0.0298,
+            "n_unique": 95664,
+            "min": "2016-10-11 13:46:32",
+            "max": "2018-10-17 13:22:46"
+          },
+          "order_estimated_delivery_date": {
+            "dtype": "str",
+            "n_null": 0,
+            "null_rate": 0.0,
+            "n_unique": 459,
+            "min": "2016-09-30 00:00:00",
+            "max": "2018-11-12 00:00:00"
+          }
+        }
+      },
+      "order_items": {
+        "n_rows": 112650,
+        "n_cols": 7,
+        "duplicate_rows": 0,
+        "columns": {
+          "order_id": {
+            "dtype": "str",
+            "n_null": 0,
+            "null_rate": 0.0,
+            "n_unique": 98666
+          },
+          "order_item_id": {
+            "dtype": "int64",
+            "n_null": 0,
+            "null_rate": 0.0,
+            "n_unique": 21,
+            "min": 1.0,
+            "max": 21.0
+          },
+          "product_id": {
+            "dtype": "str",
+            "n_null": 0,
+            "null_rate": 0.0,
+            "n_unique": 32951
+          },
+          "seller_id": {
+            "dtype": "str",
+            "n_null": 0,
+            "null_rate": 0.0,
+            "n_unique": 3095
+          },
+          "shipping_limit_date": {
+            "dtype": "str",
+            "n_null": 0,
+            "null_rate": 0.0,
+            "n_unique": 93318,
+            "min": "2016-09-19 00:15:34",
+            "max": "2020-04-09 22:35:08"
+          },
+          "price": {
+            "dtype": "float64",
+            "n_null": 0,
+            "null_rate": 0.0,
+            "n_unique": 5968,
+            "min": 0.85,
+            "max": 6735.0
+          },
+          "freight_value": {
+            "dtype": "float64",
+            "n_null": 0,
+            "null_rate": 0.0,
+            "n_unique": 6999,
+            "min": 0.0,
+            "max": 409.68
+          }
+        }
+      },
+      "order_payments": {
+        "n_rows": 103886,
+        "n_cols": 5,
+        "duplicate_rows": 0,
+        "columns": {
+          "order_id": {
+            "dtype": "str",
+            "n_null": 0,
+            "null_rate": 0.0,
+            "n_unique": 99440
+          },
+          "payment_sequential": {
+            "dtype": "int64",
+            "n_null": 0,
+            "null_rate": 0.0,
+            "n_unique": 29,
+            "min": 1.0,
+            "max": 29.0
+          },
+          "payment_type": {
+            "dtype": "str",
+            "n_null": 0,
+            "null_rate": 0.0,
+            "n_unique": 5
+          },
+          "payment_installments": {
+            "dtype": "int64",
+            "n_null": 0,
+            "null_rate": 0.0,
+            "n_unique": 24,
+            "min": 0.0,
+            "max": 24.0
+          },
+          "payment_value": {
+            "dtype": "float64",
+            "n_null": 0,
+            "null_rate": 0.0,
+            "n_unique": 29077,
+            "min": 0.0,
+            "max": 13664.08
+          }
+        }
+      },
+      "order_reviews": {
+        "n_rows": 99224,
+        "n_cols": 7,
+        "duplicate_rows": 0,
+        "columns": {
+          "review_id": {
+            "dtype": "str",
+            "n_null": 0,
+            "null_rate": 0.0,
+            "n_unique": 98410
+          },
+          "order_id": {
+            "dtype": "str",
+            "n_null": 0,
+            "null_rate": 0.0,
+            "n_unique": 98673
+          },
+          "review_score": {
+            "dtype": "int64",
+            "n_null": 0,
+            "null_rate": 0.0,
+            "n_unique": 5,
+            "min": 1.0,
+            "max": 5.0
+          },
+          "review_comment_title": {
+            "dtype": "str",
+            "n_null": 87656,
+            "null_rate": 0.8834,
+            "n_unique": 4527
+          },
+          "review_comment_message": {
+            "dtype": "str",
+            "n_null": 58247,
+            "null_rate": 0.587,
+            "n_unique": 36159
+          },
+          "review_creation_date": {
+            "dtype": "str",
+            "n_null": 0,
+            "null_rate": 0.0,
+            "n_unique": 636,
+            "min": "2016-10-02 00:00:00",
+            "max": "2018-08-31 00:00:00"
+          },
+          "review_answer_timestamp": {
+            "dtype": "str",
+            "n_null": 0,
+            "null_rate": 0.0,
+            "n_unique": 98248,
+            "min": "2016-10-07 18:32:28",
+            "max": "2018-10-29 12:27:35"
+          }
+        }
+      },
+      "products": {
+        "n_rows": 32951,
+        "n_cols": 9,
+        "duplicate_rows": 0,
+        "columns": {
+          "product_id": {
+            "dtype": "str",
+            "n_null": 0,
+            "null_rate": 0.0,
+            "n_unique": 32951
+          },
+          "product_category_name": {
+            "dtype": "str",
+            "n_null": 610,
+            "null_rate": 0.0185,
+            "n_unique": 73
+          },
+          "product_name_lenght": {
+            "dtype": "float64",
+            "n_null": 610,
+            "null_rate": 0.0185,
+            "n_unique": 66,
+            "min": 5.0,
+            "max": 76.0
+          },
+          "product_description_lenght": {
+            "dtype": "float64",
+            "n_null": 610,
+            "null_rate": 0.0185,
+            "n_unique": 2960,
+            "min": 4.0,
+            "max": 3992.0
+          },
+          "product_photos_qty": {
+            "dtype": "float64",
+            "n_null": 610,
+            "null_rate": 0.0185,
+            "n_unique": 19,
+            "min": 1.0,
+            "max": 20.0
+          },
+          "product_weight_g": {
+            "dtype": "float64",
+            "n_null": 2,
+            "null_rate": 0.0001,
+            "n_unique": 2204,
+            "min": 0.0,
+            "max": 40425.0
+          },
+          "product_length_cm": {
+            "dtype": "float64",
+            "n_null": 2,
+            "null_rate": 0.0001,
+            "n_unique": 99,
+            "min": 7.0,
+            "max": 105.0
+          },
+          "product_height_cm": {
+            "dtype": "float64",
+            "n_null": 2,
+            "null_rate": 0.0001,
+            "n_unique": 102,
+            "min": 2.0,
+            "max": 105.0
+          },
+          "product_width_cm": {
+            "dtype": "float64",
+            "n_null": 2,
+            "null_rate": 0.0001,
+            "n_unique": 95,
+            "min": 6.0,
+            "max": 118.0
+          }
+        }
+      },
+      "sellers": {
+        "n_rows": 3095,
+        "n_cols": 4,
+        "duplicate_rows": 0,
+        "columns": {
+          "seller_id": {
+            "dtype": "str",
+            "n_null": 0,
+            "null_rate": 0.0,
+            "n_unique": 3095
+          },
+          "seller_zip_code_prefix": {
+            "dtype": "int64",
+            "n_null": 0,
+            "null_rate": 0.0,
+            "n_unique": 2246,
+            "min": 1001.0,
+            "max": 99730.0
+          },
+          "seller_city": {
+            "dtype": "str",
+            "n_null": 0,
+            "null_rate": 0.0,
+            "n_unique": 611
+          },
+          "seller_state": {
+            "dtype": "str",
+            "n_null": 0,
+            "null_rate": 0.0,
+            "n_unique": 23
+          }
+        }
+      },
+      "geolocation": {
+        "n_rows": 1000163,
+        "n_cols": 5,
+        "duplicate_rows": 261831,
+        "columns": {
+          "geolocation_zip_code_prefix": {
+            "dtype": "int64",
+            "n_null": 0,
+            "null_rate": 0.0,
+            "n_unique": 19015,
+            "min": 1001.0,
+            "max": 99990.0
+          },
+          "geolocation_lat": {
+            "dtype": "float64",
+            "n_null": 0,
+            "null_rate": 0.0,
+            "n_unique": 717363,
+            "min": -36.6053744107061,
+            "max": 45.06593318269697
+          },
+          "geolocation_lng": {
+            "dtype": "float64",
+            "n_null": 0,
+            "null_rate": 0.0,
+            "n_unique": 717615,
+            "min": -101.46676644931476,
+            "max": 121.10539381057764
+          },
+          "geolocation_city": {
+            "dtype": "str",
+            "n_null": 0,
+            "null_rate": 0.0,
+            "n_unique": 8011
+          },
+          "geolocation_state": {
+            "dtype": "str",
+            "n_null": 0,
+            "null_rate": 0.0,
+            "n_unique": 27
+          }
+        }
+      },
+      "category_translation": {
+        "n_rows": 71,
+        "n_cols": 2,
+        "duplicate_rows": 0,
+        "columns": {
+          "product_category_name": {
+            "dtype": "str",
+            "n_null": 0,
+            "null_rate": 0.0,
+            "n_unique": 71
+          },
+          "product_category_name_english": {
+            "dtype": "str",
+            "n_null": 0,
+            "null_rate": 0.0,
+            "n_unique": 71
+          }
+        }
+      }
+    },
+    "candidate_keys": {
+      "customers": {
+        "key_columns": [
+          "customer_id"
+        ],
+        "columns_exist": true,
+        "n_rows": 99441,
+        "n_duplicate_key_rows": 0,
+        "n_unique_key_combinations": 99441,
+        "uniqueness_confirmed": true
+      },
+      "orders": {
+        "key_columns": [
+          "order_id"
+        ],
+        "columns_exist": true,
+        "n_rows": 99441,
+        "n_duplicate_key_rows": 0,
+        "n_unique_key_combinations": 99441,
+        "uniqueness_confirmed": true
+      },
+      "order_items": {
+        "key_columns": [
+          "order_id",
+          "order_item_id"
+        ],
+        "columns_exist": true,
+        "n_rows": 112650,
+        "n_duplicate_key_rows": 0,
+        "n_unique_key_combinations": 112650,
+        "uniqueness_confirmed": true
+      },
+      "order_payments": {
+        "key_columns": [
+          "order_id",
+          "payment_sequential"
+        ],
+        "columns_exist": true,
+        "n_rows": 103886,
+        "n_duplicate_key_rows": 0,
+        "n_unique_key_combinations": 103886,
+        "uniqueness_confirmed": true
+      },
+      "order_reviews": {
+        "key_columns": [
+          "review_id"
+        ],
+        "columns_exist": true,
+        "n_rows": 99224,
+        "n_duplicate_key_rows": 814,
+        "n_unique_key_combinations": 98410,
+        "uniqueness_confirmed": false
+      },
+      "products": {
+        "key_columns": [
+          "product_id"
+        ],
+        "columns_exist": true,
+        "n_rows": 32951,
+        "n_duplicate_key_rows": 0,
+        "n_unique_key_combinations": 32951,
+        "uniqueness_confirmed": true
+      },
+      "sellers": {
+        "key_columns": [
+          "seller_id"
+        ],
+        "columns_exist": true,
+        "n_rows": 3095,
+        "n_duplicate_key_rows": 0,
+        "n_unique_key_combinations": 3095,
+        "uniqueness_confirmed": true
+      },
+      "geolocation": {
+        "key_columns": [],
+        "columns_exist": null,
+        "n_rows": 1000163,
+        "n_duplicate_key_rows": null,
+        "n_unique_key_combinations": null,
+        "uniqueness_confirmed": false,
+        "note": "no candidate key configured for this table"
+      },
+      "category_translation": {
+        "key_columns": [
+          "product_category_name"
+        ],
+        "columns_exist": true,
+        "n_rows": 71,
+        "n_duplicate_key_rows": 0,
+        "n_unique_key_combinations": 71,
+        "uniqueness_confirmed": true
+      }
+    },
+    "foreign_keys": [
+      {
+        "child_table": "orders",
+        "parent_table": "customers",
+        "child_column": "customer_id",
+        "parent_column": "customer_id",
+        "n_distinct_child_keys": 99441,
+        "n_distinct_parent_keys": 99441,
+        "n_orphan_keys": 0,
+        "orphan_key_rate": 0.0,
+        "n_orphan_rows": 0,
+        "orphan_row_rate": 0.0,
+        "n_null_fk": 0,
+        "null_fk_rate": 0.0,
+        "sample_orphans": []
+      },
+      {
+        "child_table": "order_items",
+        "parent_table": "orders",
+        "child_column": "order_id",
+        "parent_column": "order_id",
+        "n_distinct_child_keys": 98666,
+        "n_distinct_parent_keys": 99441,
+        "n_orphan_keys": 0,
+        "orphan_key_rate": 0.0,
+        "n_orphan_rows": 0,
+        "orphan_row_rate": 0.0,
+        "n_null_fk": 0,
+        "null_fk_rate": 0.0,
+        "sample_orphans": []
+      },
+      {
+        "child_table": "order_items",
+        "parent_table": "products",
+        "child_column": "product_id",
+        "parent_column": "product_id",
+        "n_distinct_child_keys": 32951,
+        "n_distinct_parent_keys": 32951,
+        "n_orphan_keys": 0,
+        "orphan_key_rate": 0.0,
+        "n_orphan_rows": 0,
+        "orphan_row_rate": 0.0,
+        "n_null_fk": 0,
+        "null_fk_rate": 0.0,
+        "sample_orphans": []
+      },
+      {
+        "child_table": "order_items",
+        "parent_table": "sellers",
+        "child_column": "seller_id",
+        "parent_column": "seller_id",
+        "n_distinct_child_keys": 3095,
+        "n_distinct_parent_keys": 3095,
+        "n_orphan_keys": 0,
+        "orphan_key_rate": 0.0,
+        "n_orphan_rows": 0,
+        "orphan_row_rate": 0.0,
+        "n_null_fk": 0,
+        "null_fk_rate": 0.0,
+        "sample_orphans": []
+      },
+      {
+        "child_table": "order_payments",
+        "parent_table": "orders",
+        "child_column": "order_id",
+        "parent_column": "order_id",
+        "n_distinct_child_keys": 99440,
+        "n_distinct_parent_keys": 99441,
+        "n_orphan_keys": 0,
+        "orphan_key_rate": 0.0,
+        "n_orphan_rows": 0,
+        "orphan_row_rate": 0.0,
+        "n_null_fk": 0,
+        "null_fk_rate": 0.0,
+        "sample_orphans": []
+      },
+      {
+        "child_table": "order_reviews",
+        "parent_table": "orders",
+        "child_column": "order_id",
+        "parent_column": "order_id",
+        "n_distinct_child_keys": 98673,
+        "n_distinct_parent_keys": 99441,
+        "n_orphan_keys": 0,
+        "orphan_key_rate": 0.0,
+        "n_orphan_rows": 0,
+        "orphan_row_rate": 0.0,
+        "n_null_fk": 0,
+        "null_fk_rate": 0.0,
+        "sample_orphans": []
+      },
+      {
+        "child_table": "products",
+        "parent_table": "category_translation",
+        "child_column": "product_category_name",
+        "parent_column": "product_category_name",
+        "n_distinct_child_keys": 73,
+        "n_distinct_parent_keys": 71,
+        "n_orphan_keys": 2,
+        "orphan_key_rate": 0.0274,
+        "n_orphan_rows": 13,
+        "orphan_row_rate": 0.0004,
+        "n_null_fk": 610,
+        "null_fk_rate": 0.0185,
+        "sample_orphans": [
+          "pc_gamer",
+          "portateis_cozinha_e_preparadores_de_alimentos"
+        ]
+      }
+    ],
+    "relationship_cardinality": {
+      "orders -> order_items": {
+        "n_parent_rows": 99441,
+        "n_child_rows": 112650,
+        "n_distinct_parents": 99441,
+        "avg_children_per_parent": 1.1328,
+        "median_children_per_parent": 1.0,
+        "max_children_per_parent": 21,
+        "pct_parents_with_zero_children": 0.78,
+        "pct_parents_with_more_than_one_child": 9.86
+      },
+      "orders -> order_payments": {
+        "n_parent_rows": 99441,
+        "n_child_rows": 103886,
+        "n_distinct_parents": 99441,
+        "avg_children_per_parent": 1.0447,
+        "median_children_per_parent": 1.0,
+        "max_children_per_parent": 29,
+        "pct_parents_with_zero_children": 0.0,
+        "pct_parents_with_more_than_one_child": 2.98
+      },
+      "orders -> order_reviews": {
+        "n_parent_rows": 99441,
+        "n_child_rows": 99224,
+        "n_distinct_parents": 99441,
+        "avg_children_per_parent": 0.9978,
+        "median_children_per_parent": 1.0,
+        "max_children_per_parent": 3,
+        "pct_parents_with_zero_children": 0.77,
+        "pct_parents_with_more_than_one_child": 0.55
+      },
+      "customers_unique -> orders": {
+        "n_parent_rows": 96096,
+        "n_child_rows": 99441,
+        "n_distinct_parents": 96096,
+        "avg_children_per_parent": 1.0348,
+        "median_children_per_parent": 1.0,
+        "max_children_per_parent": 17,
+        "pct_parents_with_zero_children": 0.0,
+        "pct_parents_with_more_than_one_child": 3.12
+      },
+      "products -> order_items": {
+        "n_parent_rows": 32951,
+        "n_child_rows": 112650,
+        "n_distinct_parents": 32951,
+        "avg_children_per_parent": 3.4187,
+        "median_children_per_parent": 1.0,
+        "max_children_per_parent": 527,
+        "pct_parents_with_zero_children": 0.0,
+        "pct_parents_with_more_than_one_child": 45.02
+      },
+      "sellers -> order_items": {
+        "n_parent_rows": 3095,
+        "n_child_rows": 112650,
+        "n_distinct_parents": 3095,
+        "avg_children_per_parent": 36.3974,
+        "median_children_per_parent": 8.0,
+        "max_children_per_parent": 2033,
+        "pct_parents_with_zero_children": 0.0,
+        "pct_parents_with_more_than_one_child": 83.55
+      }
+    },
+    "date_quality": {
+      "orders": {
+        "order_purchase_timestamp": {
+          "n_total": 99441,
+          "n_parseable": 99441,
+          "n_failed_parse": 0,
+          "failed_parse_rate": 0.0,
+          "min": "2016-09-04 21:15:19",
+          "max": "2018-10-17 17:30:18"
+        },
+        "order_delivered_carrier_date": {
+          "n_total": 99441,
+          "n_parseable": 97658,
+          "n_failed_parse": 0,
+          "failed_parse_rate": 0.0,
+          "min": "2016-10-08 10:34:01",
+          "max": "2018-09-11 19:48:28"
+        },
+        "order_delivered_customer_date": {
+          "n_total": 99441,
+          "n_parseable": 96476,
+          "n_failed_parse": 0,
+          "failed_parse_rate": 0.0,
+          "min": "2016-10-11 13:46:32",
+          "max": "2018-10-17 13:22:46"
+        },
+        "order_estimated_delivery_date": {
+          "n_total": 99441,
+          "n_parseable": 99441,
+          "n_failed_parse": 0,
+          "failed_parse_rate": 0.0,
+          "min": "2016-09-30 00:00:00",
+          "max": "2018-11-12 00:00:00"
+        }
+      },
+      "order_items": {
+        "shipping_limit_date": {
+          "n_total": 112650,
+          "n_parseable": 112650,
+          "n_failed_parse": 0,
+          "failed_parse_rate": 0.0,
+          "min": "2016-09-19 00:15:34",
+          "max": "2020-04-09 22:35:08"
+        }
+      },
+      "order_reviews": {
+        "review_creation_date": {
+          "n_total": 99224,
+          "n_parseable": 99224,
+          "n_failed_parse": 0,
+          "failed_parse_rate": 0.0,
+          "min": "2016-10-02 00:00:00",
+          "max": "2018-08-31 00:00:00"
+        },
+        "review_answer_timestamp": {
+          "n_total": 99224,
+          "n_parseable": 99224,
+          "n_failed_parse": 0,
+          "failed_parse_rate": 0.0,
+          "min": "2016-10-07 18:32:28",
+          "max": "2018-10-29 12:27:35"
+        }
+      }
+    }
+  },
+  "kpi_temporal_eda": {
+    "revenue_reconciliation": {
+      "n_orders_total": 99441,
+      "n_orders_with_items": 98666,
+      "n_orders_without_items": 775,
+      "n_orders_with_payments": 99440,
+      "n_orders_without_payments": 1,
+      "n_orders_in_both_items_and_payments": 98665,
+      "n_orders_items_only_no_payment_row": 1,
+      "n_orders_payment_only_no_item_row": 775,
+      "n_matched_within_1_cent": 98284,
+      "matched_rate_of_both": 0.9961,
+      "n_mismatched": 381,
+      "mismatch_abs_diff_mean": 8.58,
+      "mismatch_abs_diff_median": 3.77,
+      "mismatch_abs_diff_max": 182.81,
+      "top_10_mismatches": [
+        {
+          "order_id": "ce6d150fb29ada17d2082f4847107665",
+          "order_items_total": 1403.66,
+          "payment_total": 1586.47,
+          "diff": 182.80999999999995
+        },
+        {
+          "order_id": "6e5fe7366a2e1bfbf3257dba0af1267f",
+          "order_items_total": 287.90999999999997,
+          "payment_total": 406.92,
+          "diff": 119.01000000000005
+        },
+        {
+          "order_id": "70b742795bc441e94a44a084b6d9ce7a",
+          "order_items_total": 466.93,
+          "payment_total": 578.82,
+          "diff": 111.89000000000004
+        },
+        {
+          "order_id": "996c7e73600ad3723e8627ab7bef81e4",
+          "order_items_total": 587.9,
+          "payment_total": 664.43,
+          "diff": 76.52999999999997
+        },
+        {
+          "order_id": "70b7e94ea46d3e8b5bc12a50186edaf0",
+          "order_items_total": 213.14999999999998,
+          "payment_total": 274.84,
+          "diff": 61.69
+        },
+        {
+          "order_id": "bc2c82b0ef78d2252b6176d1972db7c9",
+          "order_items_total": 242.01,
+          "payment_total": 303.02,
+          "diff": 61.00999999999999
+        },
+        {
+          "order_id": "af9ffff2ce6b3defd34fd4c78857a379",
+          "order_items_total": 413.16999999999996,
+          "payment_total": 466.97,
+          "diff": 53.80000000000007
+        },
+        {
+          "order_id": "262118ce178bb3e4590a3adcf6d62e6b",
+          "order_items_total": 177.74,
+          "payment_total": 126.12,
+          "diff": -51.620000000000005
+        },
+        {
+          "order_id": "bfdb5bbb06458d600a33d61f5f287472",
+          "order_items_total": 348.93,
+          "payment_total": 394.36,
+          "diff": 45.43000000000001
+        },
+        {
+          "order_id": "8d9c0dc8d5a2ce804f6b925d8f8e6c1d",
+          "order_items_total": 254.45000000000002,
+          "payment_total": 293.89,
+          "diff": 39.43999999999997
+        }
+      ]
+    },
+    "material_movements_monthly_ge15pct": [
+      {
+        "kpi": "revenue",
+        "period": "2017-01-01",
+        "value": 120312.87,
+        "pct_change_mom": 1103687.8,
+        "orders_that_month": 800
+      },
+      {
+        "kpi": "orders",
+        "period": "2017-01-01",
+        "value": 800.0,
+        "pct_change_mom": 79900.0,
+        "orders_that_month": 800
+      },
+      {
+        "kpi": "revenue",
+        "period": "2016-10-01",
+        "value": 49507.66,
+        "pct_change_mom": 18417.23,
+        "orders_that_month": 324
+      },
+      {
+        "kpi": "orders",
+        "period": "2016-10-01",
+        "value": 324.0,
+        "pct_change_mom": 8000.0,
+        "orders_that_month": 324
+      },
+      {
+        "kpi": "aov",
+        "period": "2017-01-01",
+        "value": 150.39,
+        "pct_change_mom": 1279.73,
+        "orders_that_month": 800
+      },
+      {
+        "kpi": "avg_review_score",
+        "period": "2016-10-01",
+        "value": 3.56,
+        "pct_change_mom": 256.11,
+        "orders_that_month": 324
+      },
+      {
+        "kpi": "avg_delivery_days",
+        "period": "2017-01-01",
+        "value": 12.65,
+        "pct_change_mom": 169.49,
+        "orders_that_month": 800
+      },
+      {
+        "kpi": "aov",
+        "period": "2016-10-01",
+        "value": 152.8,
+        "pct_change_mom": 128.61,
+        "orders_that_month": 324
+      },
+      {
+        "kpi": "orders",
+        "period": "2017-02-01",
+        "value": 1780.0,
+        "pct_change_mom": 122.5,
+        "orders_that_month": 1780
+      },
+      {
+        "kpi": "revenue",
+        "period": "2017-02-01",
+        "value": 247303.02,
+        "pct_change_mom": 105.55,
+        "orders_that_month": 1780
+      },
+      {
+        "kpi": "avg_delivery_days",
+        "period": "2016-10-01",
+        "value": 19.58,
+        "pct_change_mom": -64.28,
+        "orders_that_month": 324
+      },
+      {
+        "kpi": "orders",
+        "period": "2017-11-01",
+        "value": 7544.0,
+        "pct_change_mom": 62.9,
+        "orders_that_month": 7544
+      },
+      {
+        "kpi": "orders",
+        "period": "2017-05-01",
+        "value": 3700.0,
+        "pct_change_mom": 53.91,
+        "orders_that_month": 3700
+      },
+      {
+        "kpi": "revenue",
+        "period": "2017-11-01",
+        "value": 1010271.37,
+        "pct_change_mom": 52.1,
+        "orders_that_month": 7544
+      },
+      {
+        "kpi": "revenue",
+        "period": "2017-03-01",
+        "value": 374344.3,
+        "pct_change_mom": 51.37,
+        "orders_that_month": 2682
+      },
+      {
+        "kpi": "orders",
+        "period": "2017-03-01",
+        "value": 2682.0,
+        "pct_change_mom": 50.67,
+        "orders_that_month": 2682
+      },
+      {
+        "kpi": "revenue",
+        "period": "2017-05-01",
+        "value": 506071.14,
+        "pct_change_mom": 40.6,
+        "orders_that_month": 3700
+      },
+      {
+        "kpi": "avg_delivery_days",
+        "period": "2018-04-01",
+        "value": 11.5,
+        "pct_change_mom": -29.46,
+        "orders_that_month": 6939
+      },
+      {
+        "kpi": "orders",
+        "period": "2018-01-01",
+        "value": 7269.0,
+        "pct_change_mom": 28.13,
+        "orders_that_month": 7269
+      },
+      {
+        "kpi": "avg_delivery_days",
+        "period": "2017-11-01",
+        "value": 15.16,
+        "pct_change_mom": 27.87,
+        "orders_that_month": 7544
+      },
+      {
+        "kpi": "revenue",
+        "period": "2018-01-01",
+        "value": 950030.36,
+        "pct_change_mom": 27.71,
+        "orders_that_month": 7269
+      },
+      {
+        "kpi": "revenue",
+        "period": "2017-12-01",
+        "value": 743914.17,
+        "pct_change_mom": -26.36,
+        "orders_that_month": 5673
+      },
+      {
+        "kpi": "orders",
+        "period": "2017-12-01",
+        "value": 5673.0,
+        "pct_change_mom": -24.8,
+        "orders_that_month": 5673
+      },
+      {
+        "kpi": "avg_delivery_days",
+        "period": "2017-05-01",
+        "value": 11.32,
+        "pct_change_mom": -24.1,
+        "orders_that_month": 3700
+      },
+      {
+        "kpi": "orders",
+        "period": "2017-07-01",
+        "value": 4026.0,
+        "pct_change_mom": 24.07,
+        "orders_that_month": 4026
+      }
+    ],
+    "sparse_history": {
+      "products": {
+        "n_entities": 32216,
+        "lt_30_obs": 31840,
+        "lt_90_obs": 32149,
+        "lt_180_obs": 32199,
+        "pct_lt_30": 98.83,
+        "pct_lt_90": 99.79,
+        "median_obs": 1.0
+      },
+      "sellers": {
+        "n_entities": 2970,
+        "lt_30_obs": 2288,
+        "lt_90_obs": 2701,
+        "lt_180_obs": 2854,
+        "pct_lt_30": 77.04,
+        "pct_lt_90": 90.94,
+        "median_obs": 8.0
+      },
+      "products_with_zero_delivered_transactions": 735,
+      "sellers_with_zero_delivered_transactions": 125,
+      "n_categories": 73,
+      "categories_lt_30_obs": 8,
+      "smallest_5_categories": {
+        "seguros_e_servicos": 2,
+        "fashion_roupa_infanto_juvenil": 7,
+        "pc_gamer": 8,
+        "la_cuisine": 14,
+        "cds_dvds_musicais": 14
+      },
+      "largest_5_categories": {
+        "informatica_acessorios": 7644,
+        "moveis_decoracao": 8160,
+        "esporte_lazer": 8431,
+        "beleza_saude": 9465,
+        "cama_mesa_banho": 10953
+      }
+    },
+    "segmentation_cardinality": {
+      "n_seller_states": 23,
+      "n_customer_states": 27,
+      "n_product_categories": 73,
+      "n_sellers": 3095,
+      "revenue_by_seller_state": {
+        "SP": 8509511.46,
+        "PR": 1232096.99,
+        "MG": 977866.31,
+        "RJ": 820611.59,
+        "SC": 613591.65,
+        "RS": 373412.08,
+        "BA": 277925.51,
+        "DF": 94840.31,
+        "PE": 91164.15,
+        "GO": 64806.59,
+        "ES": 46941.64,
+        "MA": 36097.98,
+        "CE": 19517.84,
+        "MT": 17007.82,
+        "PB": 16395.5,
+        "RN": 9992.6,
+        "MS": 8551.69,
+        "RO": 4762.2,
+        "PI": 2383.0,
+        "SE": 1606.2,
+        "PA": 1238.0,
+        "AM": 1177.0
+      },
+      "orders_by_customer_state": {
+        "SP": 40501,
+        "RJ": 12350,
+        "MG": 11354,
+        "RS": 5345,
+        "PR": 4923,
+        "SC": 3546,
+        "BA": 3256,
+        "DF": 2080,
+        "ES": 1995,
+        "GO": 1957,
+        "PE": 1593,
+        "CE": 1279,
+        "PA": 946,
+        "MT": 886,
+        "MA": 717,
+        "MS": 701,
+        "PB": 517,
+        "PI": 476,
+        "RN": 474,
+        "AL": 397,
+        "SE": 335,
+        "TO": 274,
+        "RO": 243,
+        "AM": 145,
+        "AC": 80,
+        "AP": 67,
+        "RR": 41
+      },
+      "top_20_sellers_share_of_revenue_pct": 21.28
+    },
+    "date_anomalies": {
+      "order_purchase_timestamp_max": "2018-10-17 17:30:18",
+      "shipping_limit_date_max": "2020-04-09 22:35:08",
+      "n_items_with_shipping_limit_after_last_order": 4
+    },
+    "order_status_value_counts": {
+      "delivered": 96478,
+      "shipped": 1107,
+      "canceled": 625,
+      "unavailable": 609,
+      "invoiced": 314,
+      "processing": 301,
+      "created": 5,
+      "approved": 2
+    },
+    "orders_missing_from_order_items": 775
+  },
+  "text_and_entity_eda": {
+    "review_text_quality": {
+      "n_review_rows": 99224,
+      "n_with_title": 11566,
+      "n_with_message": 40950,
+      "pct_with_message": 41.27,
+      "pct_empty_message": 58.73,
+      "length_chars": {
+        "mean": 68.7,
+        "median": 53.0,
+        "p90": 161.0,
+        "max": 208
+      },
+      "length_words": {
+        "mean": 11.7,
+        "median": 9.0,
+        "p90": 28.0,
+        "max": 45
+      },
+      "very_short_le_2_words": 5645,
+      "very_short_pct_of_nonempty": 13.79,
+      "very_long_ge_100_words": 0,
+      "language_guess_distribution_pct": {
+        "undetermined": 8.2,
+        "pt-likely": 91.8,
+        "en-or-other-likely": 0.01
+      },
+      "language_guess_method": "crude stopword/diacritic heuristic on a sample of up to 20k non-empty messages -- NOT a validated language classifier. Sufficient to establish the corpus is overwhelmingly non-English (Brazilian Portuguese), which is an architectural constraint (embedding model / prompts must support pt-BR), but exact per-row language should be re-verified with a real detector (e.g. langdetect/fasttext) before RAG implementation.",
+      "duplicate_nonempty_texts": 1179,
+      "rows_that_are_duplicate_text": 5974,
+      "duplicate_rate_of_nonempty": 14.59,
+      "top_5_duplicate_texts": [
+        {
+          "text": "Muito bom",
+          "count": 230
+        },
+        {
+          "text": "Bom",
+          "count": 189
+        },
+        {
+          "text": "muito bom",
+          "count": 122
+        },
+        {
+          "text": "bom",
+          "count": 107
+        },
+        {
+          "text": "Recomendo",
+          "count": 100
+        }
+      ],
+      "pii_scan": {
+        "rows_with_email_pattern": 0,
+        "rows_with_phone_like_pattern": 4,
+        "rows_with_url": 2,
+        "note": "phone_like_pattern regex is intentionally loose (many false positives from order numbers / prices in text) -- treat as an upper bound requiring manual review, not a confirmed PII count."
+      },
+      "html_or_markup_artifacts": 0,
+      "prompt_injection_like_rows": {
+        "count": 0,
+        "samples": [],
+        "note": "Flagged for security-layer test design per instructions. NOT necessarily malicious -- e.g. 'recomendo' (recommend) can false-positive on 'act as' style regex in rare cases. Each sample must be manually reviewed before use as a security test fixture."
+      }
+    },
+    "entity_linkage": {
+      "n_reviews": 99224,
+      "n_reviews_matching_an_order_with_items": 98465,
+      "n_reviews_with_no_matching_order_items": 759,
+      "n_reviews_unambiguously_linked_to_one_product": 95227,
+      "pct_unambiguously_linked_to_one_product": 95.97,
+      "n_reviews_unambiguously_linked_to_one_seller": 97187,
+      "pct_unambiguously_linked_to_one_seller": 97.95,
+      "n_reviews_spanning_multiple_products_ambiguous": 3238,
+      "pct_ambiguous_multi_product": 3.26,
+      "n_reviews_linked_to_customer": 99224,
+      "note": "review_id/order_id do NOT carry product_id or seller_id directly -- linkage is only possible by joining through order_items, and is unambiguous only for single-item orders (~90% of orders per relationship cardinality profiling). For the ~10% multi-item orders, a review cannot be deterministically attributed to one product/seller from structured data alone."
+    },
+    "pii_structured_scan": {
+      "customers_columns": [
+        "customer_id",
+        "customer_unique_id",
+        "customer_zip_code_prefix",
+        "customer_city",
+        "customer_state"
+      ],
+      "sellers_columns": [
+        "seller_id",
+        "seller_zip_code_prefix",
+        "seller_city",
+        "seller_state"
+      ],
+      "customers_email_pattern_found": {
+        "customer_id": false,
+        "customer_unique_id": false,
+        "customer_zip_code_prefix": false,
+        "customer_city": false,
+        "customer_state": false
+      },
+      "sellers_email_pattern_found": {
+        "seller_id": false,
+        "seller_zip_code_prefix": false,
+        "seller_city": false,
+        "seller_state": false
+      },
+      "note": "Olist's public release is pre-anonymized: no customer/seller name, email, phone, or street address columns exist in any table (only IDs, zip-code prefix, city, state). This is consistent with Kaggle's published documentation and confirmed here by column enumeration -- no email/phone regex matches found in the identifier tables. customer_unique_id and customer_id / seller_id are still classified SENSITIVE (re-identification risk when joined with zip+city+order timing), not PUBLIC."
+    }
+  },
+  "join_driver_anomaly_eda": {
+    "join_fanout_demo": {
+      "correct_total_revenue_sum_order_items_price": 13591643.7,
+      "naive_revenue_if_price_summed_after_joining_items_payments_reviews": 14141001.32,
+      "inflation_ratio": 1.0404,
+      "concrete_example_order": {
+        "order_id": "03ecec245220b63fd7f68c1737ba99ba",
+        "n_order_items": 2,
+        "n_payment_rows": 2,
+        "true_item_price_total": 298.9,
+        "rows_after_naive_items_x_payments_join": 4,
+        "price_sum_if_naively_summed_over_that_join": 597.8,
+        "inflation_factor": 2
+      },
+      "rule": "Revenue MUST be aggregated (groupby order_id, sum price) BEFORE joining to order_payments or order_reviews. Joining first and summing price after multiplies revenue by the payment/review row count for that order. This is a real, reproducible risk in this schema, not a hypothetical -- order_payments has up to 29 rows for a single order_id (installment rows) and order_reviews up to 3."
+    },
+    "pvm_decomposition_oct_to_nov_2017": {
+      "period_old": "2017-10",
+      "period_new": "2017-11",
+      "revenue_old": 664219.43,
+      "revenue_new": 1010271.37,
+      "delta_revenue": 346051.94,
+      "qty_old": 5322,
+      "qty_new": 8665,
+      "volume_effect": 417227.65,
+      "price_effect": 4674.63,
+      "mix_effect": -75850.34,
+      "check_sum_matches_delta": 0.0,
+      "top_10_category_revenue_contributors": {
+        "cama_mesa_banho": 43214.54,
+        "beleza_saude": 37204.68,
+        "moveis_decoracao": 32996.46,
+        "relogios_presentes": 31765.04,
+        "brinquedos": 29687.88,
+        "informatica_acessorios": 28633.91,
+        "ferramentas_jardim": 19993.44,
+        "utilidades_domesticas": 18858.69,
+        "esporte_lazer": 15122.6,
+        "perfumaria": 14847.19
+      },
+      "bottom_5_category_revenue_contributors": {
+        "moveis_quarto": -320.9,
+        "construcao_ferramentas_ferramentas": -749.1,
+        "telefonia_fixa": -2807.9,
+        "uncategorized": -4684.5,
+        "pcs": -30625.92
+      },
+      "n_categories_involved": 68,
+      "grain_used": "product_category_name (73 raw categories incl. nulls->uncategorized)",
+      "caveat": "This decomposition is fully deterministic and reproducible from order_items + products alone -- no fabricated data. Category-level avg_price mixes genuinely different SKUs within a category, so 'price effect' here is a price-per-category-unit shift, not a true like-for-like SKU price change (no promotional-price / list-price field exists in this schema to isolate discounting from mix within-category)."
+    },
+    "delivery_vs_review_contradiction_scan": {
+      "correlation_delivery_days_vs_review_score_across_months": -0.942,
+      "interpretation": "Negative correlation expected (slower delivery -> lower score) if delivery is a real driver of satisfaction; a weak/positive correlation would itself be a noteworthy contradiction worth investigating via review text.",
+      "window_around_nov_2017_spike": {
+        "2017-09": {
+          "avg_delivery_days": 11.85,
+          "avg_review_score": 4.189,
+          "orders": 4285
+        },
+        "2017-10": {
+          "avg_delivery_days": 11.86,
+          "avg_review_score": 4.124,
+          "orders": 4631
+        },
+        "2017-11": {
+          "avg_delivery_days": 15.16,
+          "avg_review_score": 3.911,
+          "orders": 7544
+        },
+        "2017-12": {
+          "avg_delivery_days": 15.39,
+          "avg_review_score": 4.02,
+          "orders": 5673
+        },
+        "2018-01": {
+          "avg_delivery_days": 14.08,
+          "avg_review_score": 4.041,
+          "orders": 7269
+        },
+        "2018-02": {
+          "avg_delivery_days": 16.95,
+          "avg_review_score": 3.829,
+          "orders": 6728
+        }
+      }
+    },
+    "nov_2017_spike_breakdown": {
+      "n_orders_oct_2017": 4631,
+      "n_orders_nov_2017": 7544,
+      "n_states_with_orders_oct": 27,
+      "n_states_with_orders_nov": 27,
+      "top_10_states_by_order_count_nov": {
+        "SP": 3012,
+        "RJ": 1048,
+        "MG": 943,
+        "RS": 422,
+        "PR": 378,
+        "SC": 303,
+        "BA": 250,
+        "ES": 170,
+        "DF": 168,
+        "GO": 157
+      },
+      "top_10_categories_by_absolute_item_growth_nov_vs_oct": {
+        "cama_mesa_banho": 430,
+        "moveis_decoracao": 404,
+        "ferramentas_jardim": 269,
+        "beleza_saude": 223,
+        "informatica_acessorios": 210,
+        "brinquedos": 205,
+        "utilidades_domesticas": 188,
+        "relogios_presentes": 155,
+        "esporte_lazer": 141,
+        "telefonia": 130
+      },
+      "conclusion": "growth pattern computed directly from the data -- see whether growth is spread across most states/categories (broad platform-level demand event, e.g. Black Friday) or concentrated in a handful (segment-specific event)."
+    }
+  }
+}
