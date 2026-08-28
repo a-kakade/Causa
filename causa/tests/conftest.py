@@ -121,3 +121,22 @@ def built_vector_index(review_corpus):
     ]
     index = FlatCosineIndex.build(vectors, metadata)
     return index, text_rows, cache
+
+
+# ---------------------------------------------------------------------------
+# Step 5: Secure Multi-Agent Investigation Engine fixtures
+# ---------------------------------------------------------------------------
+#
+# `agent_ctx` builds one real tools.context.ToolContext (KPIEngine +
+# SemanticRegistry + the real November 2017 evidence package + a real BM25
+# index) ONCE per test session (~90s, dominated by the same langdetect/E5
+# cache-hit cost `built_vector_index` above already pays) and is shared by
+# every Step 5 test file. Step 5 tests never mock KPIEngine/driver_engine/
+# anomaly_engine/BM25 -- only the LLM provider is ever faked (see
+# agents.llm_client.FakeLLMClient), matching this repo's "mock the LLM, never
+# the business logic" discipline.
+
+@pytest.fixture(scope="session")
+def agent_ctx(canonical):
+    from tools.context import build_tool_context
+    return build_tool_context(canonical)

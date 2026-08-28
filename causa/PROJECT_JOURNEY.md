@@ -13,6 +13,53 @@ has skipped ahead of what the prior step actually established.
 
 ## Where we are right now
 
+**Step 5 complete (2026-08-28): the Secure Multi-Agent Investigation Engine.**
+Six agents investigate a KPI movement end-to-end — Orchestrator, Causal
+Method Selector, and Confidence Judge are 100% deterministic (no LLM call
+anywhere); Hypothesis, Evidence, and Counter-Evidence agents make real calls
+to Groq (`openai/gpt-oss-20b`, provider-agnostic client) for the genuinely
+interpretive work, with every tool call — from either side — routed through
+one Tool Gateway chokepoint (Authentication → Authorization → Clearance
+derivation → Input Validation → Execution → Output Validation → Audit).
+Full detail: [STEP5_VALIDATION.md](STEP5_VALIDATION.md).
+
+**LLM provider pivoted mid-implementation.** Originally scoped to call
+Claude directly; the user supplied 17 Groq API keys partway through for
+cost and asked for Groq specifically. This was a provider swap, not a
+redesign — `agents/llm_client.py`'s `LLMClient` protocol was already
+provider-agnostic. Two live-API surprises followed and were fixed: the
+SDK's advertised default model (`llama-3.3-70b-versatile`) 404'd on every
+one of the user's keys (switched to `openai/gpt-oss-20b`, verified live with
+real tool-calling), and this account's 17 keys turned out to share one
+8,000-tokens-per-minute quota at the organization level, not 17 independent
+quotas (broadened exception handling + a rotation backoff, documented in
+`STEP5_VALIDATION.md` §19 rather than hidden).
+
+**Real end-to-end demonstration, not a mock.** The November 2017 revenue
+investigation ran against the real Step 1–4 engines and a real Groq model:
+the Hypothesis Agent made genuine tool calls (`compare_kpi`,
+`get_driver_decomposition`, `get_concurrent_kpis`, `search_evidence`) and
+proposed 3 diverse, evidence-grounded hypotheses; the numeric guardrail
+caught and rejected a fabricated number live (and, separately, one genuine
+false positive — a bare "2017" read as a business figure — found and fixed
+during this run); the investigation then honestly `ABSTAINED` on both the
+ANALYST and EXECUTIVE runs when evidence-gathering didn't converge within
+budget, rather than manufacturing a confident answer from thin evidence.
+Revenue movement matched the required 52.1% / R$346,051.94 exactly.
+
+Building this also caught and fixed several real bugs beyond the LLM
+plumbing: an uncaught `DriverRequestError`/`KPIRequestError` that could
+crash the Tool Gateway, a PII-redaction gap in `get_evidence` (review text
+was redacted at the retrieval layer but not when fetched directly by id), a
+numeric-guardrail tolerance loose enough to let a fabricated number in the
+same order of magnitude as a real one slip through, and a causal-language
+regex that matched "caused by" but not bare "caused".
+
+139/139 Step 5 tests pass (12 required test files; ~90% run against a fully
+deterministic `FakeLLMClient`, no network, so the suite stays fast and
+reproducible). Full repository suite: **686 tests pass, 0 regressions**
+against Steps 1–4A.
+
 **Step 4A complete, then corrected (2026-08-28).** Step 4 (Evidence Fabric) was
 built and validated, but its retrieval evaluation revealed P@5≈0, P@10=0.017,
 MRR=0.017 using multilingual-e5-small. Step 4A was a mandated deep-dive to
@@ -56,7 +103,9 @@ verified byte-identical to a fresh full-corpus re-encode.
 - 547 tests pass (545 + 2 new regression tests), 0 regressions. Steps 2–3D
   untouched.
 
-**Still no causal inference, LLM, agents, or frontend anywhere.**
+**(As of Step 4A: still no causal inference, LLM, agents, or frontend
+anywhere — Step 5, above, is what added agents/LLM. Causal inference
+execution and a frontend still don't exist.)**
 
 ---
 
@@ -72,7 +121,8 @@ verified byte-identical to a fresh full-corpus re-encode.
 | 3D | Driver decomposition engine (PVM + contribution) | ✅ Complete | [STEP3D_VALIDATION.md](STEP3D_VALIDATION.md) |
 | 4 | Evidence Fabric (structured + unstructured RAG) | ✅ Complete | [STEP4_VALIDATION.md](STEP4_VALIDATION.md) |
 | 4A | Retrieval failure analysis + BM25 + hybrid architecture | ✅ Complete | [STEP4A_VALIDATION.md](STEP4A_VALIDATION.md) |
-| — | Causal inference, LLM, agents, recommendations, frontend | ⬜ Not started | — |
+| 5 | Secure Multi-Agent Investigation Engine | ✅ Complete | [STEP5_VALIDATION.md](STEP5_VALIDATION.md) |
+| — | Causal inference execution, action recommendations, frontend | ⬜ Not started | — |
 
 ---
 
@@ -427,6 +477,81 @@ Full detail: [STEP4A_VALIDATION.md](STEP4A_VALIDATION.md),
 
 ---
 
+## Step 5 — Secure Multi-Agent Investigation Engine
+
+**What was built:** `src/agents/` (11 files) and `src/tools/` (5 files) — a
+six-agent investigation pipeline sitting on top of the Evidence Fabric,
+governed by a single Tool Gateway chokepoint.
+
+- **Orchestrator** (`orchestrator.py`, deterministic) — drives a 9-state
+  state machine (`state_machine.py`) through PLANNED → SECURITY_VALIDATED →
+  HYPOTHESES_GENERATED → EVIDENCE_COLLECTION → COUNTER_EVIDENCE →
+  CONTRADICTION_ANALYSIS → METHOD_SELECTION → CONFIDENCE_EVALUATION →
+  COMPLETED (or ABSTAINED / NEEDS_CLARIFICATION / BUDGET_EXCEEDED /
+  SECURITY_BLOCKED), never generating a business conclusion itself
+  (AST-scanned to prove it).
+- **Hypothesis / Evidence / Counter-Evidence Agents** (LLM-backed, real
+  calls to Groq via `agents/llm_client.py`'s provider-agnostic
+  `LLMClient` + a manual tool-use loop) — formulate diverse hypotheses,
+  decide what evidence to request, classify it, and adversarially search
+  for what would prove each hypothesis wrong.
+- **Causal Method Selector / Confidence Judge** (`causal_selector.py`,
+  `confidence_judge.py`, both 100% deterministic) — select
+  T1_DESCRIPTIVE/T2_ARITHMETIC/INSUFFICIENT_DATA (never T3/T4 — this
+  dataset has no natural experiment) and score HIGH/MEDIUM/LOW/ABSTAIN/
+  NEEDS_CLARIFICATION, with hard caps so weak evidence can't reach HIGH and
+  a STRONG contradiction can't reach HIGH either.
+- **Tool Gateway** (`tools/gateway.py`) — Authentication → Authorization
+  (fixed per-role tool allowlist) → Clearance derivation (RBAC, never
+  agent-supplied) → Input Validation → Execution → Output Validation →
+  Audit, for every tool call regardless of whether an LLM or deterministic
+  code proposed it.
+- **RBAC**: `EXECUTIVE`→`PUBLIC_ANALYTICAL`, `ANALYST`→`INTERNAL`,
+  `INTERNAL`→`RESTRICTED`, reusing Step 4's existing clearance scale.
+- **Guardrails**: a numeric guardrail (every cited number must trace to a
+  real tool result), a causal-language guardrail (no agent output may
+  assert causation), and an `<UNTRUSTED_EVIDENCE>` boundary around every
+  retrieved review before it reaches the model.
+
+**LLM provider: Groq, not Anthropic — a deliberate pivot mid-build.** The
+user supplied 17 Groq API keys and asked for Groq specifically (cost). Keys
+live in a local, gitignored `.env`, round-robined by `GroqKeyPool`. Two
+live-API issues were found and fixed: the SDK's advertised default model
+404'd on every one of the user's keys (switched to `openai/gpt-oss-20b`,
+verified live with real tool-calling), and the account's 17 keys share one
+8,000 TPM quota at the organization level, not 17 independent ones
+(broadened exception handling + rotation backoff).
+
+**Real end-to-end demonstration:** `scripts/step5_investigate_november_2017.py`
+ran a real investigation (`dry_run: false` in `reports/step5_validation.json`)
+against the real Step 1-4 engines and real Groq calls. The Hypothesis Agent
+made genuine tool calls and proposed 3 diverse hypotheses (mix/customer_state,
+freight_revenue, orders/customer_state); the numeric guardrail rejected a
+fabricated number live, and separately caught its own false positive (a bare
+"2017" read as a business figure — found and fixed during this run); both
+the ANALYST and EXECUTIVE investigations honestly `ABSTAINED` when
+evidence-gathering didn't converge within budget, rather than manufacturing
+a conclusion. Revenue movement matched exactly: +52.1% / R$346,051.94.
+
+**Bugs found and fixed while building this:** an uncaught
+`DriverRequestError`/`KPIRequestError` that could crash the Tool Gateway; a
+PII-redaction gap in `get_evidence` (redacted at retrieval, not when
+fetched directly by id); a numeric-guardrail tolerance loose enough to miss
+a same-order-of-magnitude fabrication; a causal-language regex that missed
+bare "caused"; the bare-calendar-year false positive above.
+
+139/139 Step 5 tests pass (12 files, ~90% via a fully deterministic
+`FakeLLMClient` — no network needed for the suite to be reproducible). 686
+total tests pass, 0 regressions against Steps 1-4A.
+
+Full detail: [STEP5_VALIDATION.md](STEP5_VALIDATION.md),
+[docs/MULTI_AGENT_ARCHITECTURE.md](docs/MULTI_AGENT_ARCHITECTURE.md),
+[docs/AGENT_SECURITY.md](docs/AGENT_SECURITY.md),
+[docs/INVESTIGATION_PROTOCOL.md](docs/INVESTIGATION_PROTOCOL.md),
+[reports/step5_validation.json](reports/step5_validation.json).
+
+---
+
 ## Running list of things intentionally left undone (don't rediscover these as surprises)
 
 - No profit/margin KPI — no cost-of-goods field exists anywhere in the source data.
@@ -436,8 +561,11 @@ Full detail: [STEP4A_VALIDATION.md](STEP4A_VALIDATION.md),
 - Geolocation is not in the canonical layer (see Step 2).
 - `order_status` default filtering for "recognized revenue" is an open question,
   deliberately exposed as a filter rather than decided (see Step 3A).
-- No causal inference, RAG, LLM integration, agents, recommendations, or
-  frontend exist anywhere in this repository yet.
+- No causal inference EXECUTION, action recommendations, persona-specific
+  narratives, feedback learning, or frontend exist anywhere in this
+  repository yet (Step 5's Causal Method Selector only ever *selects* a
+  rigor label — T1_DESCRIPTIVE/T2_ARITHMETIC/INSUFFICIENT_DATA, never T3/T4
+  — it never runs a causal estimation procedure).
 - The KPI engine (Step 3B) cannot compute `repeat_purchase_rate` by cohort
   month (no ready query, by design) or `avg_review_score`'s `review_level_average`
   variant grouped by dimension (not built) — both raise explicit errors
@@ -445,23 +573,34 @@ Full detail: [STEP4A_VALIDATION.md](STEP4A_VALIDATION.md),
 - PVM decomposition (Step 3D) is Revenue-only — Price × Volume × Mix is only
   meaningful for a SUM-of-price KPI; generalizing it to other KPIs is future
   work.
-- Neither the anomaly engine (3C) nor the driver decomposition engine (3D) has
-  been wired *into* each other or into a single "investigate this movement"
-  entry point yet — each is invoked independently today.
+- Step 5's Evidence Agent did not converge to a classification within its
+  per-hypothesis tool-iteration budget in the captured real demonstration
+  run (the model kept exploring rather than concluding) — global budgets
+  were not exhausted, so this is a per-agent-call loop-size tuning question,
+  not a hard system limit. See `STEP5_VALIDATION.md` §19.
+- Step 5 has no adaptive re-invocation loop — each of the six agents runs
+  exactly once per investigation; the Orchestrator never re-invokes Evidence/
+  Counter-Evidence with a targeted follow-up when confidence comes back thin.
+- `tools/context.build_tool_context()` (Step 5) builds the review corpus/
+  index twice internally (reuses two separate Step 4 functions rather than
+  one combined one) — a known, documented inefficiency, not hidden.
 
 ## How to pick this back up
 
 1. Read this file top to bottom.
 2. Read the most recent step's own validation doc in full (currently
-   [STEP3D_VALIDATION.md](STEP3D_VALIDATION.md)).
+   [STEP5_VALIDATION.md](STEP5_VALIDATION.md)).
 3. Reproduce the current state if needed:
    ```bash
    python scripts/step2_04_build_canonical.py     # rebuild data/processed/
-   python -m pytest tests/ scripts/test_profile_olist.py -q   # should show 354 passed
-   python scripts/step3a_validate_semantic_layer.py
+   python -m pytest tests/ -q                      # should show 686 passed, 0 failed
    python scripts/step3b_validate_engine.py        # Nov 2017 KPI numbers should match exactly
    python scripts/step3c_validate_engine.py        # Nov 2017 anomaly verdict should be CRITICAL
    python scripts/step3d_validate_engine.py        # Nov 2017 PVM numbers should match exactly
+   python scripts/step4_validate_engine.py         # rebuilds the Evidence Fabric package
+   python scripts/step5_investigate_november_2017.py  # needs GROQ_API_KEYS in causa/.env for a
+                                                        # real LLM run; falls back to a clearly-
+                                                        # labeled dry run otherwise
    ```
 4. Update this file's "Where we are right now" section and add a new entry to
    the Timeline table at the end of whatever step comes next.
