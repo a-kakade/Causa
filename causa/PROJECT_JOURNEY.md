@@ -13,6 +13,37 @@ has skipped ahead of what the prior step actually established.
 
 ## Where we are right now
 
+**Session note (2026-08-29): frontend verified working; Step 5 pipeline
+live-tested against a fresh Groq key.** A React/Vite frontend
+(`frontend/`, sibling to `causa/` at the repo root) already exists on disk,
+built against the design intent of showing every step's real backend
+output — but it is **not yet committed to git** (shows untracked) and has
+no live API wired up: `frontend/src/api/index.ts` currently points at
+`demoAdapter`, which serves every page from static JSON fixtures in
+`public/fixtures/`; `productionApi/index.ts` is an empty stub, since (per
+the bullet below) the Python backend still exposes no HTTP surface.
+Verified this session: dev server starts clean, all 9 nav pages
+(Overview, Active Investigation, Evidence Explorer, Evidence Graph,
+Recommendations, Impact & Feedback, Audit Logs, Security, Telemetry) render
+their fixture data with zero console errors and working client-side
+routing.
+
+Separately, a new Groq API key was supplied, confirmed valid directly
+against Groq's `/models` endpoint, and appended to the `GROQ_API_KEYS` pool
+in `causa/.env` (now 18 keys, still gitignored). `scripts/
+step5_investigate_november_2017.py` was re-run live end-to-end against it:
+`dry_run: false` (real Groq calls, not the `FakeLLMClient` fallback),
+139/139 Step 5 tests pass, all required numeric checks match, ~$0.024 of
+real Groq usage across both the ANALYST and EXECUTIVE runs. The
+investigation itself came back `ABSTAINED` this run (the Hypothesis
+agent's tool-calling loop didn't submit a valid hypothesis set within its
+iteration budget) — consistent with the same honest-abstention behavior
+already documented in `STEP5_VALIDATION.md`, just with different
+LLM-output variance than the previously-committed run (which abstained
+too, but after generating 3 hypotheses first). This regenerated
+`reports/step5_validation.json`, which the earlier committed version now
+differs from.
+
 **Step 9 complete (2026-08-28): the Human Feedback & Learning Loop.** The
 system now learns from analysts without ever automatically fine-tuning or
 retraining anything: `Feedback → Structured Classification → Stored
@@ -321,7 +352,7 @@ feedback learning, and a frontend still don't exist.)**
 | 7 | Decision & Action Intelligence Engine | ✅ Complete | [STEP7_VALIDATION.md](STEP7_VALIDATION.md) |
 | 8 | Persona-Aware KPI Storytelling | ✅ Complete | [STEP8_VALIDATION.md](STEP8_VALIDATION.md) |
 | 9 | Human Feedback & Learning Loop | ✅ Complete | [STEP9_VALIDATION.md](STEP9_VALIDATION.md) |
-| — | Frontend/API | ⬜ Not started | — |
+| — | Frontend/API | 🟡 Frontend exists, demo-mode only (untracked); no backend API yet | `frontend/` |
 
 ---
 
@@ -858,9 +889,13 @@ Full detail: [STEP6_VALIDATION.md](STEP6_VALIDATION.md),
 - Geolocation is not in the canonical layer (see Step 2).
 - `order_status` default filtering for "recognized revenue" is an open question,
   deliberately exposed as a filter rather than decided (see Step 3A).
-- No frontend/API exists anywhere in this repository yet (Steps 1-9 are all
+- No backend HTTP/REST/GraphQL API exists yet (Steps 1-9 are all
   Python-callable, matching the task's own "don't introduce a UI/API unless
-  one already exists" instruction). Step 6 added causal inference EXECUTION
+  one already exists" instruction) — `frontend/src/api/productionApi/`
+  is a documented empty stub for when one does. A frontend UI does now
+  exist on disk (`frontend/`, see the 2026-08-29 session note above) but
+  runs entirely off static demo fixtures, is not yet committed to git, and
+  has never been wired to a live backend call. Step 6 added causal inference EXECUTION
   (`src/causal/` — eligibility, method selection, DiD/ITS/CausalImpact
   estimators) on top of Step 5's Causal Method Selector (which only ever
   *selected* a rigor label and never ran an estimation procedure of its
