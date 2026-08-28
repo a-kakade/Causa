@@ -1,0 +1,5297 @@
+{
+  "step": "4",
+  "scope": "Evidence Fabric: structured evidence adapters over Steps 3B/3C/3D, a governed review-retrieval pipeline (untrusted-data classification, PII/injection screening, structured-first retrieval, MMR reranking), a NetworkX evidence graph with access control, and a complete November 2017 evidence package. No causal inference, no recommendations, no LLM calls, no agents.",
+  "kpi_movement_checks": {
+    "revenue": {
+      "computed_pct_change": 52.09903901787393,
+      "required_pct_change": 52.1,
+      "matches": true
+    },
+    "orders": {
+      "computed_pct_change": 62.90218095443748,
+      "required_pct_change": 62.9,
+      "matches": true
+    },
+    "aov": {
+      "computed_pct_change": -6.752327173044138,
+      "required_pct_change": -6.75,
+      "matches": true
+    },
+    "freight_revenue": {
+      "computed_pct_change": 60.68862475443164,
+      "required_pct_change": 60.69,
+      "matches": true
+    },
+    "avg_delivery_days": {
+      "computed_pct_change": 27.86974524729181,
+      "required_pct_change": 27.87,
+      "matches": true
+    },
+    "avg_review_score": {
+      "computed_pct_change": -5.159601907954981,
+      "required_pct_change": -5.16,
+      "matches": true
+    }
+  },
+  "revenue_absolute_change_check": {
+    "computed": 346051.9399999998,
+    "required": 346051.94,
+    "matches": true
+  },
+  "pvm_checks": {
+    "volume": {
+      "computed": 417227.65,
+      "required": 417227.65,
+      "matches": true
+    },
+    "price": {
+      "computed": 4674.63,
+      "required": 4674.63,
+      "matches": true
+    },
+    "mix": {
+      "computed": -75850.34,
+      "required": -75850.34,
+      "matches": true
+    }
+  },
+  "materiality_check": {
+    "verdict": "CRITICAL",
+    "expected_one_of": [
+      "MATERIAL",
+      "CRITICAL"
+    ],
+    "matches": true
+  },
+  "all_required_values_match": true,
+  "structured_evidence_count": 56,
+  "structured_evidence_by_type": {
+    "KPI_MOVEMENT": 6,
+    "ANOMALY_SIGNAL": 1,
+    "DRIVER_CONTRIBUTION": 3,
+    "SEGMENT_CONTRIBUTION": 40,
+    "CONCURRENT_KPI": 5,
+    "STATISTICAL_RESULT": 1
+  },
+  "review_evidence_count": 12160,
+  "review_language_distribution": {
+    "PT": 4241,
+    "UNKNOWN": 7519,
+    "OTHER": 374,
+    "EN": 26
+  },
+  "review_security_status_distribution": {
+    "SAFE": 12160
+  },
+  "review_pii_detected_count": 577,
+  "retrieval": {
+    "delivery_related": {
+      "n_results": 10,
+      "telemetry": {
+        "candidates_before_filter": 5019,
+        "candidates_after_filter": 3084,
+        "vector_searches_performed": 1,
+        "embedding_cache_hits": 0,
+        "embedding_cache_misses": 0,
+        "structured_filter_latency_ms": 2.479,
+        "semantic_search_latency_ms": 223.506,
+        "reranking_latency_ms": 1.465,
+        "total_latency_ms": 228.058,
+        "estimated_embedding_cost_usd": 0.0,
+        "llm_calls_made": 0
+      }
+    },
+    "low_score": {
+      "n_results": 10,
+      "telemetry": {
+        "candidates_before_filter": 5019,
+        "candidates_after_filter": 1028,
+        "vector_searches_performed": 0,
+        "embedding_cache_hits": 0,
+        "embedding_cache_misses": 0,
+        "structured_filter_latency_ms": 2.751,
+        "semantic_search_latency_ms": 0.515,
+        "reranking_latency_ms": 0.698,
+        "total_latency_ms": 4.146,
+        "estimated_embedding_cost_usd": 0.0,
+        "llm_calls_made": 0
+      }
+    },
+    "category_specific": {
+      "n_results": 10,
+      "telemetry": {
+        "candidates_before_filter": 5019,
+        "candidates_after_filter": 360,
+        "vector_searches_performed": 0,
+        "embedding_cache_hits": 0,
+        "embedding_cache_misses": 0,
+        "structured_filter_latency_ms": 3.027,
+        "semantic_search_latency_ms": 0.108,
+        "reranking_latency_ms": 0.157,
+        "total_latency_ms": 3.47,
+        "estimated_embedding_cost_usd": 0.0,
+        "llm_calls_made": 0
+      }
+    },
+    "product_quality": {
+      "n_results": 10,
+      "telemetry": {
+        "candidates_before_filter": 5019,
+        "candidates_after_filter": 3084,
+        "vector_searches_performed": 1,
+        "embedding_cache_hits": 0,
+        "embedding_cache_misses": 0,
+        "structured_filter_latency_ms": 2.422,
+        "semantic_search_latency_ms": 28.971,
+        "reranking_latency_ms": 1.422,
+        "total_latency_ms": 33.09,
+        "estimated_embedding_cost_usd": 0.0,
+        "llm_calls_made": 0
+      }
+    }
+  },
+  "contradiction_checks": {
+    "bed_bath_table": {
+      "previous_low_score_rate": 0.1261682242990654,
+      "current_low_score_rate": 0.23243933588761176,
+      "n_previous": 428,
+      "n_current": 783,
+      "z_score": 4.463049987186008,
+      "contradicts": false
+    },
+    "health_beauty": {
+      "previous_low_score_rate": 0.11676646706586827,
+      "current_low_score_rate": 0.13904761904761906,
+      "n_previous": 334,
+      "n_current": 525,
+      "z_score": 0.945404784371492,
+      "contradicts": false
+    },
+    "furniture_decor": {
+      "previous_low_score_rate": 0.14393939393939395,
+      "current_low_score_rate": 0.2303370786516854,
+      "n_previous": 264,
+      "n_current": 534,
+      "z_score": 2.8614982710541907,
+      "contradicts": false
+    },
+    "watches_gifts": {
+      "previous_low_score_rate": 0.13167259786476868,
+      "current_low_score_rate": 0.16904761904761906,
+      "n_previous": 281,
+      "n_current": 420,
+      "z_score": 1.3433186278970772,
+      "contradicts": false
+    },
+    "toys": {
+      "previous_low_score_rate": 0.09157509157509157,
+      "current_low_score_rate": 0.15192743764172337,
+      "n_previous": 273,
+      "n_current": 441,
+      "z_score": 2.339132241767036,
+      "contradicts": false
+    },
+    "computers_accessories": {
+      "previous_low_score_rate": 0.13076923076923078,
+      "current_low_score_rate": 0.15753424657534246,
+      "n_previous": 260,
+      "n_current": 438,
+      "z_score": 0.963921904680059,
+      "contradicts": false
+    },
+    "garden_tools": {
+      "previous_low_score_rate": 0.09047619047619047,
+      "current_low_score_rate": 0.17452830188679244,
+      "n_previous": 210,
+      "n_current": 424,
+      "z_score": 2.815436426517924,
+      "contradicts": false
+    },
+    "housewares": {
+      "previous_low_score_rate": 0.10382513661202186,
+      "current_low_score_rate": 0.1608187134502924,
+      "n_previous": 183,
+      "n_current": 342,
+      "z_score": 1.7882985826608866,
+      "contradicts": false
+    },
+    "sports_leisure": {
+      "previous_low_score_rate": 0.10287081339712918,
+      "current_low_score_rate": 0.11552346570397112,
+      "n_previous": 418,
+      "n_current": 554,
+      "z_score": 0.6239614907295062,
+      "contradicts": false
+    }
+  },
+  "graph_summary": {
+    "n_nodes": 39,
+    "n_edges": 29,
+    "node_types": [
+      "CONFIDENCE",
+      "DRIVER",
+      "EVIDENCE",
+      "INVESTIGATION",
+      "KPI",
+      "MOVEMENT"
+    ],
+    "relationship_types": [
+      "EXPLAINED_BY",
+      "HAS_CONFIDENCE",
+      "HAS_MOVEMENT",
+      "SUPPORTED_BY"
+    ]
+  },
+  "build_seconds": 52.88,
+  "full_structured_evidence": [
+    {
+      "evidence_id": "ev_kpimove_6e864b5dccd95feb",
+      "evidence_type": "KPI_MOVEMENT",
+      "evidence_tier": "T1_DESCRIPTIVE",
+      "claim": "revenue moved from 664219.43 (2017-10-01..2017-10-31) to 1010271.3699999999 (2017-11-01..2017-11-30), a change of 346051.9399999998 (+52.10%).",
+      "value": {
+        "value": 346051.9399999998,
+        "unit": null
+      },
+      "time": {
+        "start": "2017-10-01",
+        "end": "2017-11-30"
+      },
+      "dimensions": {},
+      "confidence": "HIGH",
+      "source": {
+        "system": "kpi_engine",
+        "component": "kpi.engine.KPIEngine.compare_periods",
+        "version": "1.0"
+      },
+      "lineage": [
+        {
+          "layer": "kpi",
+          "reference": "revenue"
+        },
+        {
+          "layer": "semantic_definition",
+          "reference": "docs/KPI_SEMANTICS_PREVIEW.md#causa_revenue"
+        },
+        {
+          "layer": "canonical_table_field",
+          "reference": "agg_order_items.item_price_total"
+        },
+        {
+          "layer": "raw_table_column",
+          "reference": "order_items.price"
+        }
+      ],
+      "freshness": {
+        "event_time": "2017-11-30",
+        "data_availability_time": null,
+        "processing_time": "2026-08-26T18:05:04.101242+00:00",
+        "is_historical": true
+      },
+      "quality": {
+        "completeness": 0.9876723223753977,
+        "freshness": null,
+        "source_reliability": 1.0,
+        "coverage": 0.9876723223753977,
+        "historical_sufficiency": null,
+        "retrieval_quality": null
+      },
+      "security": {
+        "classification": "PUBLIC_ANALYTICAL",
+        "trust_level": "TRUSTED_SYSTEM",
+        "security_status": "SAFE",
+        "pii_detected": false,
+        "pii_types": [],
+        "redaction_status": "NOT_APPLICABLE"
+      },
+      "relationships": [],
+      "metadata": {
+        "previous_value": 664219.43,
+        "current_value": 1010271.3699999999,
+        "percentage_change": 52.09903901787393
+      },
+      "created_at": "2026-08-26T18:05:04.101298+00:00"
+    },
+    {
+      "evidence_id": "ev_kpimove_21524d1db518dcfe",
+      "evidence_type": "KPI_MOVEMENT",
+      "evidence_tier": "T1_DESCRIPTIVE",
+      "claim": "orders moved from 4631.0 (2017-10-01..2017-10-31) to 7544.0 (2017-11-01..2017-11-30), a change of 2913.0 (+62.90%).",
+      "value": {
+        "value": 2913.0,
+        "unit": null
+      },
+      "time": {
+        "start": "2017-10-01",
+        "end": "2017-11-30"
+      },
+      "dimensions": {},
+      "confidence": "HIGH",
+      "source": {
+        "system": "kpi_engine",
+        "component": "kpi.engine.KPIEngine.compare_periods",
+        "version": "1.0"
+      },
+      "lineage": [
+        {
+          "layer": "kpi",
+          "reference": "orders"
+        },
+        {
+          "layer": "semantic_definition",
+          "reference": "config/kpis.yaml#orders"
+        },
+        {
+          "layer": "canonical_table_field",
+          "reference": "fact_orders.order_id"
+        },
+        {
+          "layer": "raw_table_column",
+          "reference": "orders.order_id"
+        }
+      ],
+      "freshness": {
+        "event_time": "2017-11-30",
+        "data_availability_time": null,
+        "processing_time": "2026-08-26T18:05:04.108984+00:00",
+        "is_historical": true
+      },
+      "quality": {
+        "completeness": 1.0,
+        "freshness": null,
+        "source_reliability": 1.0,
+        "coverage": 1.0,
+        "historical_sufficiency": null,
+        "retrieval_quality": null
+      },
+      "security": {
+        "classification": "PUBLIC_ANALYTICAL",
+        "trust_level": "TRUSTED_SYSTEM",
+        "security_status": "SAFE",
+        "pii_detected": false,
+        "pii_types": [],
+        "redaction_status": "NOT_APPLICABLE"
+      },
+      "relationships": [],
+      "metadata": {
+        "previous_value": 4631.0,
+        "current_value": 7544.0,
+        "percentage_change": 62.90218095443748
+      },
+      "created_at": "2026-08-26T18:05:04.109032+00:00"
+    },
+    {
+      "evidence_id": "ev_kpimove_f6b6be1db3a405ff",
+      "evidence_type": "KPI_MOVEMENT",
+      "evidence_tier": "T1_DESCRIPTIVE",
+      "claim": "aov moved from 145.40705560420315 (2017-10-01..2017-10-31) to 135.58869547711714 (2017-11-01..2017-11-30), a change of -9.81836012708601 (-6.75%).",
+      "value": {
+        "value": -9.81836012708601,
+        "unit": null
+      },
+      "time": {
+        "start": "2017-10-01",
+        "end": "2017-11-30"
+      },
+      "dimensions": {},
+      "confidence": "HIGH",
+      "source": {
+        "system": "kpi_engine",
+        "component": "kpi.engine.KPIEngine.compare_periods",
+        "version": "1.0"
+      },
+      "lineage": [
+        {
+          "layer": "kpi",
+          "reference": "aov"
+        },
+        {
+          "layer": "semantic_definition",
+          "reference": "config/kpis.yaml#aov"
+        },
+        {
+          "layer": "canonical_table_field",
+          "reference": "agg_order_items.item_price_total, agg_order_items.order_id"
+        },
+        {
+          "layer": "raw_table_column",
+          "reference": "order_items.price, order_items.order_id"
+        }
+      ],
+      "freshness": {
+        "event_time": "2017-11-30",
+        "data_availability_time": null,
+        "processing_time": "2026-08-26T18:05:04.199392+00:00",
+        "is_historical": true
+      },
+      "quality": {
+        "completeness": 0.9876723223753977,
+        "freshness": null,
+        "source_reliability": 1.0,
+        "coverage": 0.9876723223753977,
+        "historical_sufficiency": null,
+        "retrieval_quality": null
+      },
+      "security": {
+        "classification": "PUBLIC_ANALYTICAL",
+        "trust_level": "TRUSTED_SYSTEM",
+        "security_status": "SAFE",
+        "pii_detected": false,
+        "pii_types": [],
+        "redaction_status": "NOT_APPLICABLE"
+      },
+      "relationships": [],
+      "metadata": {
+        "previous_value": 145.40705560420315,
+        "current_value": 135.58869547711714,
+        "percentage_change": -6.752327173044138
+      },
+      "created_at": "2026-08-26T18:05:04.199439+00:00"
+    },
+    {
+      "evidence_id": "ev_kpimove_ba8344367543dfb5",
+      "evidence_type": "KPI_MOVEMENT",
+      "evidence_tier": "T1_DESCRIPTIVE",
+      "claim": "freight_revenue moved from 105092.94 (2017-10-01..2017-10-31) to 168872.4 (2017-11-01..2017-11-30), a change of 63779.45999999999 (+60.69%).",
+      "value": {
+        "value": 63779.45999999999,
+        "unit": null
+      },
+      "time": {
+        "start": "2017-10-01",
+        "end": "2017-11-30"
+      },
+      "dimensions": {},
+      "confidence": "HIGH",
+      "source": {
+        "system": "kpi_engine",
+        "component": "kpi.engine.KPIEngine.compare_periods",
+        "version": "1.0"
+      },
+      "lineage": [
+        {
+          "layer": "kpi",
+          "reference": "freight_revenue"
+        },
+        {
+          "layer": "semantic_definition",
+          "reference": "config/kpis.yaml#freight_revenue"
+        },
+        {
+          "layer": "canonical_table_field",
+          "reference": "agg_order_items.item_freight_total"
+        },
+        {
+          "layer": "raw_table_column",
+          "reference": "order_items.freight_value"
+        }
+      ],
+      "freshness": {
+        "event_time": "2017-11-30",
+        "data_availability_time": null,
+        "processing_time": "2026-08-26T18:05:04.294055+00:00",
+        "is_historical": true
+      },
+      "quality": {
+        "completeness": 0.9876723223753977,
+        "freshness": null,
+        "source_reliability": 1.0,
+        "coverage": 0.9876723223753977,
+        "historical_sufficiency": null,
+        "retrieval_quality": null
+      },
+      "security": {
+        "classification": "PUBLIC_ANALYTICAL",
+        "trust_level": "TRUSTED_SYSTEM",
+        "security_status": "SAFE",
+        "pii_detected": false,
+        "pii_types": [],
+        "redaction_status": "NOT_APPLICABLE"
+      },
+      "relationships": [],
+      "metadata": {
+        "previous_value": 105092.94,
+        "current_value": 168872.4,
+        "percentage_change": 60.68862475443164
+      },
+      "created_at": "2026-08-26T18:05:04.294105+00:00"
+    },
+    {
+      "evidence_id": "ev_kpimove_ebad522b67d1132b",
+      "evidence_type": "KPI_MOVEMENT",
+      "evidence_tier": "T1_DESCRIPTIVE",
+      "claim": "avg_delivery_days moved from 11.856699698526128 (2017-10-01..2017-10-31) to 15.161131699241777 (2017-11-01..2017-11-30), a change of 3.3044320007156482 (+27.87%).",
+      "value": {
+        "value": 3.3044320007156482,
+        "unit": null
+      },
+      "time": {
+        "start": "2017-10-01",
+        "end": "2017-11-30"
+      },
+      "dimensions": {},
+      "confidence": "HIGH",
+      "source": {
+        "system": "kpi_engine",
+        "component": "kpi.engine.KPIEngine.compare_periods",
+        "version": "1.0"
+      },
+      "lineage": [
+        {
+          "layer": "kpi",
+          "reference": "avg_delivery_days"
+        },
+        {
+          "layer": "semantic_definition",
+          "reference": "docs/CANONICAL_DATA_MODEL.md#delivery-fields"
+        },
+        {
+          "layer": "canonical_table_field",
+          "reference": "fact_orders.delivery_days, fact_orders.delivery_data_quality_flag"
+        },
+        {
+          "layer": "raw_table_column",
+          "reference": "orders.order_purchase_timestamp, orders.order_delivered_customer_date"
+        }
+      ],
+      "freshness": {
+        "event_time": "2017-11-30",
+        "data_availability_time": null,
+        "processing_time": "2026-08-26T18:05:04.303746+00:00",
+        "is_historical": true
+      },
+      "quality": {
+        "completeness": 0.9660657476139979,
+        "freshness": null,
+        "source_reliability": 1.0,
+        "coverage": 0.9660657476139979,
+        "historical_sufficiency": null,
+        "retrieval_quality": null
+      },
+      "security": {
+        "classification": "PUBLIC_ANALYTICAL",
+        "trust_level": "TRUSTED_SYSTEM",
+        "security_status": "SAFE",
+        "pii_detected": false,
+        "pii_types": [],
+        "redaction_status": "NOT_APPLICABLE"
+      },
+      "relationships": [],
+      "metadata": {
+        "previous_value": 11.856699698526128,
+        "current_value": 15.161131699241777,
+        "percentage_change": 27.86974524729181
+      },
+      "created_at": "2026-08-26T18:05:04.303791+00:00"
+    },
+    {
+      "evidence_id": "ev_kpimove_445bceadecfbf630",
+      "evidence_type": "KPI_MOVEMENT",
+      "evidence_tier": "T1_DESCRIPTIVE",
+      "claim": "avg_review_score moved from 4.123448726322665 (2017-10-01..2017-10-31) to 3.9106951871657754 (2017-11-01..2017-11-30), a change of -0.21275353915688955 (-5.16%).",
+      "value": {
+        "value": -0.21275353915688955,
+        "unit": null
+      },
+      "time": {
+        "start": "2017-10-01",
+        "end": "2017-11-30"
+      },
+      "dimensions": {},
+      "confidence": "HIGH",
+      "source": {
+        "system": "kpi_engine",
+        "component": "kpi.engine.KPIEngine.compare_periods",
+        "version": "1.0"
+      },
+      "lineage": [
+        {
+          "layer": "kpi",
+          "reference": "avg_review_score"
+        },
+        {
+          "layer": "semantic_definition",
+          "reference": "docs/REVIEW_GOVERNANCE.md"
+        },
+        {
+          "layer": "canonical_table_field",
+          "reference": "agg_order_reviews.latest_review_score"
+        },
+        {
+          "layer": "raw_table_column",
+          "reference": "order_reviews.review_score, order_reviews.review_answer_timestamp"
+        }
+      ],
+      "freshness": {
+        "event_time": "2017-11-30",
+        "data_availability_time": null,
+        "processing_time": "2026-08-26T18:05:04.387362+00:00",
+        "is_historical": true
+      },
+      "quality": {
+        "completeness": 0.9915164369034994,
+        "freshness": null,
+        "source_reliability": 1.0,
+        "coverage": 0.9915164369034994,
+        "historical_sufficiency": null,
+        "retrieval_quality": null
+      },
+      "security": {
+        "classification": "PUBLIC_ANALYTICAL",
+        "trust_level": "TRUSTED_SYSTEM",
+        "security_status": "SAFE",
+        "pii_detected": false,
+        "pii_types": [],
+        "redaction_status": "NOT_APPLICABLE"
+      },
+      "relationships": [],
+      "metadata": {
+        "previous_value": 4.123448726322665,
+        "current_value": 3.9106951871657754,
+        "percentage_change": -5.159601907954981
+      },
+      "created_at": "2026-08-26T18:05:04.387398+00:00"
+    },
+    {
+      "evidence_id": "ev_anomalysig_30805f60c2e10da9",
+      "evidence_type": "ANOMALY_SIGNAL",
+      "evidence_tier": "T3_STATISTICAL",
+      "claim": "revenue's 2017-11 observation (1010271.3699999999) was assessed as CRITICAL materiality against a rolling_mean baseline of 549955.67 (movement 460315.69999999984, 83.70050989746134%).",
+      "value": {
+        "value": 1.0,
+        "unit": "materiality_score_0_1"
+      },
+      "time": {
+        "start": "2017-11",
+        "end": "2017-11"
+      },
+      "dimensions": {},
+      "confidence": "HIGH",
+      "source": {
+        "system": "anomaly_engine",
+        "component": "anomaly.engine.detect",
+        "version": "1.0"
+      },
+      "lineage": [
+        {
+          "layer": "anomaly_engine",
+          "reference": "src/anomaly/engine.py::detect"
+        },
+        {
+          "layer": "baseline_method",
+          "reference": "rolling_mean"
+        },
+        {
+          "layer": "kpi_lineage_pointer",
+          "reference": "see KPI_OBSERVATION evidence for kpi_id=revenue, period=2017-11"
+        }
+      ],
+      "freshness": {
+        "event_time": "2017-11",
+        "data_availability_time": null,
+        "processing_time": "2026-08-26T18:05:04.777527+00:00",
+        "is_historical": true
+      },
+      "quality": {
+        "completeness": null,
+        "freshness": null,
+        "source_reliability": 1.0,
+        "coverage": 0.9876723223753977,
+        "historical_sufficiency": 1.0,
+        "retrieval_quality": null
+      },
+      "security": {
+        "classification": "PUBLIC_ANALYTICAL",
+        "trust_level": "TRUSTED_SYSTEM",
+        "security_status": "SAFE",
+        "pii_detected": false,
+        "pii_types": [],
+        "redaction_status": "NOT_APPLICABLE"
+      },
+      "relationships": [],
+      "metadata": {
+        "verdict": "CRITICAL",
+        "score": 1.0,
+        "baseline_level": "global",
+        "downgraded": false
+      },
+      "created_at": "2026-08-26T18:05:04.777559+00:00"
+    },
+    {
+      "evidence_id": "ev_statresult_00a3226b7a9981f3",
+      "evidence_type": "STATISTICAL_RESULT",
+      "evidence_tier": "T3_STATISTICAL",
+      "claim": "revenue's 2017-11 z-score was 5.317625144682472 (robust z-score 5.0198421394447115, percentile 100.0) relative to its baseline distribution.",
+      "value": {
+        "value": 5.317625144682472,
+        "unit": "z_score"
+      },
+      "time": {
+        "start": "2017-11",
+        "end": "2017-11"
+      },
+      "dimensions": {},
+      "confidence": "HIGH",
+      "source": {
+        "system": "anomaly_engine",
+        "component": "anomaly.statistics",
+        "version": "1.0"
+      },
+      "lineage": [
+        {
+          "layer": "anomaly_engine",
+          "reference": "src/anomaly/engine.py::detect"
+        },
+        {
+          "layer": "baseline_method",
+          "reference": "rolling_mean"
+        },
+        {
+          "layer": "kpi_lineage_pointer",
+          "reference": "see KPI_OBSERVATION evidence for kpi_id=revenue, period=2017-11"
+        }
+      ],
+      "freshness": {
+        "event_time": "2017-11",
+        "data_availability_time": null,
+        "processing_time": "2026-08-26T18:05:04.777617+00:00",
+        "is_historical": true
+      },
+      "quality": {
+        "completeness": null,
+        "freshness": null,
+        "source_reliability": 1.0,
+        "coverage": 0.9876723223753977,
+        "historical_sufficiency": null,
+        "retrieval_quality": null
+      },
+      "security": {
+        "classification": "PUBLIC_ANALYTICAL",
+        "trust_level": "TRUSTED_SYSTEM",
+        "security_status": "SAFE",
+        "pii_detected": false,
+        "pii_types": [],
+        "redaction_status": "NOT_APPLICABLE"
+      },
+      "relationships": [],
+      "metadata": {
+        "robust_z_score": 5.0198421394447115,
+        "percentile": 100.0,
+        "signals_agree": true
+      },
+      "created_at": "2026-08-26T18:05:04.777627+00:00"
+    },
+    {
+      "evidence_id": "ev_driver_b0c41dfd608c1491",
+      "evidence_type": "DRIVER_CONTRIBUTION",
+      "evidence_tier": "T2_ARITHMETIC",
+      "claim": "The volume effect contributed +417227.65 to the revenue change from 2017-10 to 2017-11 (+120.6% of total change), via PVM decomposition.",
+      "value": {
+        "value": 417227.65,
+        "unit": "BRL"
+      },
+      "time": {
+        "start": "2017-10",
+        "end": "2017-11"
+      },
+      "dimensions": {
+        "driver": "volume",
+        "direction": "positive"
+      },
+      "confidence": "HIGH",
+      "source": {
+        "system": "driver_engine",
+        "component": "drivers.pvm.compute_pvm_bridge",
+        "version": "1.0"
+      },
+      "lineage": [
+        {
+          "layer": "kpi",
+          "reference": "revenue"
+        },
+        {
+          "layer": "semantic_definition",
+          "reference": "docs/KPI_SEMANTICS_PREVIEW.md#causa_revenue"
+        },
+        {
+          "layer": "canonical_table_field",
+          "reference": "agg_order_items.item_price_total"
+        },
+        {
+          "layer": "raw_table_column",
+          "reference": "order_items.price"
+        }
+      ],
+      "freshness": {
+        "event_time": "2017-11",
+        "data_availability_time": null,
+        "processing_time": "2026-08-26T18:05:05.500887+00:00",
+        "is_historical": true
+      },
+      "quality": {
+        "completeness": null,
+        "freshness": null,
+        "source_reliability": 1.0,
+        "coverage": null,
+        "historical_sufficiency": null,
+        "retrieval_quality": null
+      },
+      "security": {
+        "classification": "PUBLIC_ANALYTICAL",
+        "trust_level": "TRUSTED_SYSTEM",
+        "security_status": "SAFE",
+        "pii_detected": false,
+        "pii_types": [],
+        "redaction_status": "NOT_APPLICABLE"
+      },
+      "relationships": [],
+      "metadata": {
+        "contribution_pct_of_change": 120.56792694865396,
+        "method": "PVM",
+        "evidence_type_source": "deterministic"
+      },
+      "created_at": "2026-08-26T18:05:05.500930+00:00"
+    },
+    {
+      "evidence_id": "ev_driver_db0b4b68f6845adc",
+      "evidence_type": "DRIVER_CONTRIBUTION",
+      "evidence_tier": "T2_ARITHMETIC",
+      "claim": "The price effect contributed +4674.63 to the revenue change from 2017-10 to 2017-11 (+1.4% of total change), via PVM decomposition.",
+      "value": {
+        "value": 4674.63,
+        "unit": "BRL"
+      },
+      "time": {
+        "start": "2017-10",
+        "end": "2017-11"
+      },
+      "dimensions": {
+        "driver": "price",
+        "direction": "positive"
+      },
+      "confidence": "HIGH",
+      "source": {
+        "system": "driver_engine",
+        "component": "drivers.pvm.compute_pvm_bridge",
+        "version": "1.0"
+      },
+      "lineage": [
+        {
+          "layer": "kpi",
+          "reference": "revenue"
+        },
+        {
+          "layer": "semantic_definition",
+          "reference": "docs/KPI_SEMANTICS_PREVIEW.md#causa_revenue"
+        },
+        {
+          "layer": "canonical_table_field",
+          "reference": "agg_order_items.item_price_total"
+        },
+        {
+          "layer": "raw_table_column",
+          "reference": "order_items.price"
+        }
+      ],
+      "freshness": {
+        "event_time": "2017-11",
+        "data_availability_time": null,
+        "processing_time": "2026-08-26T18:05:05.500996+00:00",
+        "is_historical": true
+      },
+      "quality": {
+        "completeness": null,
+        "freshness": null,
+        "source_reliability": 1.0,
+        "coverage": null,
+        "historical_sufficiency": null,
+        "retrieval_quality": null
+      },
+      "security": {
+        "classification": "PUBLIC_ANALYTICAL",
+        "trust_level": "TRUSTED_SYSTEM",
+        "security_status": "SAFE",
+        "pii_detected": false,
+        "pii_types": [],
+        "redaction_status": "NOT_APPLICABLE"
+      },
+      "relationships": [],
+      "metadata": {
+        "contribution_pct_of_change": 1.3508462554593508,
+        "method": "PVM",
+        "evidence_type_source": "deterministic"
+      },
+      "created_at": "2026-08-26T18:05:05.501007+00:00"
+    },
+    {
+      "evidence_id": "ev_driver_6b458b5ffcf491ee",
+      "evidence_type": "DRIVER_CONTRIBUTION",
+      "evidence_tier": "T2_ARITHMETIC",
+      "claim": "The mix effect contributed -75850.34 to the revenue change from 2017-10 to 2017-11 (-21.9% of total change), via PVM decomposition.",
+      "value": {
+        "value": -75850.34,
+        "unit": "BRL"
+      },
+      "time": {
+        "start": "2017-10",
+        "end": "2017-11"
+      },
+      "dimensions": {
+        "driver": "mix",
+        "direction": "negative"
+      },
+      "confidence": "HIGH",
+      "source": {
+        "system": "driver_engine",
+        "component": "drivers.pvm.compute_pvm_bridge",
+        "version": "1.0"
+      },
+      "lineage": [
+        {
+          "layer": "kpi",
+          "reference": "revenue"
+        },
+        {
+          "layer": "semantic_definition",
+          "reference": "docs/KPI_SEMANTICS_PREVIEW.md#causa_revenue"
+        },
+        {
+          "layer": "canonical_table_field",
+          "reference": "agg_order_items.item_price_total"
+        },
+        {
+          "layer": "raw_table_column",
+          "reference": "order_items.price"
+        }
+      ],
+      "freshness": {
+        "event_time": "2017-11",
+        "data_availability_time": null,
+        "processing_time": "2026-08-26T18:05:05.501042+00:00",
+        "is_historical": true
+      },
+      "quality": {
+        "completeness": null,
+        "freshness": null,
+        "source_reliability": 1.0,
+        "coverage": null,
+        "historical_sufficiency": null,
+        "retrieval_quality": null
+      },
+      "security": {
+        "classification": "PUBLIC_ANALYTICAL",
+        "trust_level": "TRUSTED_SYSTEM",
+        "security_status": "SAFE",
+        "pii_detected": false,
+        "pii_types": [],
+        "redaction_status": "NOT_APPLICABLE"
+      },
+      "relationships": [],
+      "metadata": {
+        "contribution_pct_of_change": -21.91877320411332,
+        "method": "PVM",
+        "evidence_type_source": "deterministic"
+      },
+      "created_at": "2026-08-26T18:05:05.501050+00:00"
+    },
+    {
+      "evidence_id": "ev_segment_38ba8f141bcd8da4",
+      "evidence_type": "SEGMENT_CONTRIBUTION",
+      "evidence_tier": "T2_ARITHMETIC",
+      "claim": "bed_bath_table (product_category) moved from 46198.0 to 89412.54000000001 between 2017-10 and 2017-11, an absolute change of +43214.54 (12.49% of the total movement).",
+      "value": {
+        "value": 43214.54000000001,
+        "unit": "BRL"
+      },
+      "time": {
+        "start": "2017-10",
+        "end": "2017-11"
+      },
+      "dimensions": {
+        "segment_type": "product_category",
+        "segment_value": "bed_bath_table"
+      },
+      "confidence": "HIGH",
+      "source": {
+        "system": "driver_engine",
+        "component": "drivers.contribution.compute_segment_contributions",
+        "version": "1.0"
+      },
+      "lineage": [
+        {
+          "layer": "kpi",
+          "reference": "revenue"
+        },
+        {
+          "layer": "semantic_definition",
+          "reference": "docs/KPI_SEMANTICS_PREVIEW.md#causa_revenue"
+        },
+        {
+          "layer": "canonical_table_field",
+          "reference": "agg_order_items.item_price_total"
+        },
+        {
+          "layer": "raw_table_column",
+          "reference": "order_items.price"
+        },
+        {
+          "layer": "segment_method",
+          "reference": "deterministic_contribution_analysis"
+        }
+      ],
+      "freshness": {
+        "event_time": "2017-11",
+        "data_availability_time": null,
+        "processing_time": "2026-08-26T18:05:05.501096+00:00",
+        "is_historical": true
+      },
+      "quality": {
+        "completeness": null,
+        "freshness": null,
+        "source_reliability": 1.0,
+        "coverage": null,
+        "historical_sufficiency": null,
+        "retrieval_quality": null
+      },
+      "security": {
+        "classification": "PUBLIC_ANALYTICAL",
+        "trust_level": "TRUSTED_SYSTEM",
+        "security_status": "SAFE",
+        "pii_detected": false,
+        "pii_types": [],
+        "redaction_status": "NOT_APPLICABLE"
+      },
+      "relationships": [],
+      "metadata": {
+        "rank": 1,
+        "sample_size": 975,
+        "history_periods": 11,
+        "percentage_change": 93.54201480583578
+      },
+      "created_at": "2026-08-26T18:05:05.501105+00:00"
+    },
+    {
+      "evidence_id": "ev_segment_6122a76cacd9dc2a",
+      "evidence_type": "SEGMENT_CONTRIBUTION",
+      "evidence_tier": "T2_ARITHMETIC",
+      "claim": "health_beauty (product_category) moved from 41915.72 to 79120.4 between 2017-10 and 2017-11, an absolute change of +37204.68 (10.75% of the total movement).",
+      "value": {
+        "value": 37204.67999999999,
+        "unit": "BRL"
+      },
+      "time": {
+        "start": "2017-10",
+        "end": "2017-11"
+      },
+      "dimensions": {
+        "segment_type": "product_category",
+        "segment_value": "health_beauty"
+      },
+      "confidence": "HIGH",
+      "source": {
+        "system": "driver_engine",
+        "component": "drivers.contribution.compute_segment_contributions",
+        "version": "1.0"
+      },
+      "lineage": [
+        {
+          "layer": "kpi",
+          "reference": "revenue"
+        },
+        {
+          "layer": "semantic_definition",
+          "reference": "docs/KPI_SEMANTICS_PREVIEW.md#causa_revenue"
+        },
+        {
+          "layer": "canonical_table_field",
+          "reference": "agg_order_items.item_price_total"
+        },
+        {
+          "layer": "raw_table_column",
+          "reference": "order_items.price"
+        },
+        {
+          "layer": "segment_method",
+          "reference": "deterministic_contribution_analysis"
+        }
+      ],
+      "freshness": {
+        "event_time": "2017-11",
+        "data_availability_time": null,
+        "processing_time": "2026-08-26T18:05:05.501145+00:00",
+        "is_historical": true
+      },
+      "quality": {
+        "completeness": null,
+        "freshness": null,
+        "source_reliability": 1.0,
+        "coverage": null,
+        "historical_sufficiency": null,
+        "retrieval_quality": null
+      },
+      "security": {
+        "classification": "PUBLIC_ANALYTICAL",
+        "trust_level": "TRUSTED_SYSTEM",
+        "security_status": "SAFE",
+        "pii_detected": false,
+        "pii_types": [],
+        "redaction_status": "NOT_APPLICABLE"
+      },
+      "relationships": [],
+      "metadata": {
+        "rank": 2,
+        "sample_size": 584,
+        "history_periods": 12,
+        "percentage_change": 88.7606845355394
+      },
+      "created_at": "2026-08-26T18:05:05.501152+00:00"
+    },
+    {
+      "evidence_id": "ev_segment_48eaf9e2fdff24b5",
+      "evidence_type": "SEGMENT_CONTRIBUTION",
+      "evidence_tier": "T2_ARITHMETIC",
+      "claim": "furniture_decor (product_category) moved from 30227.51 to 63223.97 between 2017-10 and 2017-11, an absolute change of +32996.46 (9.54% of the total movement).",
+      "value": {
+        "value": 32996.46000000001,
+        "unit": "BRL"
+      },
+      "time": {
+        "start": "2017-10",
+        "end": "2017-11"
+      },
+      "dimensions": {
+        "segment_type": "product_category",
+        "segment_value": "furniture_decor"
+      },
+      "confidence": "HIGH",
+      "source": {
+        "system": "driver_engine",
+        "component": "drivers.contribution.compute_segment_contributions",
+        "version": "1.0"
+      },
+      "lineage": [
+        {
+          "layer": "kpi",
+          "reference": "revenue"
+        },
+        {
+          "layer": "semantic_definition",
+          "reference": "docs/KPI_SEMANTICS_PREVIEW.md#causa_revenue"
+        },
+        {
+          "layer": "canonical_table_field",
+          "reference": "agg_order_items.item_price_total"
+        },
+        {
+          "layer": "raw_table_column",
+          "reference": "order_items.price"
+        },
+        {
+          "layer": "segment_method",
+          "reference": "deterministic_contribution_analysis"
+        }
+      ],
+      "freshness": {
+        "event_time": "2017-11",
+        "data_availability_time": null,
+        "processing_time": "2026-08-26T18:05:05.501186+00:00",
+        "is_historical": true
+      },
+      "quality": {
+        "completeness": null,
+        "freshness": null,
+        "source_reliability": 1.0,
+        "coverage": null,
+        "historical_sufficiency": null,
+        "retrieval_quality": null
+      },
+      "security": {
+        "classification": "PUBLIC_ANALYTICAL",
+        "trust_level": "TRUSTED_SYSTEM",
+        "security_status": "SAFE",
+        "pii_detected": false,
+        "pii_types": [],
+        "redaction_status": "NOT_APPLICABLE"
+      },
+      "relationships": [],
+      "metadata": {
+        "rank": 3,
+        "sample_size": 783,
+        "history_periods": 12,
+        "percentage_change": 109.16036418481048
+      },
+      "created_at": "2026-08-26T18:05:05.501193+00:00"
+    },
+    {
+      "evidence_id": "ev_segment_9896e3a8d65272c7",
+      "evidence_type": "SEGMENT_CONTRIBUTION",
+      "evidence_tier": "T2_ARITHMETIC",
+      "claim": "watches_gifts (product_category) moved from 65959.53 to 97724.57 between 2017-10 and 2017-11, an absolute change of +31765.04 (9.18% of the total movement).",
+      "value": {
+        "value": 31765.040000000008,
+        "unit": "BRL"
+      },
+      "time": {
+        "start": "2017-10",
+        "end": "2017-11"
+      },
+      "dimensions": {
+        "segment_type": "product_category",
+        "segment_value": "watches_gifts"
+      },
+      "confidence": "HIGH",
+      "source": {
+        "system": "driver_engine",
+        "component": "drivers.contribution.compute_segment_contributions",
+        "version": "1.0"
+      },
+      "lineage": [
+        {
+          "layer": "kpi",
+          "reference": "revenue"
+        },
+        {
+          "layer": "semantic_definition",
+          "reference": "docs/KPI_SEMANTICS_PREVIEW.md#causa_revenue"
+        },
+        {
+          "layer": "canonical_table_field",
+          "reference": "agg_order_items.item_price_total"
+        },
+        {
+          "layer": "raw_table_column",
+          "reference": "order_items.price"
+        },
+        {
+          "layer": "segment_method",
+          "reference": "deterministic_contribution_analysis"
+        }
+      ],
+      "freshness": {
+        "event_time": "2017-11",
+        "data_availability_time": null,
+        "processing_time": "2026-08-26T18:05:05.501224+00:00",
+        "is_historical": true
+      },
+      "quality": {
+        "completeness": null,
+        "freshness": null,
+        "source_reliability": 1.0,
+        "coverage": null,
+        "historical_sufficiency": null,
+        "retrieval_quality": null
+      },
+      "security": {
+        "classification": "PUBLIC_ANALYTICAL",
+        "trust_level": "TRUSTED_SYSTEM",
+        "security_status": "SAFE",
+        "pii_detected": false,
+        "pii_types": [],
+        "redaction_status": "NOT_APPLICABLE"
+      },
+      "relationships": [],
+      "metadata": {
+        "rank": 4,
+        "sample_size": 469,
+        "history_periods": 11,
+        "percentage_change": 48.15837832683163
+      },
+      "created_at": "2026-08-26T18:05:05.501230+00:00"
+    },
+    {
+      "evidence_id": "ev_segment_65eae14ad125f8e0",
+      "evidence_type": "SEGMENT_CONTRIBUTION",
+      "evidence_tier": "T2_ARITHMETIC",
+      "claim": "computers (product_category) moved from 40393.92 to 9768.0 between 2017-10 and 2017-11, an absolute change of -30625.92 (-8.85% of the total movement).",
+      "value": {
+        "value": -30625.92,
+        "unit": "BRL"
+      },
+      "time": {
+        "start": "2017-10",
+        "end": "2017-11"
+      },
+      "dimensions": {
+        "segment_type": "product_category",
+        "segment_value": "computers"
+      },
+      "confidence": "MEDIUM",
+      "source": {
+        "system": "driver_engine",
+        "component": "drivers.contribution.compute_segment_contributions",
+        "version": "1.0"
+      },
+      "lineage": [
+        {
+          "layer": "kpi",
+          "reference": "revenue"
+        },
+        {
+          "layer": "semantic_definition",
+          "reference": "docs/KPI_SEMANTICS_PREVIEW.md#causa_revenue"
+        },
+        {
+          "layer": "canonical_table_field",
+          "reference": "agg_order_items.item_price_total"
+        },
+        {
+          "layer": "raw_table_column",
+          "reference": "order_items.price"
+        },
+        {
+          "layer": "segment_method",
+          "reference": "deterministic_contribution_analysis"
+        }
+      ],
+      "freshness": {
+        "event_time": "2017-11",
+        "data_availability_time": null,
+        "processing_time": "2026-08-26T18:05:05.501261+00:00",
+        "is_historical": true
+      },
+      "quality": {
+        "completeness": null,
+        "freshness": null,
+        "source_reliability": 1.0,
+        "coverage": null,
+        "historical_sufficiency": null,
+        "retrieval_quality": null
+      },
+      "security": {
+        "classification": "PUBLIC_ANALYTICAL",
+        "trust_level": "TRUSTED_SYSTEM",
+        "security_status": "SAFE",
+        "pii_detected": false,
+        "pii_types": [],
+        "redaction_status": "NOT_APPLICABLE"
+      },
+      "relationships": [],
+      "metadata": {
+        "rank": 5,
+        "sample_size": 7,
+        "history_periods": 5,
+        "percentage_change": -75.81814292844071
+      },
+      "created_at": "2026-08-26T18:05:05.501267+00:00"
+    },
+    {
+      "evidence_id": "ev_segment_5e99dd477876f0e8",
+      "evidence_type": "SEGMENT_CONTRIBUTION",
+      "evidence_tier": "T2_ARITHMETIC",
+      "claim": "toys (product_category) moved from 34633.01 to 64320.89 between 2017-10 and 2017-11, an absolute change of +29687.88 (8.58% of the total movement).",
+      "value": {
+        "value": 29687.879999999997,
+        "unit": "BRL"
+      },
+      "time": {
+        "start": "2017-10",
+        "end": "2017-11"
+      },
+      "dimensions": {
+        "segment_type": "product_category",
+        "segment_value": "toys"
+      },
+      "confidence": "HIGH",
+      "source": {
+        "system": "driver_engine",
+        "component": "drivers.contribution.compute_segment_contributions",
+        "version": "1.0"
+      },
+      "lineage": [
+        {
+          "layer": "kpi",
+          "reference": "revenue"
+        },
+        {
+          "layer": "semantic_definition",
+          "reference": "docs/KPI_SEMANTICS_PREVIEW.md#causa_revenue"
+        },
+        {
+          "layer": "canonical_table_field",
+          "reference": "agg_order_items.item_price_total"
+        },
+        {
+          "layer": "raw_table_column",
+          "reference": "order_items.price"
+        },
+        {
+          "layer": "segment_method",
+          "reference": "deterministic_contribution_analysis"
+        }
+      ],
+      "freshness": {
+        "event_time": "2017-11",
+        "data_availability_time": null,
+        "processing_time": "2026-08-26T18:05:05.501297+00:00",
+        "is_historical": true
+      },
+      "quality": {
+        "completeness": null,
+        "freshness": null,
+        "source_reliability": 1.0,
+        "coverage": null,
+        "historical_sufficiency": null,
+        "retrieval_quality": null
+      },
+      "security": {
+        "classification": "PUBLIC_ANALYTICAL",
+        "trust_level": "TRUSTED_SYSTEM",
+        "security_status": "SAFE",
+        "pii_detected": false,
+        "pii_types": [],
+        "redaction_status": "NOT_APPLICABLE"
+      },
+      "relationships": [],
+      "metadata": {
+        "rank": 6,
+        "sample_size": 495,
+        "history_periods": 11,
+        "percentage_change": 85.72133926563124
+      },
+      "created_at": "2026-08-26T18:05:05.501303+00:00"
+    },
+    {
+      "evidence_id": "ev_segment_91a837460a5160b8",
+      "evidence_type": "SEGMENT_CONTRIBUTION",
+      "evidence_tier": "T2_ARITHMETIC",
+      "claim": "computers_accessories (product_category) moved from 44022.09 to 72656.0 between 2017-10 and 2017-11, an absolute change of +28633.91 (8.27% of the total movement).",
+      "value": {
+        "value": 28633.910000000003,
+        "unit": "BRL"
+      },
+      "time": {
+        "start": "2017-10",
+        "end": "2017-11"
+      },
+      "dimensions": {
+        "segment_type": "product_category",
+        "segment_value": "computers_accessories"
+      },
+      "confidence": "HIGH",
+      "source": {
+        "system": "driver_engine",
+        "component": "drivers.contribution.compute_segment_contributions",
+        "version": "1.0"
+      },
+      "lineage": [
+        {
+          "layer": "kpi",
+          "reference": "revenue"
+        },
+        {
+          "layer": "semantic_definition",
+          "reference": "docs/KPI_SEMANTICS_PREVIEW.md#causa_revenue"
+        },
+        {
+          "layer": "canonical_table_field",
+          "reference": "agg_order_items.item_price_total"
+        },
+        {
+          "layer": "raw_table_column",
+          "reference": "order_items.price"
+        },
+        {
+          "layer": "segment_method",
+          "reference": "deterministic_contribution_analysis"
+        }
+      ],
+      "freshness": {
+        "event_time": "2017-11",
+        "data_availability_time": null,
+        "processing_time": "2026-08-26T18:05:05.501333+00:00",
+        "is_historical": true
+      },
+      "quality": {
+        "completeness": null,
+        "freshness": null,
+        "source_reliability": 1.0,
+        "coverage": null,
+        "historical_sufficiency": null,
+        "retrieval_quality": null
+      },
+      "security": {
+        "classification": "PUBLIC_ANALYTICAL",
+        "trust_level": "TRUSTED_SYSTEM",
+        "security_status": "SAFE",
+        "pii_detected": false,
+        "pii_types": [],
+        "redaction_status": "NOT_APPLICABLE"
+      },
+      "relationships": [],
+      "metadata": {
+        "rank": 7,
+        "sample_size": 532,
+        "history_periods": 11,
+        "percentage_change": 65.04441292996313
+      },
+      "created_at": "2026-08-26T18:05:05.501339+00:00"
+    },
+    {
+      "evidence_id": "ev_segment_4d0f91d40ae48bbc",
+      "evidence_type": "SEGMENT_CONTRIBUTION",
+      "evidence_tier": "T2_ARITHMETIC",
+      "claim": "garden_tools (product_category) moved from 25978.74 to 45972.18 between 2017-10 and 2017-11, an absolute change of +19993.44 (5.78% of the total movement).",
+      "value": {
+        "value": 19993.44,
+        "unit": "BRL"
+      },
+      "time": {
+        "start": "2017-10",
+        "end": "2017-11"
+      },
+      "dimensions": {
+        "segment_type": "product_category",
+        "segment_value": "garden_tools"
+      },
+      "confidence": "HIGH",
+      "source": {
+        "system": "driver_engine",
+        "component": "drivers.contribution.compute_segment_contributions",
+        "version": "1.0"
+      },
+      "lineage": [
+        {
+          "layer": "kpi",
+          "reference": "revenue"
+        },
+        {
+          "layer": "semantic_definition",
+          "reference": "docs/KPI_SEMANTICS_PREVIEW.md#causa_revenue"
+        },
+        {
+          "layer": "canonical_table_field",
+          "reference": "agg_order_items.item_price_total"
+        },
+        {
+          "layer": "raw_table_column",
+          "reference": "order_items.price"
+        },
+        {
+          "layer": "segment_method",
+          "reference": "deterministic_contribution_analysis"
+        }
+      ],
+      "freshness": {
+        "event_time": "2017-11",
+        "data_availability_time": null,
+        "processing_time": "2026-08-26T18:05:05.501368+00:00",
+        "is_historical": true
+      },
+      "quality": {
+        "completeness": null,
+        "freshness": null,
+        "source_reliability": 1.0,
+        "coverage": null,
+        "historical_sufficiency": null,
+        "retrieval_quality": null
+      },
+      "security": {
+        "classification": "PUBLIC_ANALYTICAL",
+        "trust_level": "TRUSTED_SYSTEM",
+        "security_status": "SAFE",
+        "pii_detected": false,
+        "pii_types": [],
+        "redaction_status": "NOT_APPLICABLE"
+      },
+      "relationships": [],
+      "metadata": {
+        "rank": 8,
+        "sample_size": 550,
+        "history_periods": 11,
+        "percentage_change": 76.9607763886932
+      },
+      "created_at": "2026-08-26T18:05:05.501374+00:00"
+    },
+    {
+      "evidence_id": "ev_segment_46925fdb8e1c2e57",
+      "evidence_type": "SEGMENT_CONTRIBUTION",
+      "evidence_tier": "T2_ARITHMETIC",
+      "claim": "housewares (product_category) moved from 15996.630000000001 to 34855.32 between 2017-10 and 2017-11, an absolute change of +18858.69 (5.45% of the total movement).",
+      "value": {
+        "value": 18858.69,
+        "unit": "BRL"
+      },
+      "time": {
+        "start": "2017-10",
+        "end": "2017-11"
+      },
+      "dimensions": {
+        "segment_type": "product_category",
+        "segment_value": "housewares"
+      },
+      "confidence": "HIGH",
+      "source": {
+        "system": "driver_engine",
+        "component": "drivers.contribution.compute_segment_contributions",
+        "version": "1.0"
+      },
+      "lineage": [
+        {
+          "layer": "kpi",
+          "reference": "revenue"
+        },
+        {
+          "layer": "semantic_definition",
+          "reference": "docs/KPI_SEMANTICS_PREVIEW.md#causa_revenue"
+        },
+        {
+          "layer": "canonical_table_field",
+          "reference": "agg_order_items.item_price_total"
+        },
+        {
+          "layer": "raw_table_column",
+          "reference": "order_items.price"
+        },
+        {
+          "layer": "segment_method",
+          "reference": "deterministic_contribution_analysis"
+        }
+      ],
+      "freshness": {
+        "event_time": "2017-11",
+        "data_availability_time": null,
+        "processing_time": "2026-08-26T18:05:05.501404+00:00",
+        "is_historical": true
+      },
+      "quality": {
+        "completeness": null,
+        "freshness": null,
+        "source_reliability": 1.0,
+        "coverage": null,
+        "historical_sufficiency": null,
+        "retrieval_quality": null
+      },
+      "security": {
+        "classification": "PUBLIC_ANALYTICAL",
+        "trust_level": "TRUSTED_SYSTEM",
+        "security_status": "SAFE",
+        "pii_detected": false,
+        "pii_types": [],
+        "redaction_status": "NOT_APPLICABLE"
+      },
+      "relationships": [],
+      "metadata": {
+        "rank": 9,
+        "sample_size": 423,
+        "history_periods": 11,
+        "percentage_change": 117.89164342739689
+      },
+      "created_at": "2026-08-26T18:05:05.501410+00:00"
+    },
+    {
+      "evidence_id": "ev_segment_61883f14b14ab0d9",
+      "evidence_type": "SEGMENT_CONTRIBUTION",
+      "evidence_tier": "T2_ARITHMETIC",
+      "claim": "sports_leisure (product_category) moved from 49751.45 to 64874.05 between 2017-10 and 2017-11, an absolute change of +15122.60 (4.37% of the total movement).",
+      "value": {
+        "value": 15122.600000000006,
+        "unit": "BRL"
+      },
+      "time": {
+        "start": "2017-10",
+        "end": "2017-11"
+      },
+      "dimensions": {
+        "segment_type": "product_category",
+        "segment_value": "sports_leisure"
+      },
+      "confidence": "HIGH",
+      "source": {
+        "system": "driver_engine",
+        "component": "drivers.contribution.compute_segment_contributions",
+        "version": "1.0"
+      },
+      "lineage": [
+        {
+          "layer": "kpi",
+          "reference": "revenue"
+        },
+        {
+          "layer": "semantic_definition",
+          "reference": "docs/KPI_SEMANTICS_PREVIEW.md#causa_revenue"
+        },
+        {
+          "layer": "canonical_table_field",
+          "reference": "agg_order_items.item_price_total"
+        },
+        {
+          "layer": "raw_table_column",
+          "reference": "order_items.price"
+        },
+        {
+          "layer": "segment_method",
+          "reference": "deterministic_contribution_analysis"
+        }
+      ],
+      "freshness": {
+        "event_time": "2017-11",
+        "data_availability_time": null,
+        "processing_time": "2026-08-26T18:05:05.501440+00:00",
+        "is_historical": true
+      },
+      "quality": {
+        "completeness": null,
+        "freshness": null,
+        "source_reliability": 1.0,
+        "coverage": null,
+        "historical_sufficiency": null,
+        "retrieval_quality": null
+      },
+      "security": {
+        "classification": "PUBLIC_ANALYTICAL",
+        "trust_level": "TRUSTED_SYSTEM",
+        "security_status": "SAFE",
+        "pii_detected": false,
+        "pii_types": [],
+        "redaction_status": "NOT_APPLICABLE"
+      },
+      "relationships": [],
+      "metadata": {
+        "rank": 10,
+        "sample_size": 612,
+        "history_periods": 11,
+        "percentage_change": 30.396300007336485
+      },
+      "created_at": "2026-08-26T18:05:05.501446+00:00"
+    },
+    {
+      "evidence_id": "ev_segment_678bed9fa0f049b7",
+      "evidence_type": "SEGMENT_CONTRIBUTION",
+      "evidence_tier": "T2_ARITHMETIC",
+      "claim": "53243585a1d6dc2643021fd1853d8905 (seller) moved from 41708.0 to 20339.96 between 2017-10 and 2017-11, an absolute change of -21368.04 (-6.17% of the total movement).",
+      "value": {
+        "value": -21368.04,
+        "unit": "BRL"
+      },
+      "time": {
+        "start": "2017-10",
+        "end": "2017-11"
+      },
+      "dimensions": {
+        "segment_type": "seller",
+        "segment_value": "53243585a1d6dc2643021fd1853d8905"
+      },
+      "confidence": "MEDIUM",
+      "source": {
+        "system": "driver_engine",
+        "component": "drivers.contribution.compute_segment_contributions",
+        "version": "1.0"
+      },
+      "lineage": [
+        {
+          "layer": "kpi",
+          "reference": "revenue"
+        },
+        {
+          "layer": "semantic_definition",
+          "reference": "docs/KPI_SEMANTICS_PREVIEW.md#causa_revenue"
+        },
+        {
+          "layer": "canonical_table_field",
+          "reference": "agg_order_items.item_price_total"
+        },
+        {
+          "layer": "raw_table_column",
+          "reference": "order_items.price"
+        },
+        {
+          "layer": "segment_method",
+          "reference": "deterministic_contribution_analysis"
+        }
+      ],
+      "freshness": {
+        "event_time": "2017-11",
+        "data_availability_time": null,
+        "processing_time": "2026-08-26T18:05:05.501477+00:00",
+        "is_historical": true
+      },
+      "quality": {
+        "completeness": null,
+        "freshness": null,
+        "source_reliability": 1.0,
+        "coverage": null,
+        "historical_sufficiency": null,
+        "retrieval_quality": null
+      },
+      "security": {
+        "classification": "INTERNAL",
+        "trust_level": "TRUSTED_SYSTEM",
+        "security_status": "SAFE",
+        "pii_detected": false,
+        "pii_types": [],
+        "redaction_status": "NOT_APPLICABLE"
+      },
+      "relationships": [],
+      "metadata": {
+        "rank": 1,
+        "sample_size": 50,
+        "history_periods": 3,
+        "percentage_change": -51.23247338640069
+      },
+      "created_at": "2026-08-26T18:05:05.501484+00:00"
+    },
+    {
+      "evidence_id": "ev_segment_dfe61b380805bb1a",
+      "evidence_type": "SEGMENT_CONTRIBUTION",
+      "evidence_tier": "T2_ARITHMETIC",
+      "claim": "b94cc9f10ddc85e4ba73a6f7974e7101 (seller) moved from 0.0 to 14047.699999999999 between 2017-10 and 2017-11, an absolute change of +14047.70 (4.06% of the total movement).",
+      "value": {
+        "value": 14047.699999999999,
+        "unit": "BRL"
+      },
+      "time": {
+        "start": "2017-10",
+        "end": "2017-11"
+      },
+      "dimensions": {
+        "segment_type": "seller",
+        "segment_value": "b94cc9f10ddc85e4ba73a6f7974e7101"
+      },
+      "confidence": "MEDIUM",
+      "source": {
+        "system": "driver_engine",
+        "component": "drivers.contribution.compute_segment_contributions",
+        "version": "1.0"
+      },
+      "lineage": [
+        {
+          "layer": "kpi",
+          "reference": "revenue"
+        },
+        {
+          "layer": "semantic_definition",
+          "reference": "docs/KPI_SEMANTICS_PREVIEW.md#causa_revenue"
+        },
+        {
+          "layer": "canonical_table_field",
+          "reference": "agg_order_items.item_price_total"
+        },
+        {
+          "layer": "raw_table_column",
+          "reference": "order_items.price"
+        },
+        {
+          "layer": "segment_method",
+          "reference": "deterministic_contribution_analysis"
+        }
+      ],
+      "freshness": {
+        "event_time": "2017-11",
+        "data_availability_time": null,
+        "processing_time": "2026-08-26T18:05:05.501515+00:00",
+        "is_historical": true
+      },
+      "quality": {
+        "completeness": null,
+        "freshness": null,
+        "source_reliability": 1.0,
+        "coverage": null,
+        "historical_sufficiency": null,
+        "retrieval_quality": null
+      },
+      "security": {
+        "classification": "INTERNAL",
+        "trust_level": "TRUSTED_SYSTEM",
+        "security_status": "SAFE",
+        "pii_detected": false,
+        "pii_types": [],
+        "redaction_status": "NOT_APPLICABLE"
+      },
+      "relationships": [],
+      "metadata": {
+        "rank": 2,
+        "sample_size": 23,
+        "history_periods": null,
+        "percentage_change": null
+      },
+      "created_at": "2026-08-26T18:05:05.501522+00:00"
+    },
+    {
+      "evidence_id": "ev_segment_7dd1db2681d23063",
+      "evidence_type": "SEGMENT_CONTRIBUTION",
+      "evidence_tier": "T2_ARITHMETIC",
+      "claim": "2bf6a2c1e71bbd29a4ad64e6d3c3629f (seller) moved from 0.0 to 12149.8 between 2017-10 and 2017-11, an absolute change of +12149.80 (3.51% of the total movement).",
+      "value": {
+        "value": 12149.8,
+        "unit": "BRL"
+      },
+      "time": {
+        "start": "2017-10",
+        "end": "2017-11"
+      },
+      "dimensions": {
+        "segment_type": "seller",
+        "segment_value": "2bf6a2c1e71bbd29a4ad64e6d3c3629f"
+      },
+      "confidence": "MEDIUM",
+      "source": {
+        "system": "driver_engine",
+        "component": "drivers.contribution.compute_segment_contributions",
+        "version": "1.0"
+      },
+      "lineage": [
+        {
+          "layer": "kpi",
+          "reference": "revenue"
+        },
+        {
+          "layer": "semantic_definition",
+          "reference": "docs/KPI_SEMANTICS_PREVIEW.md#causa_revenue"
+        },
+        {
+          "layer": "canonical_table_field",
+          "reference": "agg_order_items.item_price_total"
+        },
+        {
+          "layer": "raw_table_column",
+          "reference": "order_items.price"
+        },
+        {
+          "layer": "segment_method",
+          "reference": "deterministic_contribution_analysis"
+        }
+      ],
+      "freshness": {
+        "event_time": "2017-11",
+        "data_availability_time": null,
+        "processing_time": "2026-08-26T18:05:05.501552+00:00",
+        "is_historical": true
+      },
+      "quality": {
+        "completeness": null,
+        "freshness": null,
+        "source_reliability": 1.0,
+        "coverage": null,
+        "historical_sufficiency": null,
+        "retrieval_quality": null
+      },
+      "security": {
+        "classification": "INTERNAL",
+        "trust_level": "TRUSTED_SYSTEM",
+        "security_status": "SAFE",
+        "pii_detected": false,
+        "pii_types": [],
+        "redaction_status": "NOT_APPLICABLE"
+      },
+      "relationships": [],
+      "metadata": {
+        "rank": 3,
+        "sample_size": 7,
+        "history_periods": null,
+        "percentage_change": null
+      },
+      "created_at": "2026-08-26T18:05:05.501558+00:00"
+    },
+    {
+      "evidence_id": "ev_segment_b6e188ae4ddbab9c",
+      "evidence_type": "SEGMENT_CONTRIBUTION",
+      "evidence_tier": "T2_ARITHMETIC",
+      "claim": "8160255418d5aaa7dbdc9f4c64ebda44 (seller) moved from 1225.9 to 11493.900000000001 between 2017-10 and 2017-11, an absolute change of +10268.00 (2.97% of the total movement).",
+      "value": {
+        "value": 10268.000000000002,
+        "unit": "BRL"
+      },
+      "time": {
+        "start": "2017-10",
+        "end": "2017-11"
+      },
+      "dimensions": {
+        "segment_type": "seller",
+        "segment_value": "8160255418d5aaa7dbdc9f4c64ebda44"
+      },
+      "confidence": "MEDIUM",
+      "source": {
+        "system": "driver_engine",
+        "component": "drivers.contribution.compute_segment_contributions",
+        "version": "1.0"
+      },
+      "lineage": [
+        {
+          "layer": "kpi",
+          "reference": "revenue"
+        },
+        {
+          "layer": "semantic_definition",
+          "reference": "docs/KPI_SEMANTICS_PREVIEW.md#causa_revenue"
+        },
+        {
+          "layer": "canonical_table_field",
+          "reference": "agg_order_items.item_price_total"
+        },
+        {
+          "layer": "raw_table_column",
+          "reference": "order_items.price"
+        },
+        {
+          "layer": "segment_method",
+          "reference": "deterministic_contribution_analysis"
+        }
+      ],
+      "freshness": {
+        "event_time": "2017-11",
+        "data_availability_time": null,
+        "processing_time": "2026-08-26T18:05:05.501587+00:00",
+        "is_historical": true
+      },
+      "quality": {
+        "completeness": null,
+        "freshness": null,
+        "source_reliability": 1.0,
+        "coverage": null,
+        "historical_sufficiency": null,
+        "retrieval_quality": null
+      },
+      "security": {
+        "classification": "INTERNAL",
+        "trust_level": "TRUSTED_SYSTEM",
+        "security_status": "SAFE",
+        "pii_detected": false,
+        "pii_types": [],
+        "redaction_status": "NOT_APPLICABLE"
+      },
+      "relationships": [],
+      "metadata": {
+        "rank": 4,
+        "sample_size": 102,
+        "history_periods": 1,
+        "percentage_change": 837.5887103352638
+      },
+      "created_at": "2026-08-26T18:05:05.501594+00:00"
+    },
+    {
+      "evidence_id": "ev_segment_23744c8bc8f9333d",
+      "evidence_type": "SEGMENT_CONTRIBUTION",
+      "evidence_tier": "T2_ARITHMETIC",
+      "claim": "1f50f920176fa81dab994f9023523100 (seller) moved from 8925.1 to 19130.39 between 2017-10 and 2017-11, an absolute change of +10205.29 (2.95% of the total movement).",
+      "value": {
+        "value": 10205.289999999999,
+        "unit": "BRL"
+      },
+      "time": {
+        "start": "2017-10",
+        "end": "2017-11"
+      },
+      "dimensions": {
+        "segment_type": "seller",
+        "segment_value": "1f50f920176fa81dab994f9023523100"
+      },
+      "confidence": "HIGH",
+      "source": {
+        "system": "driver_engine",
+        "component": "drivers.contribution.compute_segment_contributions",
+        "version": "1.0"
+      },
+      "lineage": [
+        {
+          "layer": "kpi",
+          "reference": "revenue"
+        },
+        {
+          "layer": "semantic_definition",
+          "reference": "docs/KPI_SEMANTICS_PREVIEW.md#causa_revenue"
+        },
+        {
+          "layer": "canonical_table_field",
+          "reference": "agg_order_items.item_price_total"
+        },
+        {
+          "layer": "raw_table_column",
+          "reference": "order_items.price"
+        },
+        {
+          "layer": "segment_method",
+          "reference": "deterministic_contribution_analysis"
+        }
+      ],
+      "freshness": {
+        "event_time": "2017-11",
+        "data_availability_time": null,
+        "processing_time": "2026-08-26T18:05:05.501624+00:00",
+        "is_historical": true
+      },
+      "quality": {
+        "completeness": null,
+        "freshness": null,
+        "source_reliability": 1.0,
+        "coverage": null,
+        "historical_sufficiency": null,
+        "retrieval_quality": null
+      },
+      "security": {
+        "classification": "INTERNAL",
+        "trust_level": "TRUSTED_SYSTEM",
+        "security_status": "SAFE",
+        "pii_detected": false,
+        "pii_types": [],
+        "redaction_status": "NOT_APPLICABLE"
+      },
+      "relationships": [],
+      "metadata": {
+        "rank": 5,
+        "sample_size": 358,
+        "history_periods": 7,
+        "percentage_change": 114.34370483243883
+      },
+      "created_at": "2026-08-26T18:05:05.501630+00:00"
+    },
+    {
+      "evidence_id": "ev_segment_aea74517d21d62ed",
+      "evidence_type": "SEGMENT_CONTRIBUTION",
+      "evidence_tier": "T2_ARITHMETIC",
+      "claim": "4a3ca9315b744ce9f8e9374361493884 (seller) moved from 12495.95 to 21162.45 between 2017-10 and 2017-11, an absolute change of +8666.50 (2.50% of the total movement).",
+      "value": {
+        "value": 8666.5,
+        "unit": "BRL"
+      },
+      "time": {
+        "start": "2017-10",
+        "end": "2017-11"
+      },
+      "dimensions": {
+        "segment_type": "seller",
+        "segment_value": "4a3ca9315b744ce9f8e9374361493884"
+      },
+      "confidence": "HIGH",
+      "source": {
+        "system": "driver_engine",
+        "component": "drivers.contribution.compute_segment_contributions",
+        "version": "1.0"
+      },
+      "lineage": [
+        {
+          "layer": "kpi",
+          "reference": "revenue"
+        },
+        {
+          "layer": "semantic_definition",
+          "reference": "docs/KPI_SEMANTICS_PREVIEW.md#causa_revenue"
+        },
+        {
+          "layer": "canonical_table_field",
+          "reference": "agg_order_items.item_price_total"
+        },
+        {
+          "layer": "raw_table_column",
+          "reference": "order_items.price"
+        },
+        {
+          "layer": "segment_method",
+          "reference": "deterministic_contribution_analysis"
+        }
+      ],
+      "freshness": {
+        "event_time": "2017-11",
+        "data_availability_time": null,
+        "processing_time": "2026-08-26T18:05:05.501659+00:00",
+        "is_historical": true
+      },
+      "quality": {
+        "completeness": null,
+        "freshness": null,
+        "source_reliability": 1.0,
+        "coverage": null,
+        "historical_sufficiency": null,
+        "retrieval_quality": null
+      },
+      "security": {
+        "classification": "INTERNAL",
+        "trust_level": "TRUSTED_SYSTEM",
+        "security_status": "SAFE",
+        "pii_detected": false,
+        "pii_types": [],
+        "redaction_status": "NOT_APPLICABLE"
+      },
+      "relationships": [],
+      "metadata": {
+        "rank": 6,
+        "sample_size": 205,
+        "history_periods": 10,
+        "percentage_change": 69.35447084855493
+      },
+      "created_at": "2026-08-26T18:05:05.501665+00:00"
+    },
+    {
+      "evidence_id": "ev_segment_c3b3709c58fe8c70",
+      "evidence_type": "SEGMENT_CONTRIBUTION",
+      "evidence_tier": "T2_ARITHMETIC",
+      "claim": "b33e7c55446eabf8fe1a42d037ac7d6d (seller) moved from 1711.8899999999999 to 10244.470000000001 between 2017-10 and 2017-11, an absolute change of +8532.58 (2.47% of the total movement).",
+      "value": {
+        "value": 8532.580000000002,
+        "unit": "BRL"
+      },
+      "time": {
+        "start": "2017-10",
+        "end": "2017-11"
+      },
+      "dimensions": {
+        "segment_type": "seller",
+        "segment_value": "b33e7c55446eabf8fe1a42d037ac7d6d"
+      },
+      "confidence": "MEDIUM",
+      "source": {
+        "system": "driver_engine",
+        "component": "drivers.contribution.compute_segment_contributions",
+        "version": "1.0"
+      },
+      "lineage": [
+        {
+          "layer": "kpi",
+          "reference": "revenue"
+        },
+        {
+          "layer": "semantic_definition",
+          "reference": "docs/KPI_SEMANTICS_PREVIEW.md#causa_revenue"
+        },
+        {
+          "layer": "canonical_table_field",
+          "reference": "agg_order_items.item_price_total"
+        },
+        {
+          "layer": "raw_table_column",
+          "reference": "order_items.price"
+        },
+        {
+          "layer": "segment_method",
+          "reference": "deterministic_contribution_analysis"
+        }
+      ],
+      "freshness": {
+        "event_time": "2017-11",
+        "data_availability_time": null,
+        "processing_time": "2026-08-26T18:05:05.501696+00:00",
+        "is_historical": true
+      },
+      "quality": {
+        "completeness": null,
+        "freshness": null,
+        "source_reliability": 1.0,
+        "coverage": null,
+        "historical_sufficiency": null,
+        "retrieval_quality": null
+      },
+      "security": {
+        "classification": "INTERNAL",
+        "trust_level": "TRUSTED_SYSTEM",
+        "security_status": "SAFE",
+        "pii_detected": false,
+        "pii_types": [],
+        "redaction_status": "NOT_APPLICABLE"
+      },
+      "relationships": [],
+      "metadata": {
+        "rank": 7,
+        "sample_size": 47,
+        "history_periods": 1,
+        "percentage_change": 498.43038980308324
+      },
+      "created_at": "2026-08-26T18:05:05.501702+00:00"
+    },
+    {
+      "evidence_id": "ev_segment_39be7d1094828a74",
+      "evidence_type": "SEGMENT_CONTRIBUTION",
+      "evidence_tier": "T2_ARITHMETIC",
+      "claim": "620c87c171fb2a6dd6e8bb4dec959fc6 (seller) moved from 1928.8 to 9299.3 between 2017-10 and 2017-11, an absolute change of +7370.50 (2.13% of the total movement).",
+      "value": {
+        "value": 7370.499999999999,
+        "unit": "BRL"
+      },
+      "time": {
+        "start": "2017-10",
+        "end": "2017-11"
+      },
+      "dimensions": {
+        "segment_type": "seller",
+        "segment_value": "620c87c171fb2a6dd6e8bb4dec959fc6"
+      },
+      "confidence": "HIGH",
+      "source": {
+        "system": "driver_engine",
+        "component": "drivers.contribution.compute_segment_contributions",
+        "version": "1.0"
+      },
+      "lineage": [
+        {
+          "layer": "kpi",
+          "reference": "revenue"
+        },
+        {
+          "layer": "semantic_definition",
+          "reference": "docs/KPI_SEMANTICS_PREVIEW.md#causa_revenue"
+        },
+        {
+          "layer": "canonical_table_field",
+          "reference": "agg_order_items.item_price_total"
+        },
+        {
+          "layer": "raw_table_column",
+          "reference": "order_items.price"
+        },
+        {
+          "layer": "segment_method",
+          "reference": "deterministic_contribution_analysis"
+        }
+      ],
+      "freshness": {
+        "event_time": "2017-11",
+        "data_availability_time": null,
+        "processing_time": "2026-08-26T18:05:05.501731+00:00",
+        "is_historical": true
+      },
+      "quality": {
+        "completeness": null,
+        "freshness": null,
+        "source_reliability": 1.0,
+        "coverage": null,
+        "historical_sufficiency": null,
+        "retrieval_quality": null
+      },
+      "security": {
+        "classification": "INTERNAL",
+        "trust_level": "TRUSTED_SYSTEM",
+        "security_status": "SAFE",
+        "pii_detected": false,
+        "pii_types": [],
+        "redaction_status": "NOT_APPLICABLE"
+      },
+      "relationships": [],
+      "metadata": {
+        "rank": 8,
+        "sample_size": 67,
+        "history_periods": 11,
+        "percentage_change": 382.12878473662374
+      },
+      "created_at": "2026-08-26T18:05:05.501737+00:00"
+    },
+    {
+      "evidence_id": "ev_segment_1df82fae432c86ca",
+      "evidence_type": "SEGMENT_CONTRIBUTION",
+      "evidence_tier": "T2_ARITHMETIC",
+      "claim": "1025f0e2d44d7041d6cf58b6550e0bfa (seller) moved from 6325.599999999999 to 13434.04 between 2017-10 and 2017-11, an absolute change of +7108.44 (2.05% of the total movement).",
+      "value": {
+        "value": 7108.440000000001,
+        "unit": "BRL"
+      },
+      "time": {
+        "start": "2017-10",
+        "end": "2017-11"
+      },
+      "dimensions": {
+        "segment_type": "seller",
+        "segment_value": "1025f0e2d44d7041d6cf58b6550e0bfa"
+      },
+      "confidence": "MEDIUM",
+      "source": {
+        "system": "driver_engine",
+        "component": "drivers.contribution.compute_segment_contributions",
+        "version": "1.0"
+      },
+      "lineage": [
+        {
+          "layer": "kpi",
+          "reference": "revenue"
+        },
+        {
+          "layer": "semantic_definition",
+          "reference": "docs/KPI_SEMANTICS_PREVIEW.md#causa_revenue"
+        },
+        {
+          "layer": "canonical_table_field",
+          "reference": "agg_order_items.item_price_total"
+        },
+        {
+          "layer": "raw_table_column",
+          "reference": "order_items.price"
+        },
+        {
+          "layer": "segment_method",
+          "reference": "deterministic_contribution_analysis"
+        }
+      ],
+      "freshness": {
+        "event_time": "2017-11",
+        "data_availability_time": null,
+        "processing_time": "2026-08-26T18:05:05.501765+00:00",
+        "is_historical": true
+      },
+      "quality": {
+        "completeness": null,
+        "freshness": null,
+        "source_reliability": 1.0,
+        "coverage": null,
+        "historical_sufficiency": null,
+        "retrieval_quality": null
+      },
+      "security": {
+        "classification": "INTERNAL",
+        "trust_level": "TRUSTED_SYSTEM",
+        "security_status": "SAFE",
+        "pii_detected": false,
+        "pii_types": [],
+        "redaction_status": "NOT_APPLICABLE"
+      },
+      "relationships": [],
+      "metadata": {
+        "rank": 9,
+        "sample_size": 179,
+        "history_periods": 4,
+        "percentage_change": 112.37574301252057
+      },
+      "created_at": "2026-08-26T18:05:05.501772+00:00"
+    },
+    {
+      "evidence_id": "ev_segment_0d7f5ce5c3795c1d",
+      "evidence_type": "SEGMENT_CONTRIBUTION",
+      "evidence_tier": "T2_ARITHMETIC",
+      "claim": "5d378b73ab7dd6f0418d743e5dcb0bd1 (seller) moved from 9945.0 to 3298.0 between 2017-10 and 2017-11, an absolute change of -6647.00 (-1.92% of the total movement).",
+      "value": {
+        "value": -6647.0,
+        "unit": "BRL"
+      },
+      "time": {
+        "start": "2017-10",
+        "end": "2017-11"
+      },
+      "dimensions": {
+        "segment_type": "seller",
+        "segment_value": "5d378b73ab7dd6f0418d743e5dcb0bd1"
+      },
+      "confidence": "LOW",
+      "source": {
+        "system": "driver_engine",
+        "component": "drivers.contribution.compute_segment_contributions",
+        "version": "1.0"
+      },
+      "lineage": [
+        {
+          "layer": "kpi",
+          "reference": "revenue"
+        },
+        {
+          "layer": "semantic_definition",
+          "reference": "docs/KPI_SEMANTICS_PREVIEW.md#causa_revenue"
+        },
+        {
+          "layer": "canonical_table_field",
+          "reference": "agg_order_items.item_price_total"
+        },
+        {
+          "layer": "raw_table_column",
+          "reference": "order_items.price"
+        },
+        {
+          "layer": "segment_method",
+          "reference": "deterministic_contribution_analysis"
+        }
+      ],
+      "freshness": {
+        "event_time": "2017-11",
+        "data_availability_time": null,
+        "processing_time": "2026-08-26T18:05:05.501800+00:00",
+        "is_historical": true
+      },
+      "quality": {
+        "completeness": null,
+        "freshness": null,
+        "source_reliability": 1.0,
+        "coverage": null,
+        "historical_sufficiency": null,
+        "retrieval_quality": null
+      },
+      "security": {
+        "classification": "INTERNAL",
+        "trust_level": "TRUSTED_SYSTEM",
+        "security_status": "SAFE",
+        "pii_detected": false,
+        "pii_types": [],
+        "redaction_status": "NOT_APPLICABLE"
+      },
+      "relationships": [],
+      "metadata": {
+        "rank": 10,
+        "sample_size": 2,
+        "history_periods": 1,
+        "percentage_change": -66.83760683760683
+      },
+      "created_at": "2026-08-26T18:05:05.501806+00:00"
+    },
+    {
+      "evidence_id": "ev_segment_e755b683c3998ca7",
+      "evidence_type": "SEGMENT_CONTRIBUTION",
+      "evidence_tier": "T2_ARITHMETIC",
+      "claim": "SP (customer_state) moved from 227905.5 to 360251.89 between 2017-10 and 2017-11, an absolute change of +132346.39 (38.24% of the total movement).",
+      "value": {
+        "value": 132346.39,
+        "unit": "BRL"
+      },
+      "time": {
+        "start": "2017-10",
+        "end": "2017-11"
+      },
+      "dimensions": {
+        "segment_type": "customer_state",
+        "segment_value": "SP"
+      },
+      "confidence": "HIGH",
+      "source": {
+        "system": "driver_engine",
+        "component": "drivers.contribution.compute_segment_contributions",
+        "version": "1.0"
+      },
+      "lineage": [
+        {
+          "layer": "kpi",
+          "reference": "revenue"
+        },
+        {
+          "layer": "semantic_definition",
+          "reference": "docs/KPI_SEMANTICS_PREVIEW.md#causa_revenue"
+        },
+        {
+          "layer": "canonical_table_field",
+          "reference": "agg_order_items.item_price_total"
+        },
+        {
+          "layer": "raw_table_column",
+          "reference": "order_items.price"
+        },
+        {
+          "layer": "segment_method",
+          "reference": "deterministic_contribution_analysis"
+        }
+      ],
+      "freshness": {
+        "event_time": "2017-11",
+        "data_availability_time": null,
+        "processing_time": "2026-08-26T18:05:05.501835+00:00",
+        "is_historical": true
+      },
+      "quality": {
+        "completeness": null,
+        "freshness": null,
+        "source_reliability": 1.0,
+        "coverage": null,
+        "historical_sufficiency": null,
+        "retrieval_quality": null
+      },
+      "security": {
+        "classification": "PUBLIC_ANALYTICAL",
+        "trust_level": "TRUSTED_SYSTEM",
+        "security_status": "SAFE",
+        "pii_detected": false,
+        "pii_types": [],
+        "redaction_status": "NOT_APPLICABLE"
+      },
+      "relationships": [],
+      "metadata": {
+        "rank": 1,
+        "sample_size": 3437,
+        "history_periods": 12,
+        "percentage_change": 58.07073107055337
+      },
+      "created_at": "2026-08-26T18:05:05.501841+00:00"
+    },
+    {
+      "evidence_id": "ev_segment_4fa03a122dcd81f6",
+      "evidence_type": "SEGMENT_CONTRIBUTION",
+      "evidence_tier": "T2_ARITHMETIC",
+      "claim": "RJ (customer_state) moved from 97252.86 to 150539.39 between 2017-10 and 2017-11, an absolute change of +53286.53 (15.40% of the total movement).",
+      "value": {
+        "value": 53286.53000000001,
+        "unit": "BRL"
+      },
+      "time": {
+        "start": "2017-10",
+        "end": "2017-11"
+      },
+      "dimensions": {
+        "segment_type": "customer_state",
+        "segment_value": "RJ"
+      },
+      "confidence": "HIGH",
+      "source": {
+        "system": "driver_engine",
+        "component": "drivers.contribution.compute_segment_contributions",
+        "version": "1.0"
+      },
+      "lineage": [
+        {
+          "layer": "kpi",
+          "reference": "revenue"
+        },
+        {
+          "layer": "semantic_definition",
+          "reference": "docs/KPI_SEMANTICS_PREVIEW.md#causa_revenue"
+        },
+        {
+          "layer": "canonical_table_field",
+          "reference": "agg_order_items.item_price_total"
+        },
+        {
+          "layer": "raw_table_column",
+          "reference": "order_items.price"
+        },
+        {
+          "layer": "segment_method",
+          "reference": "deterministic_contribution_analysis"
+        }
+      ],
+      "freshness": {
+        "event_time": "2017-11",
+        "data_availability_time": null,
+        "processing_time": "2026-08-26T18:05:05.501870+00:00",
+        "is_historical": true
+      },
+      "quality": {
+        "completeness": null,
+        "freshness": null,
+        "source_reliability": 1.0,
+        "coverage": null,
+        "historical_sufficiency": null,
+        "retrieval_quality": null
+      },
+      "security": {
+        "classification": "PUBLIC_ANALYTICAL",
+        "trust_level": "TRUSTED_SYSTEM",
+        "security_status": "SAFE",
+        "pii_detected": false,
+        "pii_types": [],
+        "redaction_status": "NOT_APPLICABLE"
+      },
+      "relationships": [],
+      "metadata": {
+        "rank": 2,
+        "sample_size": 1212,
+        "history_periods": 11,
+        "percentage_change": 54.791735687773105
+      },
+      "created_at": "2026-08-26T18:05:05.501876+00:00"
+    },
+    {
+      "evidence_id": "ev_segment_d3a230ceda878af2",
+      "evidence_type": "SEGMENT_CONTRIBUTION",
+      "evidence_tier": "T2_ARITHMETIC",
+      "claim": "MG (customer_state) moved from 82012.09 to 134288.65 between 2017-10 and 2017-11, an absolute change of +52276.56 (15.11% of the total movement).",
+      "value": {
+        "value": 52276.56,
+        "unit": "BRL"
+      },
+      "time": {
+        "start": "2017-10",
+        "end": "2017-11"
+      },
+      "dimensions": {
+        "segment_type": "customer_state",
+        "segment_value": "MG"
+      },
+      "confidence": "HIGH",
+      "source": {
+        "system": "driver_engine",
+        "component": "drivers.contribution.compute_segment_contributions",
+        "version": "1.0"
+      },
+      "lineage": [
+        {
+          "layer": "kpi",
+          "reference": "revenue"
+        },
+        {
+          "layer": "semantic_definition",
+          "reference": "docs/KPI_SEMANTICS_PREVIEW.md#causa_revenue"
+        },
+        {
+          "layer": "canonical_table_field",
+          "reference": "agg_order_items.item_price_total"
+        },
+        {
+          "layer": "raw_table_column",
+          "reference": "order_items.price"
+        },
+        {
+          "layer": "segment_method",
+          "reference": "deterministic_contribution_analysis"
+        }
+      ],
+      "freshness": {
+        "event_time": "2017-11",
+        "data_availability_time": null,
+        "processing_time": "2026-08-26T18:05:05.501905+00:00",
+        "is_historical": true
+      },
+      "quality": {
+        "completeness": null,
+        "freshness": null,
+        "source_reliability": 1.0,
+        "coverage": null,
+        "historical_sufficiency": null,
+        "retrieval_quality": null
+      },
+      "security": {
+        "classification": "PUBLIC_ANALYTICAL",
+        "trust_level": "TRUSTED_SYSTEM",
+        "security_status": "SAFE",
+        "pii_detected": false,
+        "pii_types": [],
+        "redaction_status": "NOT_APPLICABLE"
+      },
+      "relationships": [],
+      "metadata": {
+        "rank": 3,
+        "sample_size": 1089,
+        "history_periods": 11,
+        "percentage_change": 63.74250430637727
+      },
+      "created_at": "2026-08-26T18:05:05.501911+00:00"
+    },
+    {
+      "evidence_id": "ev_segment_3efc7cdc443bbf13",
+      "evidence_type": "SEGMENT_CONTRIBUTION",
+      "evidence_tier": "T2_ARITHMETIC",
+      "claim": "RS (customer_state) moved from 37571.11 to 58699.88 between 2017-10 and 2017-11, an absolute change of +21128.77 (6.11% of the total movement).",
+      "value": {
+        "value": 21128.769999999997,
+        "unit": "BRL"
+      },
+      "time": {
+        "start": "2017-10",
+        "end": "2017-11"
+      },
+      "dimensions": {
+        "segment_type": "customer_state",
+        "segment_value": "RS"
+      },
+      "confidence": "HIGH",
+      "source": {
+        "system": "driver_engine",
+        "component": "drivers.contribution.compute_segment_contributions",
+        "version": "1.0"
+      },
+      "lineage": [
+        {
+          "layer": "kpi",
+          "reference": "revenue"
+        },
+        {
+          "layer": "semantic_definition",
+          "reference": "docs/KPI_SEMANTICS_PREVIEW.md#causa_revenue"
+        },
+        {
+          "layer": "canonical_table_field",
+          "reference": "agg_order_items.item_price_total"
+        },
+        {
+          "layer": "raw_table_column",
+          "reference": "order_items.price"
+        },
+        {
+          "layer": "segment_method",
+          "reference": "deterministic_contribution_analysis"
+        }
+      ],
+      "freshness": {
+        "event_time": "2017-11",
+        "data_availability_time": null,
+        "processing_time": "2026-08-26T18:05:05.501938+00:00",
+        "is_historical": true
+      },
+      "quality": {
+        "completeness": null,
+        "freshness": null,
+        "source_reliability": 1.0,
+        "coverage": null,
+        "historical_sufficiency": null,
+        "retrieval_quality": null
+      },
+      "security": {
+        "classification": "PUBLIC_ANALYTICAL",
+        "trust_level": "TRUSTED_SYSTEM",
+        "security_status": "SAFE",
+        "pii_detected": false,
+        "pii_types": [],
+        "redaction_status": "NOT_APPLICABLE"
+      },
+      "relationships": [],
+      "metadata": {
+        "rank": 4,
+        "sample_size": 482,
+        "history_periods": 12,
+        "percentage_change": 56.23674679827132
+      },
+      "created_at": "2026-08-26T18:05:05.501944+00:00"
+    },
+    {
+      "evidence_id": "ev_segment_faeb02f297a85ec7",
+      "evidence_type": "SEGMENT_CONTRIBUTION",
+      "evidence_tier": "T2_ARITHMETIC",
+      "claim": "SC (customer_state) moved from 21022.55 to 40312.9 between 2017-10 and 2017-11, an absolute change of +19290.35 (5.57% of the total movement).",
+      "value": {
+        "value": 19290.350000000002,
+        "unit": "BRL"
+      },
+      "time": {
+        "start": "2017-10",
+        "end": "2017-11"
+      },
+      "dimensions": {
+        "segment_type": "customer_state",
+        "segment_value": "SC"
+      },
+      "confidence": "HIGH",
+      "source": {
+        "system": "driver_engine",
+        "component": "drivers.contribution.compute_segment_contributions",
+        "version": "1.0"
+      },
+      "lineage": [
+        {
+          "layer": "kpi",
+          "reference": "revenue"
+        },
+        {
+          "layer": "semantic_definition",
+          "reference": "docs/KPI_SEMANTICS_PREVIEW.md#causa_revenue"
+        },
+        {
+          "layer": "canonical_table_field",
+          "reference": "agg_order_items.item_price_total"
+        },
+        {
+          "layer": "raw_table_column",
+          "reference": "order_items.price"
+        },
+        {
+          "layer": "segment_method",
+          "reference": "deterministic_contribution_analysis"
+        }
+      ],
+      "freshness": {
+        "event_time": "2017-11",
+        "data_availability_time": null,
+        "processing_time": "2026-08-26T18:05:05.501972+00:00",
+        "is_historical": true
+      },
+      "quality": {
+        "completeness": null,
+        "freshness": null,
+        "source_reliability": 1.0,
+        "coverage": null,
+        "historical_sufficiency": null,
+        "retrieval_quality": null
+      },
+      "security": {
+        "classification": "PUBLIC_ANALYTICAL",
+        "trust_level": "TRUSTED_SYSTEM",
+        "security_status": "SAFE",
+        "pii_detected": false,
+        "pii_types": [],
+        "redaction_status": "NOT_APPLICABLE"
+      },
+      "relationships": [],
+      "metadata": {
+        "rank": 5,
+        "sample_size": 354,
+        "history_periods": 11,
+        "percentage_change": 91.76027646503398
+      },
+      "created_at": "2026-08-26T18:05:05.501978+00:00"
+    },
+    {
+      "evidence_id": "ev_segment_4a77ac1e3c2c0ef6",
+      "evidence_type": "SEGMENT_CONTRIBUTION",
+      "evidence_tier": "T2_ARITHMETIC",
+      "claim": "DF (customer_state) moved from 13093.39 to 27759.84 between 2017-10 and 2017-11, an absolute change of +14666.45 (4.24% of the total movement).",
+      "value": {
+        "value": 14666.45,
+        "unit": "BRL"
+      },
+      "time": {
+        "start": "2017-10",
+        "end": "2017-11"
+      },
+      "dimensions": {
+        "segment_type": "customer_state",
+        "segment_value": "DF"
+      },
+      "confidence": "HIGH",
+      "source": {
+        "system": "driver_engine",
+        "component": "drivers.contribution.compute_segment_contributions",
+        "version": "1.0"
+      },
+      "lineage": [
+        {
+          "layer": "kpi",
+          "reference": "revenue"
+        },
+        {
+          "layer": "semantic_definition",
+          "reference": "docs/KPI_SEMANTICS_PREVIEW.md#causa_revenue"
+        },
+        {
+          "layer": "canonical_table_field",
+          "reference": "agg_order_items.item_price_total"
+        },
+        {
+          "layer": "raw_table_column",
+          "reference": "order_items.price"
+        },
+        {
+          "layer": "segment_method",
+          "reference": "deterministic_contribution_analysis"
+        }
+      ],
+      "freshness": {
+        "event_time": "2017-11",
+        "data_availability_time": null,
+        "processing_time": "2026-08-26T18:05:05.502007+00:00",
+        "is_historical": true
+      },
+      "quality": {
+        "completeness": null,
+        "freshness": null,
+        "source_reliability": 1.0,
+        "coverage": null,
+        "historical_sufficiency": null,
+        "retrieval_quality": null
+      },
+      "security": {
+        "classification": "PUBLIC_ANALYTICAL",
+        "trust_level": "TRUSTED_SYSTEM",
+        "security_status": "SAFE",
+        "pii_detected": false,
+        "pii_types": [],
+        "redaction_status": "NOT_APPLICABLE"
+      },
+      "relationships": [],
+      "metadata": {
+        "rank": 6,
+        "sample_size": 182,
+        "history_periods": 11,
+        "percentage_change": 112.01415370656494
+      },
+      "created_at": "2026-08-26T18:05:05.502013+00:00"
+    },
+    {
+      "evidence_id": "ev_segment_51923eef8a8b2cf9",
+      "evidence_type": "SEGMENT_CONTRIBUTION",
+      "evidence_tier": "T2_ARITHMETIC",
+      "claim": "ES (customer_state) moved from 10380.69 to 24302.25 between 2017-10 and 2017-11, an absolute change of +13921.56 (4.02% of the total movement).",
+      "value": {
+        "value": 13921.56,
+        "unit": "BRL"
+      },
+      "time": {
+        "start": "2017-10",
+        "end": "2017-11"
+      },
+      "dimensions": {
+        "segment_type": "customer_state",
+        "segment_value": "ES"
+      },
+      "confidence": "HIGH",
+      "source": {
+        "system": "driver_engine",
+        "component": "drivers.contribution.compute_segment_contributions",
+        "version": "1.0"
+      },
+      "lineage": [
+        {
+          "layer": "kpi",
+          "reference": "revenue"
+        },
+        {
+          "layer": "semantic_definition",
+          "reference": "docs/KPI_SEMANTICS_PREVIEW.md#causa_revenue"
+        },
+        {
+          "layer": "canonical_table_field",
+          "reference": "agg_order_items.item_price_total"
+        },
+        {
+          "layer": "raw_table_column",
+          "reference": "order_items.price"
+        },
+        {
+          "layer": "segment_method",
+          "reference": "deterministic_contribution_analysis"
+        }
+      ],
+      "freshness": {
+        "event_time": "2017-11",
+        "data_availability_time": null,
+        "processing_time": "2026-08-26T18:05:05.502041+00:00",
+        "is_historical": true
+      },
+      "quality": {
+        "completeness": null,
+        "freshness": null,
+        "source_reliability": 1.0,
+        "coverage": null,
+        "historical_sufficiency": null,
+        "retrieval_quality": null
+      },
+      "security": {
+        "classification": "PUBLIC_ANALYTICAL",
+        "trust_level": "TRUSTED_SYSTEM",
+        "security_status": "SAFE",
+        "pii_detected": false,
+        "pii_types": [],
+        "redaction_status": "NOT_APPLICABLE"
+      },
+      "relationships": [],
+      "metadata": {
+        "rank": 7,
+        "sample_size": 195,
+        "history_periods": 11,
+        "percentage_change": 134.1101603072628
+      },
+      "created_at": "2026-08-26T18:05:05.502048+00:00"
+    },
+    {
+      "evidence_id": "ev_segment_b14845fa34c3e83c",
+      "evidence_type": "SEGMENT_CONTRIBUTION",
+      "evidence_tier": "T2_ARITHMETIC",
+      "claim": "PR (customer_state) moved from 33400.659999999996 to 46853.49 between 2017-10 and 2017-11, an absolute change of +13452.83 (3.89% of the total movement).",
+      "value": {
+        "value": 13452.830000000002,
+        "unit": "BRL"
+      },
+      "time": {
+        "start": "2017-10",
+        "end": "2017-11"
+      },
+      "dimensions": {
+        "segment_type": "customer_state",
+        "segment_value": "PR"
+      },
+      "confidence": "HIGH",
+      "source": {
+        "system": "driver_engine",
+        "component": "drivers.contribution.compute_segment_contributions",
+        "version": "1.0"
+      },
+      "lineage": [
+        {
+          "layer": "kpi",
+          "reference": "revenue"
+        },
+        {
+          "layer": "semantic_definition",
+          "reference": "docs/KPI_SEMANTICS_PREVIEW.md#causa_revenue"
+        },
+        {
+          "layer": "canonical_table_field",
+          "reference": "agg_order_items.item_price_total"
+        },
+        {
+          "layer": "raw_table_column",
+          "reference": "order_items.price"
+        },
+        {
+          "layer": "segment_method",
+          "reference": "deterministic_contribution_analysis"
+        }
+      ],
+      "freshness": {
+        "event_time": "2017-11",
+        "data_availability_time": null,
+        "processing_time": "2026-08-26T18:05:05.502076+00:00",
+        "is_historical": true
+      },
+      "quality": {
+        "completeness": null,
+        "freshness": null,
+        "source_reliability": 1.0,
+        "coverage": null,
+        "historical_sufficiency": null,
+        "retrieval_quality": null
+      },
+      "security": {
+        "classification": "PUBLIC_ANALYTICAL",
+        "trust_level": "TRUSTED_SYSTEM",
+        "security_status": "SAFE",
+        "pii_detected": false,
+        "pii_types": [],
+        "redaction_status": "NOT_APPLICABLE"
+      },
+      "relationships": [],
+      "metadata": {
+        "rank": 8,
+        "sample_size": 446,
+        "history_periods": 12,
+        "percentage_change": 40.27713823619055
+      },
+      "created_at": "2026-08-26T18:05:05.502082+00:00"
+    },
+    {
+      "evidence_id": "ev_segment_96668cb12ffc7fec",
+      "evidence_type": "SEGMENT_CONTRIBUTION",
+      "evidence_tier": "T2_ARITHMETIC",
+      "claim": "CE (customer_state) moved from 12399.11 to 18655.44 between 2017-10 and 2017-11, an absolute change of +6256.33 (1.81% of the total movement).",
+      "value": {
+        "value": 6256.329999999998,
+        "unit": "BRL"
+      },
+      "time": {
+        "start": "2017-10",
+        "end": "2017-11"
+      },
+      "dimensions": {
+        "segment_type": "customer_state",
+        "segment_value": "CE"
+      },
+      "confidence": "HIGH",
+      "source": {
+        "system": "driver_engine",
+        "component": "drivers.contribution.compute_segment_contributions",
+        "version": "1.0"
+      },
+      "lineage": [
+        {
+          "layer": "kpi",
+          "reference": "revenue"
+        },
+        {
+          "layer": "semantic_definition",
+          "reference": "docs/KPI_SEMANTICS_PREVIEW.md#causa_revenue"
+        },
+        {
+          "layer": "canonical_table_field",
+          "reference": "agg_order_items.item_price_total"
+        },
+        {
+          "layer": "raw_table_column",
+          "reference": "order_items.price"
+        },
+        {
+          "layer": "segment_method",
+          "reference": "deterministic_contribution_analysis"
+        }
+      ],
+      "freshness": {
+        "event_time": "2017-11",
+        "data_availability_time": null,
+        "processing_time": "2026-08-26T18:05:05.502110+00:00",
+        "is_historical": true
+      },
+      "quality": {
+        "completeness": null,
+        "freshness": null,
+        "source_reliability": 1.0,
+        "coverage": null,
+        "historical_sufficiency": null,
+        "retrieval_quality": null
+      },
+      "security": {
+        "classification": "PUBLIC_ANALYTICAL",
+        "trust_level": "TRUSTED_SYSTEM",
+        "security_status": "SAFE",
+        "pii_detected": false,
+        "pii_types": [],
+        "redaction_status": "NOT_APPLICABLE"
+      },
+      "relationships": [],
+      "metadata": {
+        "rank": 9,
+        "sample_size": 123,
+        "history_periods": 11,
+        "percentage_change": 50.45789576832529
+      },
+      "created_at": "2026-08-26T18:05:05.502116+00:00"
+    },
+    {
+      "evidence_id": "ev_segment_feaa53b8bd7eec71",
+      "evidence_type": "SEGMENT_CONTRIBUTION",
+      "evidence_tier": "T2_ARITHMETIC",
+      "claim": "PB (customer_state) moved from 10284.31 to 4567.39 between 2017-10 and 2017-11, an absolute change of -5716.92 (-1.65% of the total movement).",
+      "value": {
+        "value": -5716.919999999999,
+        "unit": "BRL"
+      },
+      "time": {
+        "start": "2017-10",
+        "end": "2017-11"
+      },
+      "dimensions": {
+        "segment_type": "customer_state",
+        "segment_value": "PB"
+      },
+      "confidence": "HIGH",
+      "source": {
+        "system": "driver_engine",
+        "component": "drivers.contribution.compute_segment_contributions",
+        "version": "1.0"
+      },
+      "lineage": [
+        {
+          "layer": "kpi",
+          "reference": "revenue"
+        },
+        {
+          "layer": "semantic_definition",
+          "reference": "docs/KPI_SEMANTICS_PREVIEW.md#causa_revenue"
+        },
+        {
+          "layer": "canonical_table_field",
+          "reference": "agg_order_items.item_price_total"
+        },
+        {
+          "layer": "raw_table_column",
+          "reference": "order_items.price"
+        },
+        {
+          "layer": "segment_method",
+          "reference": "deterministic_contribution_analysis"
+        }
+      ],
+      "freshness": {
+        "event_time": "2017-11",
+        "data_availability_time": null,
+        "processing_time": "2026-08-26T18:05:05.502144+00:00",
+        "is_historical": true
+      },
+      "quality": {
+        "completeness": null,
+        "freshness": null,
+        "source_reliability": 1.0,
+        "coverage": null,
+        "historical_sufficiency": null,
+        "retrieval_quality": null
+      },
+      "security": {
+        "classification": "PUBLIC_ANALYTICAL",
+        "trust_level": "TRUSTED_SYSTEM",
+        "security_status": "SAFE",
+        "pii_detected": false,
+        "pii_types": [],
+        "redaction_status": "NOT_APPLICABLE"
+      },
+      "relationships": [],
+      "metadata": {
+        "rank": 10,
+        "sample_size": 30,
+        "history_periods": 11,
+        "percentage_change": -55.58875607600315
+      },
+      "created_at": "2026-08-26T18:05:05.502149+00:00"
+    },
+    {
+      "evidence_id": "ev_segment_e40d76536aa4f0b3",
+      "evidence_type": "SEGMENT_CONTRIBUTION",
+      "evidence_tier": "T2_ARITHMETIC",
+      "claim": "SP (seller_state) moved from 423229.92 to 622301.92 between 2017-10 and 2017-11, an absolute change of +199072.00 (57.53% of the total movement).",
+      "value": {
+        "value": 199072.00000000006,
+        "unit": "BRL"
+      },
+      "time": {
+        "start": "2017-10",
+        "end": "2017-11"
+      },
+      "dimensions": {
+        "segment_type": "seller_state",
+        "segment_value": "SP"
+      },
+      "confidence": "HIGH",
+      "source": {
+        "system": "driver_engine",
+        "component": "drivers.contribution.compute_segment_contributions",
+        "version": "1.0"
+      },
+      "lineage": [
+        {
+          "layer": "kpi",
+          "reference": "revenue"
+        },
+        {
+          "layer": "semantic_definition",
+          "reference": "docs/KPI_SEMANTICS_PREVIEW.md#causa_revenue"
+        },
+        {
+          "layer": "canonical_table_field",
+          "reference": "agg_order_items.item_price_total"
+        },
+        {
+          "layer": "raw_table_column",
+          "reference": "order_items.price"
+        },
+        {
+          "layer": "segment_method",
+          "reference": "deterministic_contribution_analysis"
+        }
+      ],
+      "freshness": {
+        "event_time": "2017-11",
+        "data_availability_time": null,
+        "processing_time": "2026-08-26T18:05:05.502179+00:00",
+        "is_historical": true
+      },
+      "quality": {
+        "completeness": null,
+        "freshness": null,
+        "source_reliability": 1.0,
+        "coverage": null,
+        "historical_sufficiency": null,
+        "retrieval_quality": null
+      },
+      "security": {
+        "classification": "PUBLIC_ANALYTICAL",
+        "trust_level": "TRUSTED_SYSTEM",
+        "security_status": "SAFE",
+        "pii_detected": false,
+        "pii_types": [],
+        "redaction_status": "NOT_APPLICABLE"
+      },
+      "relationships": [],
+      "metadata": {
+        "rank": 1,
+        "sample_size": 6238,
+        "history_periods": 11,
+        "percentage_change": 47.03637209770048
+      },
+      "created_at": "2026-08-26T18:05:05.502185+00:00"
+    },
+    {
+      "evidence_id": "ev_segment_5163e758ba4bee10",
+      "evidence_type": "SEGMENT_CONTRIBUTION",
+      "evidence_tier": "T2_ARITHMETIC",
+      "claim": "RJ (seller_state) moved from 31309.01 to 86336.87 between 2017-10 and 2017-11, an absolute change of +55027.86 (15.90% of the total movement).",
+      "value": {
+        "value": 55027.86,
+        "unit": "BRL"
+      },
+      "time": {
+        "start": "2017-10",
+        "end": "2017-11"
+      },
+      "dimensions": {
+        "segment_type": "seller_state",
+        "segment_value": "RJ"
+      },
+      "confidence": "HIGH",
+      "source": {
+        "system": "driver_engine",
+        "component": "drivers.contribution.compute_segment_contributions",
+        "version": "1.0"
+      },
+      "lineage": [
+        {
+          "layer": "kpi",
+          "reference": "revenue"
+        },
+        {
+          "layer": "semantic_definition",
+          "reference": "docs/KPI_SEMANTICS_PREVIEW.md#causa_revenue"
+        },
+        {
+          "layer": "canonical_table_field",
+          "reference": "agg_order_items.item_price_total"
+        },
+        {
+          "layer": "raw_table_column",
+          "reference": "order_items.price"
+        },
+        {
+          "layer": "segment_method",
+          "reference": "deterministic_contribution_analysis"
+        }
+      ],
+      "freshness": {
+        "event_time": "2017-11",
+        "data_availability_time": null,
+        "processing_time": "2026-08-26T18:05:05.502213+00:00",
+        "is_historical": true
+      },
+      "quality": {
+        "completeness": null,
+        "freshness": null,
+        "source_reliability": 1.0,
+        "coverage": null,
+        "historical_sufficiency": null,
+        "retrieval_quality": null
+      },
+      "security": {
+        "classification": "PUBLIC_ANALYTICAL",
+        "trust_level": "TRUSTED_SYSTEM",
+        "security_status": "SAFE",
+        "pii_detected": false,
+        "pii_types": [],
+        "redaction_status": "NOT_APPLICABLE"
+      },
+      "relationships": [],
+      "metadata": {
+        "rank": 2,
+        "sample_size": 424,
+        "history_periods": 11,
+        "percentage_change": 175.7572660393925
+      },
+      "created_at": "2026-08-26T18:05:05.502219+00:00"
+    },
+    {
+      "evidence_id": "ev_segment_b3000ca4e3a30d2f",
+      "evidence_type": "SEGMENT_CONTRIBUTION",
+      "evidence_tier": "T2_ARITHMETIC",
+      "claim": "PR (seller_state) moved from 47685.34 to 92972.46 between 2017-10 and 2017-11, an absolute change of +45287.12 (13.09% of the total movement).",
+      "value": {
+        "value": 45287.12000000001,
+        "unit": "BRL"
+      },
+      "time": {
+        "start": "2017-10",
+        "end": "2017-11"
+      },
+      "dimensions": {
+        "segment_type": "seller_state",
+        "segment_value": "PR"
+      },
+      "confidence": "HIGH",
+      "source": {
+        "system": "driver_engine",
+        "component": "drivers.contribution.compute_segment_contributions",
+        "version": "1.0"
+      },
+      "lineage": [
+        {
+          "layer": "kpi",
+          "reference": "revenue"
+        },
+        {
+          "layer": "semantic_definition",
+          "reference": "docs/KPI_SEMANTICS_PREVIEW.md#causa_revenue"
+        },
+        {
+          "layer": "canonical_table_field",
+          "reference": "agg_order_items.item_price_total"
+        },
+        {
+          "layer": "raw_table_column",
+          "reference": "order_items.price"
+        },
+        {
+          "layer": "segment_method",
+          "reference": "deterministic_contribution_analysis"
+        }
+      ],
+      "freshness": {
+        "event_time": "2017-11",
+        "data_availability_time": null,
+        "processing_time": "2026-08-26T18:05:05.502248+00:00",
+        "is_historical": true
+      },
+      "quality": {
+        "completeness": null,
+        "freshness": null,
+        "source_reliability": 1.0,
+        "coverage": null,
+        "historical_sufficiency": null,
+        "retrieval_quality": null
+      },
+      "security": {
+        "classification": "PUBLIC_ANALYTICAL",
+        "trust_level": "TRUSTED_SYSTEM",
+        "security_status": "SAFE",
+        "pii_detected": false,
+        "pii_types": [],
+        "redaction_status": "NOT_APPLICABLE"
+      },
+      "relationships": [],
+      "metadata": {
+        "rank": 3,
+        "sample_size": 625,
+        "history_periods": 13,
+        "percentage_change": 94.97073943480326
+      },
+      "created_at": "2026-08-26T18:05:05.502253+00:00"
+    },
+    {
+      "evidence_id": "ev_segment_77d9a9db85737153",
+      "evidence_type": "SEGMENT_CONTRIBUTION",
+      "evidence_tier": "T2_ARITHMETIC",
+      "claim": "SC (seller_state) moved from 24231.5 to 51303.02 between 2017-10 and 2017-11, an absolute change of +27071.52 (7.82% of the total movement).",
+      "value": {
+        "value": 27071.519999999997,
+        "unit": "BRL"
+      },
+      "time": {
+        "start": "2017-10",
+        "end": "2017-11"
+      },
+      "dimensions": {
+        "segment_type": "seller_state",
+        "segment_value": "SC"
+      },
+      "confidence": "HIGH",
+      "source": {
+        "system": "driver_engine",
+        "component": "drivers.contribution.compute_segment_contributions",
+        "version": "1.0"
+      },
+      "lineage": [
+        {
+          "layer": "kpi",
+          "reference": "revenue"
+        },
+        {
+          "layer": "semantic_definition",
+          "reference": "docs/KPI_SEMANTICS_PREVIEW.md#causa_revenue"
+        },
+        {
+          "layer": "canonical_table_field",
+          "reference": "agg_order_items.item_price_total"
+        },
+        {
+          "layer": "raw_table_column",
+          "reference": "order_items.price"
+        },
+        {
+          "layer": "segment_method",
+          "reference": "deterministic_contribution_analysis"
+        }
+      ],
+      "freshness": {
+        "event_time": "2017-11",
+        "data_availability_time": null,
+        "processing_time": "2026-08-26T18:05:05.502282+00:00",
+        "is_historical": true
+      },
+      "quality": {
+        "completeness": null,
+        "freshness": null,
+        "source_reliability": 1.0,
+        "coverage": null,
+        "historical_sufficiency": null,
+        "retrieval_quality": null
+      },
+      "security": {
+        "classification": "PUBLIC_ANALYTICAL",
+        "trust_level": "TRUSTED_SYSTEM",
+        "security_status": "SAFE",
+        "pii_detected": false,
+        "pii_types": [],
+        "redaction_status": "NOT_APPLICABLE"
+      },
+      "relationships": [],
+      "metadata": {
+        "rank": 4,
+        "sample_size": 297,
+        "history_periods": 11,
+        "percentage_change": 111.72036398902254
+      },
+      "created_at": "2026-08-26T18:05:05.502288+00:00"
+    },
+    {
+      "evidence_id": "ev_segment_9e0645de2c161a76",
+      "evidence_type": "SEGMENT_CONTRIBUTION",
+      "evidence_tier": "T2_ARITHMETIC",
+      "claim": "MG (seller_state) moved from 51383.61 to 77508.56 between 2017-10 and 2017-11, an absolute change of +26124.95 (7.55% of the total movement).",
+      "value": {
+        "value": 26124.949999999997,
+        "unit": "BRL"
+      },
+      "time": {
+        "start": "2017-10",
+        "end": "2017-11"
+      },
+      "dimensions": {
+        "segment_type": "seller_state",
+        "segment_value": "MG"
+      },
+      "confidence": "HIGH",
+      "source": {
+        "system": "driver_engine",
+        "component": "drivers.contribution.compute_segment_contributions",
+        "version": "1.0"
+      },
+      "lineage": [
+        {
+          "layer": "kpi",
+          "reference": "revenue"
+        },
+        {
+          "layer": "semantic_definition",
+          "reference": "docs/KPI_SEMANTICS_PREVIEW.md#causa_revenue"
+        },
+        {
+          "layer": "canonical_table_field",
+          "reference": "agg_order_items.item_price_total"
+        },
+        {
+          "layer": "raw_table_column",
+          "reference": "order_items.price"
+        },
+        {
+          "layer": "segment_method",
+          "reference": "deterministic_contribution_analysis"
+        }
+      ],
+      "freshness": {
+        "event_time": "2017-11",
+        "data_availability_time": null,
+        "processing_time": "2026-08-26T18:05:05.502315+00:00",
+        "is_historical": true
+      },
+      "quality": {
+        "completeness": null,
+        "freshness": null,
+        "source_reliability": 1.0,
+        "coverage": null,
+        "historical_sufficiency": null,
+        "retrieval_quality": null
+      },
+      "security": {
+        "classification": "PUBLIC_ANALYTICAL",
+        "trust_level": "TRUSTED_SYSTEM",
+        "security_status": "SAFE",
+        "pii_detected": false,
+        "pii_types": [],
+        "redaction_status": "NOT_APPLICABLE"
+      },
+      "relationships": [],
+      "metadata": {
+        "rank": 5,
+        "sample_size": 682,
+        "history_periods": 12,
+        "percentage_change": 50.84296334959727
+      },
+      "created_at": "2026-08-26T18:05:05.502321+00:00"
+    },
+    {
+      "evidence_id": "ev_segment_0b16c0bb7f73d0b7",
+      "evidence_type": "SEGMENT_CONTRIBUTION",
+      "evidence_tier": "T2_ARITHMETIC",
+      "claim": "BA (seller_state) moved from 47924.840000000004 to 23131.08 between 2017-10 and 2017-11, an absolute change of -24793.76 (-7.16% of the total movement).",
+      "value": {
+        "value": -24793.760000000002,
+        "unit": "BRL"
+      },
+      "time": {
+        "start": "2017-10",
+        "end": "2017-11"
+      },
+      "dimensions": {
+        "segment_type": "seller_state",
+        "segment_value": "BA"
+      },
+      "confidence": "HIGH",
+      "source": {
+        "system": "driver_engine",
+        "component": "drivers.contribution.compute_segment_contributions",
+        "version": "1.0"
+      },
+      "lineage": [
+        {
+          "layer": "kpi",
+          "reference": "revenue"
+        },
+        {
+          "layer": "semantic_definition",
+          "reference": "docs/KPI_SEMANTICS_PREVIEW.md#causa_revenue"
+        },
+        {
+          "layer": "canonical_table_field",
+          "reference": "agg_order_items.item_price_total"
+        },
+        {
+          "layer": "raw_table_column",
+          "reference": "order_items.price"
+        },
+        {
+          "layer": "segment_method",
+          "reference": "deterministic_contribution_analysis"
+        }
+      ],
+      "freshness": {
+        "event_time": "2017-11",
+        "data_availability_time": null,
+        "processing_time": "2026-08-26T18:05:05.502349+00:00",
+        "is_historical": true
+      },
+      "quality": {
+        "completeness": null,
+        "freshness": null,
+        "source_reliability": 1.0,
+        "coverage": null,
+        "historical_sufficiency": null,
+        "retrieval_quality": null
+      },
+      "security": {
+        "classification": "PUBLIC_ANALYTICAL",
+        "trust_level": "TRUSTED_SYSTEM",
+        "security_status": "SAFE",
+        "pii_detected": false,
+        "pii_types": [],
+        "redaction_status": "NOT_APPLICABLE"
+      },
+      "relationships": [],
+      "metadata": {
+        "rank": 6,
+        "sample_size": 64,
+        "history_periods": 11,
+        "percentage_change": -51.73467454455769
+      },
+      "created_at": "2026-08-26T18:05:05.502355+00:00"
+    },
+    {
+      "evidence_id": "ev_segment_c091047136a079bd",
+      "evidence_type": "SEGMENT_CONTRIBUTION",
+      "evidence_tier": "T2_ARITHMETIC",
+      "claim": "RS (seller_state) moved from 19600.66 to 33411.69 between 2017-10 and 2017-11, an absolute change of +13811.03 (3.99% of the total movement).",
+      "value": {
+        "value": 13811.030000000002,
+        "unit": "BRL"
+      },
+      "time": {
+        "start": "2017-10",
+        "end": "2017-11"
+      },
+      "dimensions": {
+        "segment_type": "seller_state",
+        "segment_value": "RS"
+      },
+      "confidence": "HIGH",
+      "source": {
+        "system": "driver_engine",
+        "component": "drivers.contribution.compute_segment_contributions",
+        "version": "1.0"
+      },
+      "lineage": [
+        {
+          "layer": "kpi",
+          "reference": "revenue"
+        },
+        {
+          "layer": "semantic_definition",
+          "reference": "docs/KPI_SEMANTICS_PREVIEW.md#causa_revenue"
+        },
+        {
+          "layer": "canonical_table_field",
+          "reference": "agg_order_items.item_price_total"
+        },
+        {
+          "layer": "raw_table_column",
+          "reference": "order_items.price"
+        },
+        {
+          "layer": "segment_method",
+          "reference": "deterministic_contribution_analysis"
+        }
+      ],
+      "freshness": {
+        "event_time": "2017-11",
+        "data_availability_time": null,
+        "processing_time": "2026-08-26T18:05:05.502384+00:00",
+        "is_historical": true
+      },
+      "quality": {
+        "completeness": null,
+        "freshness": null,
+        "source_reliability": 1.0,
+        "coverage": null,
+        "historical_sufficiency": null,
+        "retrieval_quality": null
+      },
+      "security": {
+        "classification": "PUBLIC_ANALYTICAL",
+        "trust_level": "TRUSTED_SYSTEM",
+        "security_status": "SAFE",
+        "pii_detected": false,
+        "pii_types": [],
+        "redaction_status": "NOT_APPLICABLE"
+      },
+      "relationships": [],
+      "metadata": {
+        "rank": 7,
+        "sample_size": 152,
+        "history_periods": 11,
+        "percentage_change": 70.4620660732853
+      },
+      "created_at": "2026-08-26T18:05:05.502390+00:00"
+    },
+    {
+      "evidence_id": "ev_segment_bb5d767a6aed4e4d",
+      "evidence_type": "SEGMENT_CONTRIBUTION",
+      "evidence_tier": "T2_ARITHMETIC",
+      "claim": "PB (seller_state) moved from 0.0 to 2838.5 between 2017-10 and 2017-11, an absolute change of +2838.50 (0.82% of the total movement).",
+      "value": {
+        "value": 2838.5,
+        "unit": "BRL"
+      },
+      "time": {
+        "start": "2017-10",
+        "end": "2017-11"
+      },
+      "dimensions": {
+        "segment_type": "seller_state",
+        "segment_value": "PB"
+      },
+      "confidence": "MEDIUM",
+      "source": {
+        "system": "driver_engine",
+        "component": "drivers.contribution.compute_segment_contributions",
+        "version": "1.0"
+      },
+      "lineage": [
+        {
+          "layer": "kpi",
+          "reference": "revenue"
+        },
+        {
+          "layer": "semantic_definition",
+          "reference": "docs/KPI_SEMANTICS_PREVIEW.md#causa_revenue"
+        },
+        {
+          "layer": "canonical_table_field",
+          "reference": "agg_order_items.item_price_total"
+        },
+        {
+          "layer": "raw_table_column",
+          "reference": "order_items.price"
+        },
+        {
+          "layer": "segment_method",
+          "reference": "deterministic_contribution_analysis"
+        }
+      ],
+      "freshness": {
+        "event_time": "2017-11",
+        "data_availability_time": null,
+        "processing_time": "2026-08-26T18:05:05.502418+00:00",
+        "is_historical": true
+      },
+      "quality": {
+        "completeness": null,
+        "freshness": null,
+        "source_reliability": 1.0,
+        "coverage": null,
+        "historical_sufficiency": null,
+        "retrieval_quality": null
+      },
+      "security": {
+        "classification": "PUBLIC_ANALYTICAL",
+        "trust_level": "TRUSTED_SYSTEM",
+        "security_status": "SAFE",
+        "pii_detected": false,
+        "pii_types": [],
+        "redaction_status": "NOT_APPLICABLE"
+      },
+      "relationships": [],
+      "metadata": {
+        "rank": 8,
+        "sample_size": 3,
+        "history_periods": 6,
+        "percentage_change": null
+      },
+      "created_at": "2026-08-26T18:05:05.502424+00:00"
+    },
+    {
+      "evidence_id": "ev_segment_37a5d03a85e612ae",
+      "evidence_type": "SEGMENT_CONTRIBUTION",
+      "evidence_tier": "T2_ARITHMETIC",
+      "claim": "DF (seller_state) moved from 8743.35 to 6921.82 between 2017-10 and 2017-11, an absolute change of -1821.53 (-0.53% of the total movement).",
+      "value": {
+        "value": -1821.5300000000007,
+        "unit": "BRL"
+      },
+      "time": {
+        "start": "2017-10",
+        "end": "2017-11"
+      },
+      "dimensions": {
+        "segment_type": "seller_state",
+        "segment_value": "DF"
+      },
+      "confidence": "HIGH",
+      "source": {
+        "system": "driver_engine",
+        "component": "drivers.contribution.compute_segment_contributions",
+        "version": "1.0"
+      },
+      "lineage": [
+        {
+          "layer": "kpi",
+          "reference": "revenue"
+        },
+        {
+          "layer": "semantic_definition",
+          "reference": "docs/KPI_SEMANTICS_PREVIEW.md#causa_revenue"
+        },
+        {
+          "layer": "canonical_table_field",
+          "reference": "agg_order_items.item_price_total"
+        },
+        {
+          "layer": "raw_table_column",
+          "reference": "order_items.price"
+        },
+        {
+          "layer": "segment_method",
+          "reference": "deterministic_contribution_analysis"
+        }
+      ],
+      "freshness": {
+        "event_time": "2017-11",
+        "data_availability_time": null,
+        "processing_time": "2026-08-26T18:05:05.502453+00:00",
+        "is_historical": true
+      },
+      "quality": {
+        "completeness": null,
+        "freshness": null,
+        "source_reliability": 1.0,
+        "coverage": null,
+        "historical_sufficiency": null,
+        "retrieval_quality": null
+      },
+      "security": {
+        "classification": "PUBLIC_ANALYTICAL",
+        "trust_level": "TRUSTED_SYSTEM",
+        "security_status": "SAFE",
+        "pii_detected": false,
+        "pii_types": [],
+        "redaction_status": "NOT_APPLICABLE"
+      },
+      "relationships": [],
+      "metadata": {
+        "rank": 9,
+        "sample_size": 76,
+        "history_periods": 11,
+        "percentage_change": -20.833319036753654
+      },
+      "created_at": "2026-08-26T18:05:05.502459+00:00"
+    },
+    {
+      "evidence_id": "ev_segment_1e8beceb74b4dbde",
+      "evidence_type": "SEGMENT_CONTRIBUTION",
+      "evidence_tier": "T2_ARITHMETIC",
+      "claim": "PE (seller_state) moved from 222.98 to 1892.56 between 2017-10 and 2017-11, an absolute change of +1669.58 (0.48% of the total movement).",
+      "value": {
+        "value": 1669.58,
+        "unit": "BRL"
+      },
+      "time": {
+        "start": "2017-10",
+        "end": "2017-11"
+      },
+      "dimensions": {
+        "segment_type": "seller_state",
+        "segment_value": "PE"
+      },
+      "confidence": "MEDIUM",
+      "source": {
+        "system": "driver_engine",
+        "component": "drivers.contribution.compute_segment_contributions",
+        "version": "1.0"
+      },
+      "lineage": [
+        {
+          "layer": "kpi",
+          "reference": "revenue"
+        },
+        {
+          "layer": "semantic_definition",
+          "reference": "docs/KPI_SEMANTICS_PREVIEW.md#causa_revenue"
+        },
+        {
+          "layer": "canonical_table_field",
+          "reference": "agg_order_items.item_price_total"
+        },
+        {
+          "layer": "raw_table_column",
+          "reference": "order_items.price"
+        },
+        {
+          "layer": "segment_method",
+          "reference": "deterministic_contribution_analysis"
+        }
+      ],
+      "freshness": {
+        "event_time": "2017-11",
+        "data_availability_time": null,
+        "processing_time": "2026-08-26T18:05:05.502487+00:00",
+        "is_historical": true
+      },
+      "quality": {
+        "completeness": null,
+        "freshness": null,
+        "source_reliability": 1.0,
+        "coverage": null,
+        "historical_sufficiency": null,
+        "retrieval_quality": null
+      },
+      "security": {
+        "classification": "PUBLIC_ANALYTICAL",
+        "trust_level": "TRUSTED_SYSTEM",
+        "security_status": "SAFE",
+        "pii_detected": false,
+        "pii_types": [],
+        "redaction_status": "NOT_APPLICABLE"
+      },
+      "relationships": [],
+      "metadata": {
+        "rank": 10,
+        "sample_size": 8,
+        "history_periods": 9,
+        "percentage_change": 748.7577361198314
+      },
+      "created_at": "2026-08-26T18:05:05.502493+00:00"
+    },
+    {
+      "evidence_id": "ev_concurrent_241561e329b1de3e",
+      "evidence_type": "CONCURRENT_KPI",
+      "evidence_tier": "T1_DESCRIPTIVE",
+      "claim": "orders moved from 4631.0 to 7544.0 between 2017-10 and 2017-11 (+62.90%), reported as concurrent context only, not combined into a conclusion about any other KPI's movement.",
+      "value": {
+        "value": 2913.0,
+        "unit": null
+      },
+      "time": {
+        "start": "2017-10",
+        "end": "2017-11"
+      },
+      "dimensions": {},
+      "confidence": "UNKNOWN",
+      "source": {
+        "system": "kpi_engine",
+        "component": "kpi.engine.KPIEngine.compare_periods",
+        "version": "1.0"
+      },
+      "lineage": [
+        {
+          "layer": "kpi",
+          "reference": "orders"
+        },
+        {
+          "layer": "semantic_definition",
+          "reference": "config/kpis.yaml#orders"
+        },
+        {
+          "layer": "canonical_table_field",
+          "reference": "fact_orders.order_id"
+        },
+        {
+          "layer": "raw_table_column",
+          "reference": "orders.order_id"
+        }
+      ],
+      "freshness": {
+        "event_time": "2017-11",
+        "data_availability_time": null,
+        "processing_time": "2026-08-26T18:05:05.502529+00:00",
+        "is_historical": true
+      },
+      "quality": {
+        "completeness": null,
+        "freshness": null,
+        "source_reliability": 1.0,
+        "coverage": null,
+        "historical_sufficiency": null,
+        "retrieval_quality": null
+      },
+      "security": {
+        "classification": "PUBLIC_ANALYTICAL",
+        "trust_level": "TRUSTED_SYSTEM",
+        "security_status": "SAFE",
+        "pii_detected": false,
+        "pii_types": [],
+        "redaction_status": "NOT_APPLICABLE"
+      },
+      "relationships": [],
+      "metadata": {
+        "previous_value": 4631.0,
+        "current_value": 7544.0
+      },
+      "created_at": "2026-08-26T18:05:05.502551+00:00"
+    },
+    {
+      "evidence_id": "ev_concurrent_1eb2b521b2546f6a",
+      "evidence_type": "CONCURRENT_KPI",
+      "evidence_tier": "T1_DESCRIPTIVE",
+      "claim": "aov moved from 145.40705560420315 to 135.58869547711714 between 2017-10 and 2017-11 (-6.75%), reported as concurrent context only, not combined into a conclusion about any other KPI's movement.",
+      "value": {
+        "value": -9.81836012708601,
+        "unit": null
+      },
+      "time": {
+        "start": "2017-10",
+        "end": "2017-11"
+      },
+      "dimensions": {},
+      "confidence": "UNKNOWN",
+      "source": {
+        "system": "kpi_engine",
+        "component": "kpi.engine.KPIEngine.compare_periods",
+        "version": "1.0"
+      },
+      "lineage": [
+        {
+          "layer": "kpi",
+          "reference": "aov"
+        },
+        {
+          "layer": "semantic_definition",
+          "reference": "config/kpis.yaml#aov"
+        },
+        {
+          "layer": "canonical_table_field",
+          "reference": "agg_order_items.item_price_total, agg_order_items.order_id"
+        },
+        {
+          "layer": "raw_table_column",
+          "reference": "order_items.price, order_items.order_id"
+        }
+      ],
+      "freshness": {
+        "event_time": "2017-11",
+        "data_availability_time": null,
+        "processing_time": "2026-08-26T18:05:05.502585+00:00",
+        "is_historical": true
+      },
+      "quality": {
+        "completeness": null,
+        "freshness": null,
+        "source_reliability": 1.0,
+        "coverage": null,
+        "historical_sufficiency": null,
+        "retrieval_quality": null
+      },
+      "security": {
+        "classification": "PUBLIC_ANALYTICAL",
+        "trust_level": "TRUSTED_SYSTEM",
+        "security_status": "SAFE",
+        "pii_detected": false,
+        "pii_types": [],
+        "redaction_status": "NOT_APPLICABLE"
+      },
+      "relationships": [],
+      "metadata": {
+        "previous_value": 145.40705560420315,
+        "current_value": 135.58869547711714
+      },
+      "created_at": "2026-08-26T18:05:05.502592+00:00"
+    },
+    {
+      "evidence_id": "ev_concurrent_69aff478b59dfcf9",
+      "evidence_type": "CONCURRENT_KPI",
+      "evidence_tier": "T1_DESCRIPTIVE",
+      "claim": "freight_revenue moved from 105092.94 to 168872.4 between 2017-10 and 2017-11 (+60.69%), reported as concurrent context only, not combined into a conclusion about any other KPI's movement.",
+      "value": {
+        "value": 63779.45999999999,
+        "unit": null
+      },
+      "time": {
+        "start": "2017-10",
+        "end": "2017-11"
+      },
+      "dimensions": {},
+      "confidence": "UNKNOWN",
+      "source": {
+        "system": "kpi_engine",
+        "component": "kpi.engine.KPIEngine.compare_periods",
+        "version": "1.0"
+      },
+      "lineage": [
+        {
+          "layer": "kpi",
+          "reference": "freight_revenue"
+        },
+        {
+          "layer": "semantic_definition",
+          "reference": "config/kpis.yaml#freight_revenue"
+        },
+        {
+          "layer": "canonical_table_field",
+          "reference": "agg_order_items.item_freight_total"
+        },
+        {
+          "layer": "raw_table_column",
+          "reference": "order_items.freight_value"
+        }
+      ],
+      "freshness": {
+        "event_time": "2017-11",
+        "data_availability_time": null,
+        "processing_time": "2026-08-26T18:05:05.502624+00:00",
+        "is_historical": true
+      },
+      "quality": {
+        "completeness": null,
+        "freshness": null,
+        "source_reliability": 1.0,
+        "coverage": null,
+        "historical_sufficiency": null,
+        "retrieval_quality": null
+      },
+      "security": {
+        "classification": "PUBLIC_ANALYTICAL",
+        "trust_level": "TRUSTED_SYSTEM",
+        "security_status": "SAFE",
+        "pii_detected": false,
+        "pii_types": [],
+        "redaction_status": "NOT_APPLICABLE"
+      },
+      "relationships": [],
+      "metadata": {
+        "previous_value": 105092.94,
+        "current_value": 168872.4
+      },
+      "created_at": "2026-08-26T18:05:05.502632+00:00"
+    },
+    {
+      "evidence_id": "ev_concurrent_b99dad0777432e17",
+      "evidence_type": "CONCURRENT_KPI",
+      "evidence_tier": "T1_DESCRIPTIVE",
+      "claim": "avg_delivery_days moved from 11.856699698526128 to 15.161131699241777 between 2017-10 and 2017-11 (+27.87%), reported as concurrent context only, not combined into a conclusion about any other KPI's movement.",
+      "value": {
+        "value": 3.3044320007156482,
+        "unit": null
+      },
+      "time": {
+        "start": "2017-10",
+        "end": "2017-11"
+      },
+      "dimensions": {},
+      "confidence": "UNKNOWN",
+      "source": {
+        "system": "kpi_engine",
+        "component": "kpi.engine.KPIEngine.compare_periods",
+        "version": "1.0"
+      },
+      "lineage": [
+        {
+          "layer": "kpi",
+          "reference": "avg_delivery_days"
+        },
+        {
+          "layer": "semantic_definition",
+          "reference": "docs/CANONICAL_DATA_MODEL.md#delivery-fields"
+        },
+        {
+          "layer": "canonical_table_field",
+          "reference": "fact_orders.delivery_days, fact_orders.delivery_data_quality_flag"
+        },
+        {
+          "layer": "raw_table_column",
+          "reference": "orders.order_purchase_timestamp, orders.order_delivered_customer_date"
+        }
+      ],
+      "freshness": {
+        "event_time": "2017-11",
+        "data_availability_time": null,
+        "processing_time": "2026-08-26T18:05:05.502660+00:00",
+        "is_historical": true
+      },
+      "quality": {
+        "completeness": null,
+        "freshness": null,
+        "source_reliability": 1.0,
+        "coverage": null,
+        "historical_sufficiency": null,
+        "retrieval_quality": null
+      },
+      "security": {
+        "classification": "PUBLIC_ANALYTICAL",
+        "trust_level": "TRUSTED_SYSTEM",
+        "security_status": "SAFE",
+        "pii_detected": false,
+        "pii_types": [],
+        "redaction_status": "NOT_APPLICABLE"
+      },
+      "relationships": [],
+      "metadata": {
+        "previous_value": 11.856699698526128,
+        "current_value": 15.161131699241777
+      },
+      "created_at": "2026-08-26T18:05:05.502667+00:00"
+    },
+    {
+      "evidence_id": "ev_concurrent_a396223c200bab68",
+      "evidence_type": "CONCURRENT_KPI",
+      "evidence_tier": "T1_DESCRIPTIVE",
+      "claim": "avg_review_score moved from 4.123448726322665 to 3.9106951871657754 between 2017-10 and 2017-11 (-5.16%), reported as concurrent context only, not combined into a conclusion about any other KPI's movement.",
+      "value": {
+        "value": -0.21275353915688955,
+        "unit": null
+      },
+      "time": {
+        "start": "2017-10",
+        "end": "2017-11"
+      },
+      "dimensions": {},
+      "confidence": "UNKNOWN",
+      "source": {
+        "system": "kpi_engine",
+        "component": "kpi.engine.KPIEngine.compare_periods",
+        "version": "1.0"
+      },
+      "lineage": [
+        {
+          "layer": "kpi",
+          "reference": "avg_review_score"
+        },
+        {
+          "layer": "semantic_definition",
+          "reference": "docs/REVIEW_GOVERNANCE.md"
+        },
+        {
+          "layer": "canonical_table_field",
+          "reference": "agg_order_reviews.latest_review_score"
+        },
+        {
+          "layer": "raw_table_column",
+          "reference": "order_reviews.review_score, order_reviews.review_answer_timestamp"
+        }
+      ],
+      "freshness": {
+        "event_time": "2017-11",
+        "data_availability_time": null,
+        "processing_time": "2026-08-26T18:05:05.502697+00:00",
+        "is_historical": true
+      },
+      "quality": {
+        "completeness": null,
+        "freshness": null,
+        "source_reliability": 1.0,
+        "coverage": null,
+        "historical_sufficiency": null,
+        "retrieval_quality": null
+      },
+      "security": {
+        "classification": "PUBLIC_ANALYTICAL",
+        "trust_level": "TRUSTED_SYSTEM",
+        "security_status": "SAFE",
+        "pii_detected": false,
+        "pii_types": [],
+        "redaction_status": "NOT_APPLICABLE"
+      },
+      "relationships": [],
+      "metadata": {
+        "previous_value": 4.123448726322665,
+        "current_value": 3.9106951871657754
+      },
+      "created_at": "2026-08-26T18:05:05.502703+00:00"
+    }
+  ],
+  "sample_review_evidence": [
+    {
+      "evidence_id": "ev_review_c2356069e9d1e79c",
+      "evidence_type": "CUSTOMER_REVIEW",
+      "evidence_tier": "T1_DESCRIPTIVE",
+      "claim": "Customer review (score=5) for order 79832b7cb59ac6f887088ffd686e1d5e.",
+      "value": {
+        "value": 5,
+        "unit": "score_1_5"
+      },
+      "time": {
+        "start": "2017-12-01",
+        "end": "2017-12-01"
+      },
+      "dimensions": {
+        "order_id": "79832b7cb59ac6f887088ffd686e1d5e",
+        "category_attribution_method": "single_item_order",
+        "month": "2017-11",
+        "customer_state": "BA",
+        "category": "auto",
+        "seller": "7142540dd4c91e2237acb7e911c4eba2",
+        "seller_state": "SP"
+      },
+      "confidence": "HIGH",
+      "source": {
+        "system": "review_pipeline",
+        "component": "evidence.review_ingestion.build_review_evidence",
+        "version": "1.0"
+      },
+      "lineage": [
+        {
+          "layer": "canonical_table",
+          "reference": "data/processed/fact_reviews.parquet"
+        },
+        {
+          "layer": "raw_table",
+          "reference": "data/raw/olist/olist_order_reviews_dataset.csv"
+        },
+        {
+          "layer": "order_join",
+          "reference": "data/processed/fact_orders.parquet (order_id)"
+        }
+      ],
+      "freshness": {
+        "event_time": "2017-12-01",
+        "data_availability_time": null,
+        "processing_time": "2026-08-26T18:05:23.317171+00:00",
+        "is_historical": true
+      },
+      "quality": {
+        "completeness": 1.0,
+        "freshness": null,
+        "source_reliability": 1.0,
+        "coverage": null,
+        "historical_sufficiency": null,
+        "retrieval_quality": null
+      },
+      "security": {
+        "classification": "INTERNAL",
+        "trust_level": "UNTRUSTED_DATA",
+        "security_status": "SAFE",
+        "pii_detected": false,
+        "pii_types": [],
+        "redaction_status": "NOT_REDACTED"
+      },
+      "relationships": [],
+      "metadata": {
+        "review_id": "0e0190b9db53b689b285d3f3916f8441",
+        "language": "PT",
+        "language_confidence": 1.0,
+        "has_text": true,
+        "text": "obrigado pela aten\u00e7ao amim dispensada"
+      },
+      "created_at": "2026-08-26T18:05:23.317171+00:00"
+    },
+    {
+      "evidence_id": "ev_review_5f9c4ab08cac7457",
+      "evidence_type": "CUSTOMER_REVIEW",
+      "evidence_tier": "T1_DESCRIPTIVE",
+      "claim": "Customer review (score=4) for order a59a15e4b6085c752d338431dc68d464.",
+      "value": {
+        "value": 4,
+        "unit": "score_1_5"
+      },
+      "time": {
+        "start": "2017-11-01",
+        "end": "2017-11-01"
+      },
+      "dimensions": {
+        "order_id": "a59a15e4b6085c752d338431dc68d464",
+        "category_attribution_method": "single_item_order",
+        "month": "2017-10",
+        "customer_state": "ES",
+        "category": "health_beauty",
+        "seller": "01bcc9d254a0143f0ce9791b960b2a47",
+        "seller_state": "GO"
+      },
+      "confidence": "HIGH",
+      "source": {
+        "system": "review_pipeline",
+        "component": "evidence.review_ingestion.build_review_evidence",
+        "version": "1.0"
+      },
+      "lineage": [
+        {
+          "layer": "canonical_table",
+          "reference": "data/processed/fact_reviews.parquet"
+        },
+        {
+          "layer": "raw_table",
+          "reference": "data/raw/olist/olist_order_reviews_dataset.csv"
+        },
+        {
+          "layer": "order_join",
+          "reference": "data/processed/fact_orders.parquet (order_id)"
+        }
+      ],
+      "freshness": {
+        "event_time": "2017-11-01",
+        "data_availability_time": null,
+        "processing_time": "2026-08-26T18:05:23.317380+00:00",
+        "is_historical": true
+      },
+      "quality": {
+        "completeness": 0.0,
+        "freshness": null,
+        "source_reliability": 1.0,
+        "coverage": null,
+        "historical_sufficiency": null,
+        "retrieval_quality": null
+      },
+      "security": {
+        "classification": "INTERNAL",
+        "trust_level": "UNTRUSTED_DATA",
+        "security_status": "SAFE",
+        "pii_detected": false,
+        "pii_types": [],
+        "redaction_status": "NOT_REDACTED"
+      },
+      "relationships": [],
+      "metadata": {
+        "review_id": "bf566b3910c328733baf7fca7d2be041",
+        "language": "UNKNOWN",
+        "language_confidence": null,
+        "has_text": false,
+        "text": ""
+      },
+      "created_at": "2026-08-26T18:05:23.317380+00:00"
+    },
+    {
+      "evidence_id": "ev_review_35135aaa6cc23891",
+      "evidence_type": "CUSTOMER_REVIEW",
+      "evidence_tier": "T1_DESCRIPTIVE",
+      "claim": "Customer review (score=1) for order 0ce9a24111d850192a933fcaab6fbad3.",
+      "value": {
+        "value": 1,
+        "unit": "score_1_5"
+      },
+      "time": {
+        "start": "2017-12-13",
+        "end": "2017-12-13"
+      },
+      "dimensions": {
+        "order_id": "0ce9a24111d850192a933fcaab6fbad3",
+        "category_attribution_method": "single_item_order",
+        "month": "2017-11",
+        "customer_state": "RJ",
+        "category": "bed_bath_table",
+        "seller": "54965bbe3e4f07ae045b90b0b8541f52",
+        "seller_state": "PR"
+      },
+      "confidence": "HIGH",
+      "source": {
+        "system": "review_pipeline",
+        "component": "evidence.review_ingestion.build_review_evidence",
+        "version": "1.0"
+      },
+      "lineage": [
+        {
+          "layer": "canonical_table",
+          "reference": "data/processed/fact_reviews.parquet"
+        },
+        {
+          "layer": "raw_table",
+          "reference": "data/raw/olist/olist_order_reviews_dataset.csv"
+        },
+        {
+          "layer": "order_join",
+          "reference": "data/processed/fact_orders.parquet (order_id)"
+        }
+      ],
+      "freshness": {
+        "event_time": "2017-12-13",
+        "data_availability_time": null,
+        "processing_time": "2026-08-26T18:05:23.320707+00:00",
+        "is_historical": true
+      },
+      "quality": {
+        "completeness": 1.0,
+        "freshness": null,
+        "source_reliability": 1.0,
+        "coverage": null,
+        "historical_sufficiency": null,
+        "retrieval_quality": null
+      },
+      "security": {
+        "classification": "INTERNAL",
+        "trust_level": "UNTRUSTED_DATA",
+        "security_status": "SAFE",
+        "pii_detected": false,
+        "pii_types": [],
+        "redaction_status": "NOT_REDACTED"
+      },
+      "relationships": [],
+      "metadata": {
+        "review_id": "2c5e27fc178bde7ac173c9c62c31b070",
+        "language": "PT",
+        "language_confidence": 1.0,
+        "has_text": true,
+        "text": "N\u00e3o gostei ! Comprei gato por lebre"
+      },
+      "created_at": "2026-08-26T18:05:23.320707+00:00"
+    },
+    {
+      "evidence_id": "ev_review_73475cb40a568e8d",
+      "evidence_type": "CUSTOMER_REVIEW",
+      "evidence_tier": "T1_DESCRIPTIVE",
+      "claim": "Customer review (score=5) for order c186ebe3937470a2f562a2dc0bc74dd7.",
+      "value": {
+        "value": 5,
+        "unit": "score_1_5"
+      },
+      "time": {
+        "start": "2017-12-05",
+        "end": "2017-12-05"
+      },
+      "dimensions": {
+        "order_id": "c186ebe3937470a2f562a2dc0bc74dd7",
+        "category_attribution_method": "single_item_order",
+        "month": "2017-11",
+        "customer_state": "SP",
+        "category": "perfumery",
+        "seller": "cc419e0650a3c5ba77189a1882b7556a",
+        "seller_state": "SP"
+      },
+      "confidence": "HIGH",
+      "source": {
+        "system": "review_pipeline",
+        "component": "evidence.review_ingestion.build_review_evidence",
+        "version": "1.0"
+      },
+      "lineage": [
+        {
+          "layer": "canonical_table",
+          "reference": "data/processed/fact_reviews.parquet"
+        },
+        {
+          "layer": "raw_table",
+          "reference": "data/raw/olist/olist_order_reviews_dataset.csv"
+        },
+        {
+          "layer": "order_join",
+          "reference": "data/processed/fact_orders.parquet (order_id)"
+        }
+      ],
+      "freshness": {
+        "event_time": "2017-12-05",
+        "data_availability_time": null,
+        "processing_time": "2026-08-26T18:05:23.320762+00:00",
+        "is_historical": true
+      },
+      "quality": {
+        "completeness": 0.0,
+        "freshness": null,
+        "source_reliability": 1.0,
+        "coverage": null,
+        "historical_sufficiency": null,
+        "retrieval_quality": null
+      },
+      "security": {
+        "classification": "INTERNAL",
+        "trust_level": "UNTRUSTED_DATA",
+        "security_status": "SAFE",
+        "pii_detected": false,
+        "pii_types": [],
+        "redaction_status": "NOT_REDACTED"
+      },
+      "relationships": [],
+      "metadata": {
+        "review_id": "caf7d6d68090fedf0f47b27aff4b4eaf",
+        "language": "UNKNOWN",
+        "language_confidence": null,
+        "has_text": false,
+        "text": ""
+      },
+      "created_at": "2026-08-26T18:05:23.320762+00:00"
+    },
+    {
+      "evidence_id": "ev_review_2fca346db6561871",
+      "evidence_type": "CUSTOMER_REVIEW",
+      "evidence_tier": "T1_DESCRIPTIVE",
+      "claim": "Customer review (score=5) for order 3fb155b4897652f5cdf1b5efff32a465.",
+      "value": {
+        "value": 5,
+        "unit": "score_1_5"
+      },
+      "time": {
+        "start": "2017-12-15",
+        "end": "2017-12-15"
+      },
+      "dimensions": {
+        "order_id": "3fb155b4897652f5cdf1b5efff32a465",
+        "category_attribution_method": "single_item_order",
+        "month": "2017-11",
+        "customer_state": "SP",
+        "category": "auto",
+        "seller": "712e6ed8aa4aa1fa65dab41fed5737e4",
+        "seller_state": "SC"
+      },
+      "confidence": "HIGH",
+      "source": {
+        "system": "review_pipeline",
+        "component": "evidence.review_ingestion.build_review_evidence",
+        "version": "1.0"
+      },
+      "lineage": [
+        {
+          "layer": "canonical_table",
+          "reference": "data/processed/fact_reviews.parquet"
+        },
+        {
+          "layer": "raw_table",
+          "reference": "data/raw/olist/olist_order_reviews_dataset.csv"
+        },
+        {
+          "layer": "order_join",
+          "reference": "data/processed/fact_orders.parquet (order_id)"
+        }
+      ],
+      "freshness": {
+        "event_time": "2017-12-15",
+        "data_availability_time": null,
+        "processing_time": "2026-08-26T18:05:23.320799+00:00",
+        "is_historical": true
+      },
+      "quality": {
+        "completeness": 0.0,
+        "freshness": null,
+        "source_reliability": 1.0,
+        "coverage": null,
+        "historical_sufficiency": null,
+        "retrieval_quality": null
+      },
+      "security": {
+        "classification": "INTERNAL",
+        "trust_level": "UNTRUSTED_DATA",
+        "security_status": "SAFE",
+        "pii_detected": false,
+        "pii_types": [],
+        "redaction_status": "NOT_REDACTED"
+      },
+      "relationships": [],
+      "metadata": {
+        "review_id": "94c4db81ff5c234f53b54a15a8a41583",
+        "language": "UNKNOWN",
+        "language_confidence": null,
+        "has_text": false,
+        "text": ""
+      },
+      "created_at": "2026-08-26T18:05:23.320799+00:00"
+    }
+  ],
+  "sample_retrieval_results": {
+    "delivery_related": [
+      {
+        "evidence_id": "ev_review_3e9282a957103e52",
+        "evidence_type": "CUSTOMER_REVIEW",
+        "claim": "Customer review (score=3) for order a523c396a29386423aa594fe448ca713.",
+        "content": "tudo certo recebi o produto",
+        "retrieval": {
+          "rank": 1,
+          "score": 0.918167,
+          "method": "structured_filter+semantic_e5_cosine+mmr_rerank"
+        },
+        "source": {
+          "review_id": "e408a4e4d994f6a92c6f052c8390b488",
+          "order_id": "a523c396a29386423aa594fe448ca713"
+        },
+        "metadata": {
+          "review_id": "e408a4e4d994f6a92c6f052c8390b488",
+          "language": "PT",
+          "language_confidence": 0.8551,
+          "has_text": true
+        },
+        "evidence_tier": "T1_DESCRIPTIVE",
+        "security": {
+          "classification": "INTERNAL",
+          "trust_level": "UNTRUSTED_DATA",
+          "security_status": "SAFE",
+          "pii_detected": false,
+          "pii_types": [],
+          "redaction_status": "NOT_REDACTED"
+        },
+        "lineage": [
+          {
+            "layer": "canonical_table",
+            "reference": "data/processed/fact_reviews.parquet"
+          },
+          {
+            "layer": "raw_table",
+            "reference": "data/raw/olist/olist_order_reviews_dataset.csv"
+          },
+          {
+            "layer": "order_join",
+            "reference": "data/processed/fact_orders.parquet (order_id)"
+          }
+        ]
+      },
+      {
+        "evidence_id": "ev_review_5f48fc56e91c1a47",
+        "evidence_type": "CUSTOMER_REVIEW",
+        "claim": "Customer review (score=5) for order a4c669715198e1c9b87995ff9da64ee5.",
+        "content": "Chegou antes do prazo e \u00e9 um \u00f3timo produto!",
+        "retrieval": {
+          "rank": 2,
+          "score": 0.897378,
+          "method": "structured_filter+semantic_e5_cosine+mmr_rerank"
+        },
+        "source": {
+          "review_id": "3a6182db19a4cced875bc79d5e630cad",
+          "order_id": "a4c669715198e1c9b87995ff9da64ee5"
+        },
+        "metadata": {
+          "review_id": "3a6182db19a4cced875bc79d5e630cad",
+          "language": "PT",
+          "language_confidence": 1.0,
+          "has_text": true
+        },
+        "evidence_tier": "T1_DESCRIPTIVE",
+        "security": {
+          "classification": "INTERNAL",
+          "trust_level": "UNTRUSTED_DATA",
+          "security_status": "SAFE",
+          "pii_detected": false,
+          "pii_types": [],
+          "redaction_status": "NOT_REDACTED"
+        },
+        "lineage": [
+          {
+            "layer": "canonical_table",
+            "reference": "data/processed/fact_reviews.parquet"
+          },
+          {
+            "layer": "raw_table",
+            "reference": "data/raw/olist/olist_order_reviews_dataset.csv"
+          },
+          {
+            "layer": "order_join",
+            "reference": "data/processed/fact_orders.parquet (order_id)"
+          }
+        ]
+      },
+      {
+        "evidence_id": "ev_review_d07aeec2d7dbdf5d",
+        "evidence_type": "CUSTOMER_REVIEW",
+        "claim": "Customer review (score=2) for order 02f30be57375dc610c40ca989d2385b7.",
+        "content": "Preciso do vale para adquirir outro .",
+        "retrieval": {
+          "rank": 3,
+          "score": 0.895496,
+          "method": "structured_filter+semantic_e5_cosine+mmr_rerank"
+        },
+        "source": {
+          "review_id": "62807bda54b6c1fc8bd49ed3d814eca0",
+          "order_id": "02f30be57375dc610c40ca989d2385b7"
+        },
+        "metadata": {
+          "review_id": "62807bda54b6c1fc8bd49ed3d814eca0",
+          "language": "PT",
+          "language_confidence": 1.0,
+          "has_text": true
+        },
+        "evidence_tier": "T1_DESCRIPTIVE",
+        "security": {
+          "classification": "INTERNAL",
+          "trust_level": "UNTRUSTED_DATA",
+          "security_status": "SAFE",
+          "pii_detected": false,
+          "pii_types": [],
+          "redaction_status": "NOT_REDACTED"
+        },
+        "lineage": [
+          {
+            "layer": "canonical_table",
+            "reference": "data/processed/fact_reviews.parquet"
+          },
+          {
+            "layer": "raw_table",
+            "reference": "data/raw/olist/olist_order_reviews_dataset.csv"
+          },
+          {
+            "layer": "order_join",
+            "reference": "data/processed/fact_orders.parquet (order_id)"
+          }
+        ]
+      }
+    ],
+    "low_score": [
+      {
+        "evidence_id": "ev_review_35135aaa6cc23891",
+        "evidence_type": "CUSTOMER_REVIEW",
+        "claim": "Customer review (score=1) for order 0ce9a24111d850192a933fcaab6fbad3.",
+        "content": "N\u00e3o gostei ! Comprei gato por lebre",
+        "retrieval": {
+          "rank": 1,
+          "score": 0.0,
+          "method": "structured_filter+metadata_diversity_rerank"
+        },
+        "source": {
+          "review_id": "2c5e27fc178bde7ac173c9c62c31b070",
+          "order_id": "0ce9a24111d850192a933fcaab6fbad3"
+        },
+        "metadata": {
+          "review_id": "2c5e27fc178bde7ac173c9c62c31b070",
+          "language": "PT",
+          "language_confidence": 1.0,
+          "has_text": true
+        },
+        "evidence_tier": "T1_DESCRIPTIVE",
+        "security": {
+          "classification": "INTERNAL",
+          "trust_level": "UNTRUSTED_DATA",
+          "security_status": "SAFE",
+          "pii_detected": false,
+          "pii_types": [],
+          "redaction_status": "NOT_REDACTED"
+        },
+        "lineage": [
+          {
+            "layer": "canonical_table",
+            "reference": "data/processed/fact_reviews.parquet"
+          },
+          {
+            "layer": "raw_table",
+            "reference": "data/raw/olist/olist_order_reviews_dataset.csv"
+          },
+          {
+            "layer": "order_join",
+            "reference": "data/processed/fact_orders.parquet (order_id)"
+          }
+        ]
+      },
+      {
+        "evidence_id": "ev_review_2747b7c718564ba5",
+        "evidence_type": "CUSTOMER_REVIEW",
+        "claim": "Customer review (score=2) for order bbd1b9ebbc5a09d51caaa2d10e0f93b5.",
+        "content": "Demorou de mais pra entrega",
+        "retrieval": {
+          "rank": 2,
+          "score": 0.0,
+          "method": "structured_filter+metadata_diversity_rerank"
+        },
+        "source": {
+          "review_id": "5c37d7ba6ef2f031c34bb4fda3454018",
+          "order_id": "bbd1b9ebbc5a09d51caaa2d10e0f93b5"
+        },
+        "metadata": {
+          "review_id": "5c37d7ba6ef2f031c34bb4fda3454018",
+          "language": "PT",
+          "language_confidence": 1.0,
+          "has_text": true
+        },
+        "evidence_tier": "T1_DESCRIPTIVE",
+        "security": {
+          "classification": "INTERNAL",
+          "trust_level": "UNTRUSTED_DATA",
+          "security_status": "SAFE",
+          "pii_detected": false,
+          "pii_types": [],
+          "redaction_status": "NOT_REDACTED"
+        },
+        "lineage": [
+          {
+            "layer": "canonical_table",
+            "reference": "data/processed/fact_reviews.parquet"
+          },
+          {
+            "layer": "raw_table",
+            "reference": "data/raw/olist/olist_order_reviews_dataset.csv"
+          },
+          {
+            "layer": "order_join",
+            "reference": "data/processed/fact_orders.parquet (order_id)"
+          }
+        ]
+      },
+      {
+        "evidence_id": "ev_review_67e9c3acebb154a2",
+        "evidence_type": "CUSTOMER_REVIEW",
+        "claim": "Customer review (score=1) for order 512ba2efae3409f37660ce26199b32aa.",
+        "content": "N\u00e3o posso! Estou aguardando a chegada do produto que comprei!Logo que isso aconte\u00e7a, terei minha opini\u00e3o formada!",
+        "retrieval": {
+          "rank": 3,
+          "score": 0.0,
+          "method": "structured_filter+metadata_diversity_rerank"
+        },
+        "source": {
+          "review_id": "cde97e23deec3aa11e838402378706ee",
+          "order_id": "512ba2efae3409f37660ce26199b32aa"
+        },
+        "metadata": {
+          "review_id": "cde97e23deec3aa11e838402378706ee",
+          "language": "PT",
+          "language_confidence": 1.0,
+          "has_text": true
+        },
+        "evidence_tier": "T1_DESCRIPTIVE",
+        "security": {
+          "classification": "INTERNAL",
+          "trust_level": "UNTRUSTED_DATA",
+          "security_status": "SAFE",
+          "pii_detected": true,
+          "pii_types": [
+            "name_heuristic"
+          ],
+          "redaction_status": "REDACTED_AT_RETRIEVAL"
+        },
+        "lineage": [
+          {
+            "layer": "canonical_table",
+            "reference": "data/processed/fact_reviews.parquet"
+          },
+          {
+            "layer": "raw_table",
+            "reference": "data/raw/olist/olist_order_reviews_dataset.csv"
+          },
+          {
+            "layer": "order_join",
+            "reference": "data/processed/fact_orders.parquet (order_id)"
+          }
+        ]
+      }
+    ],
+    "category_specific": [
+      {
+        "evidence_id": "ev_review_35135aaa6cc23891",
+        "evidence_type": "CUSTOMER_REVIEW",
+        "claim": "Customer review (score=1) for order 0ce9a24111d850192a933fcaab6fbad3.",
+        "content": "N\u00e3o gostei ! Comprei gato por lebre",
+        "retrieval": {
+          "rank": 1,
+          "score": 0.0,
+          "method": "structured_filter+metadata_diversity_rerank"
+        },
+        "source": {
+          "review_id": "2c5e27fc178bde7ac173c9c62c31b070",
+          "order_id": "0ce9a24111d850192a933fcaab6fbad3"
+        },
+        "metadata": {
+          "review_id": "2c5e27fc178bde7ac173c9c62c31b070",
+          "language": "PT",
+          "language_confidence": 1.0,
+          "has_text": true
+        },
+        "evidence_tier": "T1_DESCRIPTIVE",
+        "security": {
+          "classification": "INTERNAL",
+          "trust_level": "UNTRUSTED_DATA",
+          "security_status": "SAFE",
+          "pii_detected": false,
+          "pii_types": [],
+          "redaction_status": "NOT_REDACTED"
+        },
+        "lineage": [
+          {
+            "layer": "canonical_table",
+            "reference": "data/processed/fact_reviews.parquet"
+          },
+          {
+            "layer": "raw_table",
+            "reference": "data/raw/olist/olist_order_reviews_dataset.csv"
+          },
+          {
+            "layer": "order_join",
+            "reference": "data/processed/fact_orders.parquet (order_id)"
+          }
+        ]
+      },
+      {
+        "evidence_id": "ev_review_ad57366865126e55",
+        "evidence_type": "CUSTOMER_REVIEW",
+        "claim": "Customer review (score=5) for order c676e726f8a14a9527b41b9dc50ca1bc.",
+        "content": "Satisfeito",
+        "retrieval": {
+          "rank": 2,
+          "score": 0.0,
+          "method": "structured_filter+metadata_diversity_rerank"
+        },
+        "source": {
+          "review_id": "436f71c9cc0c1aab7f51dc0cd0820516",
+          "order_id": "c676e726f8a14a9527b41b9dc50ca1bc"
+        },
+        "metadata": {
+          "review_id": "436f71c9cc0c1aab7f51dc0cd0820516",
+          "language": "OTHER",
+          "language_confidence": 1.0,
+          "has_text": true
+        },
+        "evidence_tier": "T1_DESCRIPTIVE",
+        "security": {
+          "classification": "INTERNAL",
+          "trust_level": "UNTRUSTED_DATA",
+          "security_status": "SAFE",
+          "pii_detected": false,
+          "pii_types": [],
+          "redaction_status": "NOT_REDACTED"
+        },
+        "lineage": [
+          {
+            "layer": "canonical_table",
+            "reference": "data/processed/fact_reviews.parquet"
+          },
+          {
+            "layer": "raw_table",
+            "reference": "data/raw/olist/olist_order_reviews_dataset.csv"
+          },
+          {
+            "layer": "order_join",
+            "reference": "data/processed/fact_orders.parquet (order_id)"
+          }
+        ]
+      },
+      {
+        "evidence_id": "ev_review_a512db2741cd2069",
+        "evidence_type": "CUSTOMER_REVIEW",
+        "claim": "Customer review (score=5) for order cf34fe44babb9fd001a001acfa43cabf.",
+        "content": "OK",
+        "retrieval": {
+          "rank": 3,
+          "score": 0.0,
+          "method": "structured_filter+metadata_diversity_rerank"
+        },
+        "source": {
+          "review_id": "d8f61c7fcd172785563a65cd65a8cea8",
+          "order_id": "cf34fe44babb9fd001a001acfa43cabf"
+        },
+        "metadata": {
+          "review_id": "d8f61c7fcd172785563a65cd65a8cea8",
+          "language": "UNKNOWN",
+          "language_confidence": null,
+          "has_text": true
+        },
+        "evidence_tier": "T1_DESCRIPTIVE",
+        "security": {
+          "classification": "INTERNAL",
+          "trust_level": "UNTRUSTED_DATA",
+          "security_status": "SAFE",
+          "pii_detected": false,
+          "pii_types": [],
+          "redaction_status": "NOT_REDACTED"
+        },
+        "lineage": [
+          {
+            "layer": "canonical_table",
+            "reference": "data/processed/fact_reviews.parquet"
+          },
+          {
+            "layer": "raw_table",
+            "reference": "data/raw/olist/olist_order_reviews_dataset.csv"
+          },
+          {
+            "layer": "order_join",
+            "reference": "data/processed/fact_orders.parquet (order_id)"
+          }
+        ]
+      }
+    ],
+    "product_quality": [
+      {
+        "evidence_id": "ev_review_45b47fed95305d69",
+        "evidence_type": "CUSTOMER_REVIEW",
+        "claim": "Customer review (score=3) for order 411d2a5826116cb819444537c0d0360d.",
+        "content": "Nada como o original!",
+        "retrieval": {
+          "rank": 1,
+          "score": 0.930892,
+          "method": "structured_filter+semantic_e5_cosine+mmr_rerank"
+        },
+        "source": {
+          "review_id": "b0cb84ebf396d96d9a28822d82173852",
+          "order_id": "411d2a5826116cb819444537c0d0360d"
+        },
+        "metadata": {
+          "review_id": "b0cb84ebf396d96d9a28822d82173852",
+          "language": "PT",
+          "language_confidence": 1.0,
+          "has_text": true
+        },
+        "evidence_tier": "T1_DESCRIPTIVE",
+        "security": {
+          "classification": "INTERNAL",
+          "trust_level": "UNTRUSTED_DATA",
+          "security_status": "SAFE",
+          "pii_detected": false,
+          "pii_types": [],
+          "redaction_status": "NOT_REDACTED"
+        },
+        "lineage": [
+          {
+            "layer": "canonical_table",
+            "reference": "data/processed/fact_reviews.parquet"
+          },
+          {
+            "layer": "raw_table",
+            "reference": "data/raw/olist/olist_order_reviews_dataset.csv"
+          },
+          {
+            "layer": "order_join",
+            "reference": "data/processed/fact_orders.parquet (order_id)"
+          }
+        ]
+      },
+      {
+        "evidence_id": "ev_review_43af49f6d05a72d2",
+        "evidence_type": "CUSTOMER_REVIEW",
+        "claim": "Customer review (score=5) for order bc5cea9719955b2337f23a87db809566.",
+        "content": "Produto e prazo Ok.",
+        "retrieval": {
+          "rank": 2,
+          "score": 0.930632,
+          "method": "structured_filter+semantic_e5_cosine+mmr_rerank"
+        },
+        "source": {
+          "review_id": "c7713a409d14824b3a31e96c34c1dfef",
+          "order_id": "bc5cea9719955b2337f23a87db809566"
+        },
+        "metadata": {
+          "review_id": "c7713a409d14824b3a31e96c34c1dfef",
+          "language": "OTHER",
+          "language_confidence": 0.5714,
+          "has_text": true
+        },
+        "evidence_tier": "T1_DESCRIPTIVE",
+        "security": {
+          "classification": "INTERNAL",
+          "trust_level": "UNTRUSTED_DATA",
+          "security_status": "SAFE",
+          "pii_detected": false,
+          "pii_types": [],
+          "redaction_status": "NOT_REDACTED"
+        },
+        "lineage": [
+          {
+            "layer": "canonical_table",
+            "reference": "data/processed/fact_reviews.parquet"
+          },
+          {
+            "layer": "raw_table",
+            "reference": "data/raw/olist/olist_order_reviews_dataset.csv"
+          },
+          {
+            "layer": "order_join",
+            "reference": "data/processed/fact_orders.parquet (order_id)"
+          }
+        ]
+      },
+      {
+        "evidence_id": "ev_review_6af0a1e790df9357",
+        "evidence_type": "CUSTOMER_REVIEW",
+        "claim": "Customer review (score=5) for order d8feff3b89294953930785a4bfc5e502.",
+        "content": "Produto de otima qualidade e s\u00e3o lindos..amei vale a pena comprar...",
+        "retrieval": {
+          "rank": 3,
+          "score": 0.925491,
+          "method": "structured_filter+semantic_e5_cosine+mmr_rerank"
+        },
+        "source": {
+          "review_id": "4ce7b780399cccef1a1b9d259748bcf8",
+          "order_id": "d8feff3b89294953930785a4bfc5e502"
+        },
+        "metadata": {
+          "review_id": "4ce7b780399cccef1a1b9d259748bcf8",
+          "language": "PT",
+          "language_confidence": 1.0,
+          "has_text": true
+        },
+        "evidence_tier": "T1_DESCRIPTIVE",
+        "security": {
+          "classification": "INTERNAL",
+          "trust_level": "UNTRUSTED_DATA",
+          "security_status": "SAFE",
+          "pii_detected": false,
+          "pii_types": [],
+          "redaction_status": "NOT_REDACTED"
+        },
+        "lineage": [
+          {
+            "layer": "canonical_table",
+            "reference": "data/processed/fact_reviews.parquet"
+          },
+          {
+            "layer": "raw_table",
+            "reference": "data/raw/olist/olist_order_reviews_dataset.csv"
+          },
+          {
+            "layer": "order_join",
+            "reference": "data/processed/fact_orders.parquet (order_id)"
+          }
+        ]
+      }
+    ]
+  },
+  "test_results": {
+    "returncode": 0,
+    "n_passed": 130,
+    "n_failed": 0,
+    "failed_tests": [],
+    "all_passed": true
+  },
+  "cache_stats": {
+    "entries": 31,
+    "hits": 2,
+    "misses": 31
+  }
+}

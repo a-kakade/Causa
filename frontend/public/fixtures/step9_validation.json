@@ -1,0 +1,228 @@
+{
+  "generated_at": "2026-08-28T14:15:59.951644+00:00",
+  "run_seconds": 0.14,
+  "required_value_checks": {
+    "five_feedback_cases_submitted": true,
+    "corrections_stored_for_4_non_correct_cases": true,
+    "business_context_captured": true,
+    "evaluation_cases_created_for_4_corrections": true,
+    "regression_tests_created_for_4_cases": true,
+    "case2_regression_catches_causal_language_regression": true,
+    "dataset_level_regression_detected": true,
+    "no_case_evaluation_metrics_fabricated": true,
+    "all_checks_pass": true
+  },
+  "feedback_summary": {
+    "total_feedback": 5,
+    "total_corrections": 4,
+    "total_business_contexts": 3,
+    "total_evaluation_cases": 4,
+    "total_regression_tests": 4
+  },
+  "cases": {
+    "case1_correct": {
+      "feedback_id": "FB_d895242e14a2",
+      "categories": []
+    },
+    "case2_wrong_driver": {
+      "feedback_id": "FB_5df07aad6551",
+      "case_id": "EVALCASE_d04444525b16",
+      "test_id": "REGTEST_EVALCASE_d04444525b16",
+      "good_report": {
+        "dataset_version": "v1",
+        "total_cases": 1,
+        "passed": 1,
+        "failed": 0,
+        "metrics": {
+          "numeric_accuracy": 1.0,
+          "causal_correctness": 1.0
+        },
+        "case_results": [
+          {
+            "case_id": "EVALCASE_d04444525b16",
+            "passed": true,
+            "failure_reasons": [],
+            "checks": {
+              "forbidden_claims": true,
+              "expected_claims": true
+            }
+          }
+        ]
+      },
+      "regression_bad_report": {
+        "total": 1,
+        "passed": 0,
+        "failed": 1,
+        "results": [
+          {
+            "test_id": "REGTEST_EVALCASE_d04444525b16",
+            "case_id": "EVALCASE_d04444525b16",
+            "passed": false,
+            "failure_reasons": [
+              "forbidden claim pattern matched: 'delivery caused review decline' in produced text 'Delivery deterioration caused lower reviews.'",
+              "forbidden claim pattern matched: 'delivery deterioration caused lower reviews' in produced text 'Delivery deterioration caused lower reviews.'",
+              "expected claim(s) not found in candidate output: ['holiday campaign']"
+            ]
+          }
+        ]
+      }
+    },
+    "case3_wrong_recommendation": {
+      "feedback_id": "FB_7f609e412a9c",
+      "case_id": "EVALCASE_749a18dc0b60",
+      "test_id": "REGTEST_EVALCASE_749a18dc0b60"
+    },
+    "case4_wrong_confidence": {
+      "feedback_id": "FB_72182ce793d7",
+      "case_id": "EVALCASE_5bca388ec4e1",
+      "test_id": "REGTEST_EVALCASE_5bca388ec4e1"
+    },
+    "case5_missing_driver": {
+      "feedback_id": "FB_7fe83a32a63e",
+      "case_id": "EVALCASE_20e382eb0f3a",
+      "test_id": "REGTEST_EVALCASE_20e382eb0f3a"
+    }
+  },
+  "dataset_level_evaluation": {
+    "baseline": {
+      "dataset_version": "baseline",
+      "total_cases": 4,
+      "passed": 4,
+      "failed": 0,
+      "metrics": {
+        "numeric_accuracy": 1.0,
+        "causal_correctness": 1.0,
+        "recommendation_accuracy": 1.0,
+        "confidence_accuracy": 1.0
+      },
+      "case_results": [
+        {
+          "case_id": "EVALCASE_d04444525b16",
+          "passed": true,
+          "failure_reasons": [],
+          "checks": {
+            "forbidden_claims": true,
+            "expected_claims": true
+          }
+        },
+        {
+          "case_id": "EVALCASE_749a18dc0b60",
+          "passed": true,
+          "failure_reasons": [],
+          "checks": {
+            "recommendation": true
+          }
+        },
+        {
+          "case_id": "EVALCASE_5bca388ec4e1",
+          "passed": true,
+          "failure_reasons": [],
+          "checks": {
+            "confidence": true
+          }
+        },
+        {
+          "case_id": "EVALCASE_20e382eb0f3a",
+          "passed": true,
+          "failure_reasons": [],
+          "checks": {
+            "expected_claims": true
+          }
+        }
+      ]
+    },
+    "candidate": {
+      "dataset_version": "regressed_candidate",
+      "total_cases": 4,
+      "passed": 0,
+      "failed": 4,
+      "metrics": {
+        "numeric_accuracy": 0.0,
+        "causal_correctness": 0.0,
+        "recommendation_accuracy": 0.0,
+        "confidence_accuracy": 0.0
+      },
+      "case_results": [
+        {
+          "case_id": "EVALCASE_d04444525b16",
+          "passed": false,
+          "failure_reasons": [
+            "forbidden claim pattern matched: 'delivery caused review decline' in produced text 'Delivery deterioration caused lower reviews.'",
+            "forbidden claim pattern matched: 'delivery deterioration caused lower reviews' in produced text 'Delivery deterioration caused lower reviews.'",
+            "expected claim(s) not found in candidate output: ['holiday campaign']"
+          ],
+          "checks": {
+            "forbidden_claims": false,
+            "expected_claims": false
+          }
+        },
+        {
+          "case_id": "EVALCASE_749a18dc0b60",
+          "passed": false,
+          "failure_reasons": [
+            "recommendation {'tier': 'TOP'} did not match expected {'tier': 'BLOCKED'}"
+          ],
+          "checks": {
+            "recommendation": false
+          }
+        },
+        {
+          "case_id": "EVALCASE_5bca388ec4e1",
+          "passed": false,
+          "failure_reasons": [
+            "confidence 0.92 not within expected range [0.0, 0.5]"
+          ],
+          "checks": {
+            "confidence": false
+          }
+        },
+        {
+          "case_id": "EVALCASE_20e382eb0f3a",
+          "passed": false,
+          "failure_reasons": [
+            "expected claim(s) not found in candidate output: ['pricing change']"
+          ],
+          "checks": {
+            "expected_claims": false
+          }
+        }
+      ]
+    },
+    "comparison": {
+      "baseline_version": "baseline",
+      "candidate_version": "regressed_candidate",
+      "baseline_metrics": {
+        "numeric_accuracy": 1.0,
+        "causal_correctness": 1.0,
+        "recommendation_accuracy": 1.0,
+        "confidence_accuracy": 1.0
+      },
+      "candidate_metrics": {
+        "numeric_accuracy": 0.0,
+        "causal_correctness": 0.0,
+        "recommendation_accuracy": 0.0,
+        "confidence_accuracy": 0.0
+      },
+      "deltas": {
+        "causal_correctness": -1.0,
+        "confidence_accuracy": -1.0,
+        "numeric_accuracy": -1.0,
+        "recommendation_accuracy": -1.0
+      },
+      "regressions": [
+        "causal_correctness",
+        "confidence_accuracy",
+        "numeric_accuracy",
+        "recommendation_accuracy"
+      ],
+      "improvements": []
+    }
+  },
+  "tests": {
+    "returncode": 0,
+    "n_passed": 93,
+    "n_failed": 0,
+    "failed_tests": [],
+    "all_passed": true
+  }
+}

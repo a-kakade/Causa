@@ -1,0 +1,1608 @@
+{
+  "generated_at": "2026-08-28T07:48:06Z",
+  "dry_run": false,
+  "llm_provider": "groq",
+  "llm_model": "openai/gpt-oss-20b",
+  "context_build_seconds": 89.25,
+  "analyst_run_seconds": 181.08,
+  "executive_run_seconds": 50.19,
+  "required_value_checks": {
+    "revenue_percentage_change": {
+      "computed": 52.09903901787393,
+      "required": 52.1,
+      "matches": true
+    },
+    "revenue_absolute_change": {
+      "computed": 346051.9399999998,
+      "required": 346051.94,
+      "matches": true
+    },
+    "hypothesis_diversity": {
+      "n_hypotheses": 3,
+      "within_bounds": true,
+      "all_pairs_unique": true
+    },
+    "citation_completeness": {
+      "all_results_valid": true
+    },
+    "executive_rbac_no_internal_leak": {
+      "leaked": false
+    },
+    "all_checks_pass": true
+  },
+  "analyst_investigation": {
+    "investigation_id": "november_2017_revenue_analyst",
+    "requester_role": "ANALYST",
+    "kpi_id": "revenue",
+    "period": "2017-11",
+    "movement": {
+      "absolute": 346051.9399999998,
+      "percentage": 52.09903901787393,
+      "current_value": 1010271.3699999999,
+      "previous_value": 664219.43
+    },
+    "hypotheses": [
+      {
+        "hypothesis_id": "H1",
+        "statement": "A mix shift favoring higher-margin product categories in customer states like NY and IL may be associated with the revenue rise.",
+        "driver": "mix",
+        "dimension": "customer_state",
+        "mechanism": "Shift toward higher-margin product categories in certain customer states increases revenue.",
+        "expected_evidence": [
+          "ev_driver_6b458b5ffcf491ee",
+          "ev_segment_48eaf9e2fdff24b5",
+          "ev_kpiobs_36f622413674350c",
+          "ev_kpiobs_9f2abe6c26f63565"
+        ],
+        "falsification_evidence": [
+          "ev_driver_b0c41dfd608c1491",
+          "ev_driver_db0b4b68f6845adc",
+          "ev_concurrent_69aff478b59dfcf9"
+        ],
+        "evidence_types_expected": [
+          "driver_decomposition",
+          "segment_contribution",
+          "kpi_value"
+        ],
+        "status": "PROPOSED"
+      },
+      {
+        "hypothesis_id": "H2",
+        "statement": "An increase in freight revenue may be associated with the overall revenue increase.",
+        "driver": "freight_revenue",
+        "dimension": "freight_revenue",
+        "mechanism": "Increases in freight revenue contribute to overall revenue.",
+        "expected_evidence": [
+          "ev_concurrent_241561e329b1de3e",
+          "ev_concurrent_69aff478b59dfcf9",
+          "ev_kpiobs_7840d90e6fc8be31",
+          "ev_kpiobs_2da77e4f99c9ffaf"
+        ],
+        "falsification_evidence": [
+          "ev_concurrent_1eb2b521b2546f6a",
+          "ev_driver_b0c41dfd608c1491",
+          "ev_driver_db0b4b68f6845adc"
+        ],
+        "evidence_types_expected": [
+          "concurrent_kpi"
+        ],
+        "status": "PROPOSED"
+      },
+      {
+        "hypothesis_id": "H3",
+        "statement": "An increase in orders from customer states such as WA and OR may be associated with the revenue growth.",
+        "driver": "orders",
+        "dimension": "customer_state",
+        "mechanism": "Higher number of orders from specific customer states increases revenue.",
+        "expected_evidence": [
+          "ev_kpiobs_b602b89e8fc52a88",
+          "ev_kpiobs_5a109ca1da1176da",
+          "ev_kpiobs_5bd66a89aba1bc8f",
+          "ev_kpiobs_919194390e8070ae"
+        ],
+        "falsification_evidence": [
+          "ev_driver_db0b4b68f6845adc",
+          "ev_concurrent_241561e329b1de3e",
+          "ev_driver_6b458b5ffcf491ee"
+        ],
+        "evidence_types_expected": [
+          "kpi_value"
+        ],
+        "status": "PROPOSED"
+      }
+    ],
+    "evidence_ids": [],
+    "classified_evidence": [],
+    "counter_evidence_reports": [],
+    "contradictions": [
+      {
+        "contradiction_id": "CR-H1",
+        "hypothesis_id": "H1",
+        "supporting_evidence": [],
+        "contradicting_evidence": [],
+        "severity": "NONE",
+        "unresolved": true
+      },
+      {
+        "contradiction_id": "CR-H2",
+        "hypothesis_id": "H2",
+        "supporting_evidence": [],
+        "contradicting_evidence": [],
+        "severity": "NONE",
+        "unresolved": true
+      },
+      {
+        "contradiction_id": "CR-H3",
+        "hypothesis_id": "H3",
+        "supporting_evidence": [],
+        "contradicting_evidence": [],
+        "severity": "NONE",
+        "unresolved": true
+      }
+    ],
+    "selected_methods": [
+      {
+        "hypothesis_id": "H1",
+        "method": "INSUFFICIENT_DATA",
+        "justification": "no SUPPORTS-classified evidence -- nothing to select a method for",
+        "downgraded": false,
+        "downgrade_reason": null
+      },
+      {
+        "hypothesis_id": "H2",
+        "method": "INSUFFICIENT_DATA",
+        "justification": "no SUPPORTS-classified evidence -- nothing to select a method for",
+        "downgraded": false,
+        "downgrade_reason": null
+      },
+      {
+        "hypothesis_id": "H3",
+        "method": "INSUFFICIENT_DATA",
+        "justification": "no SUPPORTS-classified evidence -- nothing to select a method for",
+        "downgraded": false,
+        "downgrade_reason": null
+      }
+    ],
+    "hypothesis_results": [
+      {
+        "hypothesis_id": "H1",
+        "status": "INCONCLUSIVE",
+        "confidence": "ABSTAIN",
+        "evidence_ids": [],
+        "reasons": [
+          "score=0.000",
+          "completeness=0.000",
+          "n_supports=0",
+          "contradiction_severity=NONE",
+          "method=INSUFFICIENT_DATA"
+        ],
+        "method": "INSUFFICIENT_DATA",
+        "contradiction_severity": "NONE"
+      },
+      {
+        "hypothesis_id": "H2",
+        "status": "INCONCLUSIVE",
+        "confidence": "ABSTAIN",
+        "evidence_ids": [],
+        "reasons": [
+          "score=0.000",
+          "completeness=0.000",
+          "n_supports=0",
+          "contradiction_severity=NONE",
+          "method=INSUFFICIENT_DATA"
+        ],
+        "method": "INSUFFICIENT_DATA",
+        "contradiction_severity": "NONE"
+      },
+      {
+        "hypothesis_id": "H3",
+        "status": "INCONCLUSIVE",
+        "confidence": "ABSTAIN",
+        "evidence_ids": [],
+        "reasons": [
+          "score=0.000",
+          "completeness=0.000",
+          "n_supports=0",
+          "contradiction_severity=NONE",
+          "method=INSUFFICIENT_DATA"
+        ],
+        "method": "INSUFFICIENT_DATA",
+        "contradiction_severity": "NONE"
+      }
+    ],
+    "confidence": "ABSTAIN",
+    "status": "ABSTAINED",
+    "budgets": {
+      "max_iterations": 20,
+      "max_agent_calls": 40,
+      "max_tool_calls": 60,
+      "max_retrieval_calls": 20,
+      "max_tokens": 200000,
+      "max_latency_seconds": 60.0,
+      "used_iterations": 7,
+      "used_agent_calls": 31,
+      "used_tool_calls": 31,
+      "used_retrieval_calls": 1,
+      "used_tokens": 0,
+      "used_latency_seconds": 0.0
+    },
+    "audit_trace": [
+      {
+        "agent_id": "EVIDENCE",
+        "agent_role": "EVIDENCE",
+        "timestamp": "2026-08-28T07:42:34.144055+00:00",
+        "input_state_hash": "80efce630a981fd2",
+        "tool_call": "compare_kpi",
+        "tool_arguments_hash": "4e8548785317e904",
+        "tool_result_ids": [
+          "ev_kpimove_6e864b5dccd95feb"
+        ],
+        "output": "1 result item(s)",
+        "token_usage": 0,
+        "latency_ms": 122.039,
+        "security_decision": "ALLOWED"
+      },
+      {
+        "agent_id": "HYPOTHESIS",
+        "agent_role": "HYPOTHESIS",
+        "timestamp": "2026-08-28T07:42:37.379344+00:00",
+        "input_state_hash": "80efce630a981fd2",
+        "tool_call": "get_driver_decomposition",
+        "tool_arguments_hash": "c369b2272b67c03b",
+        "tool_result_ids": [
+          "ev_driver_b0c41dfd608c1491",
+          "ev_driver_db0b4b68f6845adc",
+          "ev_driver_6b458b5ffcf491ee",
+          "ev_segment_38ba8f141bcd8da4",
+          "ev_segment_6122a76cacd9dc2a",
+          "ev_segment_48eaf9e2fdff24b5",
+          "ev_segment_9896e3a8d65272c7",
+          "ev_segment_65eae14ad125f8e0",
+          "ev_segment_e755b683c3998ca7",
+          "ev_segment_4fa03a122dcd81f6",
+          "ev_segment_d3a230ceda878af2",
+          "ev_segment_3efc7cdc443bbf13",
+          "ev_segment_faeb02f297a85ec7",
+          "ev_segment_e40d76536aa4f0b3",
+          "ev_segment_5163e758ba4bee10",
+          "ev_segment_b3000ca4e3a30d2f",
+          "ev_segment_77d9a9db85737153",
+          "ev_segment_9e0645de2c161a76",
+          "ev_concurrent_241561e329b1de3e",
+          "ev_concurrent_1eb2b521b2546f6a",
+          "ev_concurrent_69aff478b59dfcf9",
+          "ev_concurrent_b99dad0777432e17",
+          "ev_concurrent_a396223c200bab68"
+        ],
+        "output": "23 result item(s)",
+        "token_usage": 0,
+        "latency_ms": 364.706,
+        "security_decision": "ALLOWED"
+      },
+      {
+        "agent_id": "HYPOTHESIS",
+        "agent_role": "HYPOTHESIS",
+        "timestamp": "2026-08-28T07:42:50.357687+00:00",
+        "input_state_hash": "80efce630a981fd2",
+        "tool_call": "get_concurrent_kpis",
+        "tool_arguments_hash": "531dd1dad0c69fa5",
+        "tool_result_ids": [],
+        "output": "Unknown kpi_id 'order_volume'. Known KPIs: ['revenue', 'orders', 'aov', 'avg_delivery_days', 'avg_review_score', 'freight_revenue', 'review_volume', 'on_time_delivery_rate', 'quantity_sold', 'repeat_purchase_rate']",
+        "token_usage": 0,
+        "latency_ms": 0.199,
+        "security_decision": "DENIED"
+      },
+      {
+        "agent_id": "HYPOTHESIS",
+        "agent_role": "HYPOTHESIS",
+        "timestamp": "2026-08-28T07:42:53.264557+00:00",
+        "input_state_hash": "80efce630a981fd2",
+        "tool_call": "get_concurrent_kpis",
+        "tool_arguments_hash": "2dbfc68317e5983b",
+        "tool_result_ids": [
+          "ev_concurrent_241561e329b1de3e",
+          "ev_concurrent_1eb2b521b2546f6a",
+          "ev_concurrent_69aff478b59dfcf9"
+        ],
+        "output": "3 result item(s)",
+        "token_usage": 0,
+        "latency_ms": 213.645,
+        "security_decision": "ALLOWED"
+      },
+      {
+        "agent_id": "HYPOTHESIS",
+        "agent_role": "HYPOTHESIS",
+        "timestamp": "2026-08-28T07:42:56.678988+00:00",
+        "input_state_hash": "80efce630a981fd2",
+        "tool_call": "get_kpi",
+        "tool_arguments_hash": "13be782d6f971f11",
+        "tool_result_ids": [
+          "ev_kpiobs_b602b89e8fc52a88"
+        ],
+        "output": "1 result item(s)",
+        "token_usage": 0,
+        "latency_ms": 0.387,
+        "security_decision": "ALLOWED"
+      },
+      {
+        "agent_id": "HYPOTHESIS",
+        "agent_role": "HYPOTHESIS",
+        "timestamp": "2026-08-28T07:43:00.748594+00:00",
+        "input_state_hash": "80efce630a981fd2",
+        "tool_call": "get_kpi",
+        "tool_arguments_hash": "90d78a1842d24009",
+        "tool_result_ids": [
+          "ev_kpiobs_af9b2bc3a9962d77",
+          "ev_kpiobs_186613fa21d14f6b",
+          "ev_kpiobs_21a7c9d37b198c45",
+          "ev_kpiobs_41bb70b183c63724",
+          "ev_kpiobs_ad64de6b5cb45afa",
+          "ev_kpiobs_eae00a8aeeeedc61",
+          "ev_kpiobs_31cdc3faad6f853c",
+          "ev_kpiobs_33b7d63cba793fb2",
+          "ev_kpiobs_3328f8838ba9f5e4",
+          "ev_kpiobs_bce2f955dfa2ff11",
+          "ev_kpiobs_7840d90e6fc8be31",
+          "ev_kpiobs_2de01d916e61a43d",
+          "ev_kpiobs_cc784acf5a5a0f32",
+          "ev_kpiobs_cb0b94a8f1459878",
+          "ev_kpiobs_5acb66f2063a7392",
+          "ev_kpiobs_367d28248a80baba",
+          "ev_kpiobs_36f622413674350c",
+          "ev_kpiobs_9f2abe6c26f63565",
+          "ev_kpiobs_30c32b7fe4c52319",
+          "ev_kpiobs_02cd2c420e7ce953",
+          "ev_kpiobs_7bb4d9cb6f1b8298",
+          "ev_kpiobs_5ce6741f9f39c74a",
+          "ev_kpiobs_63a75b6a69516f07",
+          "ev_kpiobs_a4c84b804375a43d",
+          "ev_kpiobs_2d7329a54edb5e89",
+          "ev_kpiobs_d2d9cc5fa633cce9",
+          "ev_kpiobs_3ee5af89a8dbb324",
+          "ev_kpiobs_2da77e4f99c9ffaf",
+          "ev_kpiobs_ccdf0e92e00353fa",
+          "ev_kpiobs_8e4c0c537a6d9be6",
+          "ev_kpiobs_56225e467dbd826c",
+          "ev_kpiobs_72821168016a6ede",
+          "ev_kpiobs_bb29bc64bfea66fc",
+          "ev_kpiobs_baed7e251133d4eb",
+          "ev_kpiobs_00800fc4a19fd4f4",
+          "ev_kpiobs_ea5aa2ad86e70331",
+          "ev_kpiobs_9cb594a08fbce6ba",
+          "ev_kpiobs_fec73733d1fff9db",
+          "ev_kpiobs_e99af7c20bc41412",
+          "ev_kpiobs_aace6a43f0a1f712",
+          "ev_kpiobs_13a02836fcae4d11",
+          "ev_kpiobs_4972942d90714427",
+          "ev_kpiobs_3352d5560b5b752a",
+          "ev_kpiobs_5a109ca1da1176da",
+          "ev_kpiobs_e40a70a7838a6db6",
+          "ev_kpiobs_619e1f5d289bcab8",
+          "ev_kpiobs_5c01a7a4a63a0ff5",
+          "ev_kpiobs_82c442c49d939226",
+          "ev_kpiobs_213ad5ad54418dd4",
+          "ev_kpiobs_4acdf482cc7a844d",
+          "ev_kpiobs_0339e8da15987155",
+          "ev_kpiobs_dc662426aae7f24f",
+          "ev_kpiobs_8e6b11254eeeffdd",
+          "ev_kpiobs_6d6b528e7afab1d7",
+          "ev_kpiobs_987e41ac68ccf146",
+          "ev_kpiobs_8dd52a5fc447463c",
+          "ev_kpiobs_f4848e5afd5a12e5",
+          "ev_kpiobs_faaddfad6fba9b90",
+          "ev_kpiobs_a5bd162a900f6030",
+          "ev_kpiobs_ddfaa958742f3b9e",
+          "ev_kpiobs_919194390e8070ae",
+          "ev_kpiobs_a6d9b61e205eae93",
+          "ev_kpiobs_b752362dbb077e29",
+          "ev_kpiobs_a91c6e45b1ab4f40",
+          "ev_kpiobs_5bd66a89aba1bc8f",
+          "ev_kpiobs_9f58851659c841dd"
+        ],
+        "output": "66 result item(s)",
+        "token_usage": 0,
+        "latency_ms": 80.84,
+        "security_decision": "ALLOWED"
+      },
+      {
+        "agent_id": "HYPOTHESIS",
+        "agent_role": "HYPOTHESIS",
+        "timestamp": "2026-08-28T07:43:05.076339+00:00",
+        "input_state_hash": "80efce630a981fd2",
+        "tool_call": "search_evidence",
+        "tool_arguments_hash": "1a39e7ab42a50a52",
+        "tool_result_ids": [],
+        "output": "0 result item(s)",
+        "token_usage": 0,
+        "latency_ms": 5.844,
+        "security_decision": "ALLOWED"
+      },
+      {
+        "agent_id": "EVIDENCE",
+        "agent_role": "EVIDENCE",
+        "timestamp": "2026-08-28T07:43:45.276858+00:00",
+        "input_state_hash": "0ba8561886d3972e",
+        "tool_call": "get_driver_decomposition",
+        "tool_arguments_hash": "0edefb367b81d7af",
+        "tool_result_ids": [
+          "ev_driver_586cacef8276fae5",
+          "ev_driver_7c04ac2f503a3ae2",
+          "ev_driver_ef642bf27aefba08",
+          "ev_concurrent_542f27a7101f248a",
+          "ev_concurrent_84585f115c80ca6e",
+          "ev_concurrent_01f7aaaa5284dedf",
+          "ev_concurrent_afd4def2468fff85",
+          "ev_concurrent_129fada21eeb04ee"
+        ],
+        "output": "8 result item(s)",
+        "token_usage": 0,
+        "latency_ms": 584.89,
+        "security_decision": "ALLOWED"
+      },
+      {
+        "agent_id": "EVIDENCE",
+        "agent_role": "EVIDENCE",
+        "timestamp": "2026-08-28T07:43:46.449376+00:00",
+        "input_state_hash": "0ba8561886d3972e",
+        "tool_call": "get_evidence",
+        "tool_arguments_hash": "b290f1abf984fb53",
+        "tool_result_ids": [
+          "ev_driver_586cacef8276fae5"
+        ],
+        "output": "1 result item(s)",
+        "token_usage": 0,
+        "latency_ms": 0.233,
+        "security_decision": "ALLOWED"
+      },
+      {
+        "agent_id": "EVIDENCE",
+        "agent_role": "EVIDENCE",
+        "timestamp": "2026-08-28T07:43:48.077403+00:00",
+        "input_state_hash": "0ba8561886d3972e",
+        "tool_call": "get_evidence",
+        "tool_arguments_hash": "d2eb25e8c54eb292",
+        "tool_result_ids": [
+          "ev_driver_6b458b5ffcf491ee"
+        ],
+        "output": "1 result item(s)",
+        "token_usage": 0,
+        "latency_ms": 0.159,
+        "security_decision": "ALLOWED"
+      },
+      {
+        "agent_id": "EVIDENCE",
+        "agent_role": "EVIDENCE",
+        "timestamp": "2026-08-28T07:43:49.174875+00:00",
+        "input_state_hash": "0ba8561886d3972e",
+        "tool_call": "get_evidence",
+        "tool_arguments_hash": "26198b88256e6289",
+        "tool_result_ids": [
+          "ev_driver_ef642bf27aefba08"
+        ],
+        "output": "1 result item(s)",
+        "token_usage": 0,
+        "latency_ms": 0.123,
+        "security_decision": "ALLOWED"
+      },
+      {
+        "agent_id": "EVIDENCE",
+        "agent_role": "EVIDENCE",
+        "timestamp": "2026-08-28T07:43:51.438605+00:00",
+        "input_state_hash": "0ba8561886d3972e",
+        "tool_call": "get_driver_decomposition",
+        "tool_arguments_hash": "43e31e88ee1e2f77",
+        "tool_result_ids": [
+          "ev_driver_586cacef8276fae5",
+          "ev_driver_7c04ac2f503a3ae2",
+          "ev_driver_ef642bf27aefba08",
+          "ev_concurrent_542f27a7101f248a",
+          "ev_concurrent_84585f115c80ca6e",
+          "ev_concurrent_01f7aaaa5284dedf",
+          "ev_concurrent_afd4def2468fff85",
+          "ev_concurrent_129fada21eeb04ee"
+        ],
+        "output": "8 result item(s)",
+        "token_usage": 0,
+        "latency_ms": 327.684,
+        "security_decision": "ALLOWED"
+      },
+      {
+        "agent_id": "EVIDENCE",
+        "agent_role": "EVIDENCE",
+        "timestamp": "2026-08-28T07:43:52.685116+00:00",
+        "input_state_hash": "0ba8561886d3972e",
+        "tool_call": "get_evidence",
+        "tool_arguments_hash": "460f30e8c644b790",
+        "tool_result_ids": [
+          "ev_driver_7c04ac2f503a3ae2"
+        ],
+        "output": "1 result item(s)",
+        "token_usage": 0,
+        "latency_ms": 0.119,
+        "security_decision": "ALLOWED"
+      },
+      {
+        "agent_id": "EVIDENCE",
+        "agent_role": "EVIDENCE",
+        "timestamp": "2026-08-28T07:44:16.958111+00:00",
+        "input_state_hash": "0ba8561886d3972e",
+        "tool_call": "get_evidence",
+        "tool_arguments_hash": "91b82a18e4452c88",
+        "tool_result_ids": [
+          "ev_driver_b0c41dfd608c1491"
+        ],
+        "output": "1 result item(s)",
+        "token_usage": 0,
+        "latency_ms": 0.171,
+        "security_decision": "ALLOWED"
+      },
+      {
+        "agent_id": "EVIDENCE",
+        "agent_role": "EVIDENCE",
+        "timestamp": "2026-08-28T07:44:37.759999+00:00",
+        "input_state_hash": "0ba8561886d3972e",
+        "tool_call": "get_driver_decomposition",
+        "tool_arguments_hash": "51c41ad21cf23be1",
+        "tool_result_ids": [
+          "ev_driver_586cacef8276fae5",
+          "ev_driver_7c04ac2f503a3ae2",
+          "ev_driver_ef642bf27aefba08",
+          "ev_concurrent_542f27a7101f248a",
+          "ev_concurrent_84585f115c80ca6e",
+          "ev_concurrent_01f7aaaa5284dedf",
+          "ev_concurrent_afd4def2468fff85",
+          "ev_concurrent_129fada21eeb04ee"
+        ],
+        "output": "8 result item(s)",
+        "token_usage": 0,
+        "latency_ms": 321.88,
+        "security_decision": "ALLOWED"
+      },
+      {
+        "agent_id": "EVIDENCE",
+        "agent_role": "EVIDENCE",
+        "timestamp": "2026-08-28T07:44:39.048701+00:00",
+        "input_state_hash": "0ba8561886d3972e",
+        "tool_call": "get_kpi",
+        "tool_arguments_hash": "7e342a3ef0fe253a",
+        "tool_result_ids": [
+          "ev_kpiobs_9763e31c22cdccec"
+        ],
+        "output": "1 result item(s)",
+        "token_usage": 0,
+        "latency_ms": 49.308,
+        "security_decision": "ALLOWED"
+      },
+      {
+        "agent_id": "EVIDENCE",
+        "agent_role": "EVIDENCE",
+        "timestamp": "2026-08-28T07:44:39.941993+00:00",
+        "input_state_hash": "0ba8561886d3972e",
+        "tool_call": "get_concurrent_kpis",
+        "tool_arguments_hash": "15b4df3065b09440",
+        "tool_result_ids": [],
+        "output": "Unknown kpi_id 'overall_revenue'. Known KPIs: ['revenue', 'orders', 'aov', 'avg_delivery_days', 'avg_review_score', 'freight_revenue', 'review_volume', 'on_time_delivery_rate', 'quantity_sold', 'repeat_purchase_rate']",
+        "token_usage": 0,
+        "latency_ms": 53.697,
+        "security_decision": "DENIED"
+      },
+      {
+        "agent_id": "EVIDENCE",
+        "agent_role": "EVIDENCE",
+        "timestamp": "2026-08-28T07:44:41.185126+00:00",
+        "input_state_hash": "0ba8561886d3972e",
+        "tool_call": "get_concurrent_kpis",
+        "tool_arguments_hash": "abfe285bf9617b7d",
+        "tool_result_ids": [
+          "ev_concurrent_f121e2f9f637e6ff",
+          "ev_concurrent_98027302c03a8f60"
+        ],
+        "output": "2 result item(s)",
+        "token_usage": 0,
+        "latency_ms": 100.101,
+        "security_decision": "ALLOWED"
+      },
+      {
+        "agent_id": "EVIDENCE",
+        "agent_role": "EVIDENCE",
+        "timestamp": "2026-08-28T07:45:17.938521+00:00",
+        "input_state_hash": "0ba8561886d3972e",
+        "tool_call": "get_kpi",
+        "tool_arguments_hash": "19d74362ff3da386",
+        "tool_result_ids": [
+          "ev_kpiobs_a4846f838f3171a5"
+        ],
+        "output": "1 result item(s)",
+        "token_usage": 0,
+        "latency_ms": 0.332,
+        "security_decision": "ALLOWED"
+      },
+      {
+        "agent_id": "EVIDENCE",
+        "agent_role": "EVIDENCE",
+        "timestamp": "2026-08-28T07:45:21.157098+00:00",
+        "input_state_hash": "0ba8561886d3972e",
+        "tool_call": "get_graph_neighbors",
+        "tool_arguments_hash": "30af619908a56dd2",
+        "tool_result_ids": [],
+        "output": "\"No node 'ev_kpiobs_9763e31c22cdccec' visible at clearance 'INTERNAL'.\"",
+        "token_usage": 0,
+        "latency_ms": 0.705,
+        "security_decision": "DENIED"
+      },
+      {
+        "agent_id": "EVIDENCE",
+        "agent_role": "EVIDENCE",
+        "timestamp": "2026-08-28T07:45:21.993340+00:00",
+        "input_state_hash": "0ba8561886d3972e",
+        "tool_call": "get_evidence",
+        "tool_arguments_hash": "9a02262a803cb6ac",
+        "tool_result_ids": [
+          "ev_kpiobs_9763e31c22cdccec"
+        ],
+        "output": "1 result item(s)",
+        "token_usage": 0,
+        "latency_ms": 0.125,
+        "security_decision": "ALLOWED"
+      },
+      {
+        "agent_id": "EVIDENCE",
+        "agent_role": "EVIDENCE",
+        "timestamp": "2026-08-28T07:45:22.940916+00:00",
+        "input_state_hash": "0ba8561886d3972e",
+        "tool_call": "get_evidence",
+        "tool_arguments_hash": "0af90cace4160932",
+        "tool_result_ids": [
+          "ev_kpiobs_a4846f838f3171a5"
+        ],
+        "output": "1 result item(s)",
+        "token_usage": 0,
+        "latency_ms": 0.078,
+        "security_decision": "ALLOWED"
+      },
+      {
+        "agent_id": "EVIDENCE",
+        "agent_role": "EVIDENCE",
+        "timestamp": "2026-08-28T07:45:24.138372+00:00",
+        "input_state_hash": "0ba8561886d3972e",
+        "tool_call": "get_evidence",
+        "tool_arguments_hash": "541a63187b2e0351",
+        "tool_result_ids": [
+          "ev_concurrent_f121e2f9f637e6ff"
+        ],
+        "output": "1 result item(s)",
+        "token_usage": 0,
+        "latency_ms": 0.171,
+        "security_decision": "ALLOWED"
+      },
+      {
+        "agent_id": "EVIDENCE",
+        "agent_role": "EVIDENCE",
+        "timestamp": "2026-08-28T07:45:25.394334+00:00",
+        "input_state_hash": "0ba8561886d3972e",
+        "tool_call": "get_kpi",
+        "tool_arguments_hash": "6905d1661c0da6e3",
+        "tool_result_ids": [],
+        "output": "0 result item(s)",
+        "token_usage": 0,
+        "latency_ms": 5.247,
+        "security_decision": "ALLOWED"
+      },
+      {
+        "agent_id": "EVIDENCE",
+        "agent_role": "EVIDENCE",
+        "timestamp": "2026-08-28T07:45:26.429938+00:00",
+        "input_state_hash": "0ba8561886d3972e",
+        "tool_call": "get_kpi",
+        "tool_arguments_hash": "4c953b16bf1daa2b",
+        "tool_result_ids": [
+          "ev_kpiobs_21f1cc2e6a0d7e32"
+        ],
+        "output": "1 result item(s)",
+        "token_usage": 0,
+        "latency_ms": 3.317,
+        "security_decision": "ALLOWED"
+      },
+      {
+        "agent_id": "EVIDENCE",
+        "agent_role": "EVIDENCE",
+        "timestamp": "2026-08-28T07:45:27.198235+00:00",
+        "input_state_hash": "0ba8561886d3972e",
+        "tool_call": "get_kpi",
+        "tool_arguments_hash": "6905d1661c0da6e3",
+        "tool_result_ids": [],
+        "output": "0 result item(s)",
+        "token_usage": 0,
+        "latency_ms": 0.132,
+        "security_decision": "ALLOWED"
+      },
+      {
+        "agent_id": "EVIDENCE",
+        "agent_role": "EVIDENCE",
+        "timestamp": "2026-08-28T07:45:28.334742+00:00",
+        "input_state_hash": "0ba8561886d3972e",
+        "tool_call": "get_kpi",
+        "tool_arguments_hash": "6905d1661c0da6e3",
+        "tool_result_ids": [],
+        "output": "0 result item(s)",
+        "token_usage": 0,
+        "latency_ms": 0.094,
+        "security_decision": "ALLOWED"
+      },
+      {
+        "agent_id": "EVIDENCE",
+        "agent_role": "EVIDENCE",
+        "timestamp": "2026-08-28T07:45:31.817428+00:00",
+        "input_state_hash": "0ba8561886d3972e",
+        "tool_call": "get_driver_decomposition",
+        "tool_arguments_hash": "e730e9c827c9307e",
+        "tool_result_ids": [
+          "ev_driver_7f98811fe433de7d",
+          "ev_driver_977ca6b252a0031d",
+          "ev_driver_e0cffe3ec1c4c52e",
+          "ev_concurrent_3c85f64523e09170",
+          "ev_concurrent_c610e94f2a428f16",
+          "ev_concurrent_e508c3d1a29d5127",
+          "ev_concurrent_fd924ffac0f52e55",
+          "ev_concurrent_2d1600f6cb12540e"
+        ],
+        "output": "8 result item(s)",
+        "token_usage": 0,
+        "latency_ms": 480.512,
+        "security_decision": "ALLOWED"
+      },
+      {
+        "agent_id": "EVIDENCE",
+        "agent_role": "EVIDENCE",
+        "timestamp": "2026-08-28T07:45:32.708117+00:00",
+        "input_state_hash": "0ba8561886d3972e",
+        "tool_call": "get_evidence",
+        "tool_arguments_hash": "0d13cedfa14239f8",
+        "tool_result_ids": [
+          "ev_driver_7f98811fe433de7d"
+        ],
+        "output": "1 result item(s)",
+        "token_usage": 0,
+        "latency_ms": 0.133,
+        "security_decision": "ALLOWED"
+      },
+      {
+        "agent_id": "EVIDENCE",
+        "agent_role": "EVIDENCE",
+        "timestamp": "2026-08-28T07:45:33.948501+00:00",
+        "input_state_hash": "0ba8561886d3972e",
+        "tool_call": "get_driver_decomposition",
+        "tool_arguments_hash": "92d02be5ca463651",
+        "tool_result_ids": [],
+        "output": "PVM decomposition is implemented for 'revenue' only in this step (task \u00a71's explicit scope), got kpi_id='orders'.",
+        "token_usage": 0,
+        "latency_ms": 0.059,
+        "security_decision": "DENIED"
+      },
+      {
+        "agent_id": "EVIDENCE",
+        "agent_role": "EVIDENCE",
+        "timestamp": "2026-08-28T07:45:35.104089+00:00",
+        "input_state_hash": "0ba8561886d3972e",
+        "tool_call": "get_evidence",
+        "tool_arguments_hash": "14a7271b1e93b463",
+        "tool_result_ids": [
+          "ev_kpiobs_b602b89e8fc52a88"
+        ],
+        "output": "1 result item(s)",
+        "token_usage": 0,
+        "latency_ms": 0.122,
+        "security_decision": "ALLOWED"
+      }
+    ],
+    "telemetry": [
+      {
+        "agent_role": "HYPOTHESIS",
+        "model": "openai/gpt-oss-20b",
+        "input_tokens": 1443,
+        "output_tokens": 304,
+        "total_tokens": 1747,
+        "estimated_cost": 0.000296,
+        "tool_calls": 0,
+        "retrieval_calls": 0,
+        "agent_latency_ms": 2870.388,
+        "total_latency_ms": 2870.388
+      },
+      {
+        "agent_role": "HYPOTHESIS",
+        "model": "openai/gpt-oss-20b",
+        "input_tokens": 1886,
+        "output_tokens": 219,
+        "total_tokens": 2105,
+        "estimated_cost": 0.000298,
+        "tool_calls": 0,
+        "retrieval_calls": 0,
+        "agent_latency_ms": 12978.289,
+        "total_latency_ms": 12978.289
+      },
+      {
+        "agent_role": "HYPOTHESIS",
+        "model": "openai/gpt-oss-20b",
+        "input_tokens": 2054,
+        "output_tokens": 1815,
+        "total_tokens": 3869,
+        "estimated_cost": 0.001113,
+        "tool_calls": 0,
+        "retrieval_calls": 0,
+        "agent_latency_ms": 2693.137,
+        "total_latency_ms": 2693.137
+      },
+      {
+        "agent_role": "HYPOTHESIS",
+        "model": "openai/gpt-oss-20b",
+        "input_tokens": 2203,
+        "output_tokens": 633,
+        "total_tokens": 2836,
+        "estimated_cost": 0.000537,
+        "tool_calls": 0,
+        "retrieval_calls": 0,
+        "agent_latency_ms": 3413.987,
+        "total_latency_ms": 3413.987
+      },
+      {
+        "agent_role": "HYPOTHESIS",
+        "model": "openai/gpt-oss-20b",
+        "input_tokens": 2270,
+        "output_tokens": 717,
+        "total_tokens": 2987,
+        "estimated_cost": 0.000585,
+        "tool_calls": 0,
+        "retrieval_calls": 0,
+        "agent_latency_ms": 3988.694,
+        "total_latency_ms": 3988.694
+      },
+      {
+        "agent_role": "HYPOTHESIS",
+        "model": "openai/gpt-oss-20b",
+        "input_tokens": 3396,
+        "output_tokens": 993,
+        "total_tokens": 4389,
+        "estimated_cost": 0.000836,
+        "tool_calls": 0,
+        "retrieval_calls": 0,
+        "agent_latency_ms": 4321.884,
+        "total_latency_ms": 4321.884
+      },
+      {
+        "agent_role": "HYPOTHESIS",
+        "model": "openai/gpt-oss-20b",
+        "input_tokens": 3571,
+        "output_tokens": 4009,
+        "total_tokens": 7580,
+        "estimated_cost": 0.002362,
+        "tool_calls": 0,
+        "retrieval_calls": 0,
+        "agent_latency_ms": 38597.128,
+        "total_latency_ms": 38597.128
+      },
+      {
+        "agent_role": "ORCHESTRATOR",
+        "model": "deterministic_rule_engine_v1",
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "total_tokens": 0,
+        "estimated_cost": 0.0,
+        "tool_calls": 0,
+        "retrieval_calls": 0,
+        "agent_latency_ms": 69566.897,
+        "total_latency_ms": 69566.897
+      },
+      {
+        "agent_role": "EVIDENCE",
+        "model": "openai/gpt-oss-20b",
+        "input_tokens": 1850,
+        "output_tokens": 142,
+        "total_tokens": 1992,
+        "estimated_cost": 0.000256,
+        "tool_calls": 0,
+        "retrieval_calls": 0,
+        "agent_latency_ms": 982.458,
+        "total_latency_ms": 982.458
+      },
+      {
+        "agent_role": "EVIDENCE",
+        "model": "openai/gpt-oss-20b",
+        "input_tokens": 2072,
+        "output_tokens": 121,
+        "total_tokens": 2193,
+        "estimated_cost": 0.000268,
+        "tool_calls": 0,
+        "retrieval_calls": 0,
+        "agent_latency_ms": 1172.186,
+        "total_latency_ms": 1172.186
+      },
+      {
+        "agent_role": "EVIDENCE",
+        "model": "openai/gpt-oss-20b",
+        "input_tokens": 2584,
+        "output_tokens": 899,
+        "total_tokens": 3483,
+        "estimated_cost": 0.000708,
+        "tool_calls": 0,
+        "retrieval_calls": 0,
+        "agent_latency_ms": 1627.579,
+        "total_latency_ms": 1627.579
+      },
+      {
+        "agent_role": "EVIDENCE",
+        "model": "openai/gpt-oss-20b",
+        "input_tokens": 3106,
+        "output_tokens": 138,
+        "total_tokens": 3244,
+        "estimated_cost": 0.00038,
+        "tool_calls": 0,
+        "retrieval_calls": 0,
+        "agent_latency_ms": 1097.158,
+        "total_latency_ms": 1097.158
+      },
+      {
+        "agent_role": "EVIDENCE",
+        "model": "openai/gpt-oss-20b",
+        "input_tokens": 3616,
+        "output_tokens": 851,
+        "total_tokens": 4467,
+        "estimated_cost": 0.000787,
+        "tool_calls": 0,
+        "retrieval_calls": 0,
+        "agent_latency_ms": 1935.855,
+        "total_latency_ms": 1935.855
+      },
+      {
+        "agent_role": "EVIDENCE",
+        "model": "openai/gpt-oss-20b",
+        "input_tokens": 3838,
+        "output_tokens": 255,
+        "total_tokens": 4093,
+        "estimated_cost": 0.000511,
+        "tool_calls": 0,
+        "retrieval_calls": 0,
+        "agent_latency_ms": 1246.302,
+        "total_latency_ms": 1246.302
+      },
+      {
+        "agent_role": "EVIDENCE",
+        "model": "openai/gpt-oss-20b",
+        "input_tokens": 4354,
+        "output_tokens": 643,
+        "total_tokens": 4997,
+        "estimated_cost": 0.000757,
+        "tool_calls": 0,
+        "retrieval_calls": 0,
+        "agent_latency_ms": 24273.17,
+        "total_latency_ms": 24273.17
+      },
+      {
+        "agent_role": "EVIDENCE",
+        "model": "openai/gpt-oss-20b",
+        "input_tokens": 4876,
+        "output_tokens": 488,
+        "total_tokens": 5364,
+        "estimated_cost": 0.000732,
+        "tool_calls": 0,
+        "retrieval_calls": 0,
+        "agent_latency_ms": 20480.203,
+        "total_latency_ms": 20480.203
+      },
+      {
+        "agent_role": "EVIDENCE",
+        "model": "openai/gpt-oss-20b",
+        "input_tokens": 1848,
+        "output_tokens": 559,
+        "total_tokens": 2407,
+        "estimated_cost": 0.000464,
+        "tool_calls": 0,
+        "retrieval_calls": 0,
+        "agent_latency_ms": 1239.293,
+        "total_latency_ms": 1239.293
+      },
+      {
+        "agent_role": "EVIDENCE",
+        "model": "openai/gpt-oss-20b",
+        "input_tokens": 1917,
+        "output_tokens": 161,
+        "total_tokens": 2078,
+        "estimated_cost": 0.000272,
+        "tool_calls": 0,
+        "retrieval_calls": 0,
+        "agent_latency_ms": 839.493,
+        "total_latency_ms": 839.493
+      },
+      {
+        "agent_role": "EVIDENCE",
+        "model": "openai/gpt-oss-20b",
+        "input_tokens": 2084,
+        "output_tokens": 213,
+        "total_tokens": 2297,
+        "estimated_cost": 0.000315,
+        "tool_calls": 0,
+        "retrieval_calls": 0,
+        "agent_latency_ms": 1142.946,
+        "total_latency_ms": 1142.946
+      },
+      {
+        "agent_role": "EVIDENCE",
+        "model": "openai/gpt-oss-20b",
+        "input_tokens": 2216,
+        "output_tokens": 441,
+        "total_tokens": 2657,
+        "estimated_cost": 0.000442,
+        "tool_calls": 0,
+        "retrieval_calls": 0,
+        "agent_latency_ms": 36753.801,
+        "total_latency_ms": 36753.801
+      },
+      {
+        "agent_role": "EVIDENCE",
+        "model": "openai/gpt-oss-20b",
+        "input_tokens": 2284,
+        "output_tokens": 345,
+        "total_tokens": 2629,
+        "estimated_cost": 0.000401,
+        "tool_calls": 0,
+        "retrieval_calls": 0,
+        "agent_latency_ms": 3217.803,
+        "total_latency_ms": 3217.803
+      },
+      {
+        "agent_role": "EVIDENCE",
+        "model": "openai/gpt-oss-20b",
+        "input_tokens": 2353,
+        "output_tokens": 152,
+        "total_tokens": 2505,
+        "estimated_cost": 0.000311,
+        "tool_calls": 0,
+        "retrieval_calls": 0,
+        "agent_latency_ms": 835.935,
+        "total_latency_ms": 835.935
+      },
+      {
+        "agent_role": "EVIDENCE",
+        "model": "openai/gpt-oss-20b",
+        "input_tokens": 2824,
+        "output_tokens": 122,
+        "total_tokens": 2946,
+        "estimated_cost": 0.000343,
+        "tool_calls": 0,
+        "retrieval_calls": 0,
+        "agent_latency_ms": 947.323,
+        "total_latency_ms": 947.323
+      },
+      {
+        "agent_role": "EVIDENCE",
+        "model": "openai/gpt-oss-20b",
+        "input_tokens": 3295,
+        "output_tokens": 265,
+        "total_tokens": 3560,
+        "estimated_cost": 0.000462,
+        "tool_calls": 0,
+        "retrieval_calls": 0,
+        "agent_latency_ms": 1197.117,
+        "total_latency_ms": 1197.117
+      },
+      {
+        "agent_role": "EVIDENCE",
+        "model": "openai/gpt-oss-20b",
+        "input_tokens": 1847,
+        "output_tokens": 441,
+        "total_tokens": 2288,
+        "estimated_cost": 0.000405,
+        "tool_calls": 0,
+        "retrieval_calls": 0,
+        "agent_latency_ms": 1250.414,
+        "total_latency_ms": 1250.414
+      },
+      {
+        "agent_role": "EVIDENCE",
+        "model": "openai/gpt-oss-20b",
+        "input_tokens": 1902,
+        "output_tokens": 125,
+        "total_tokens": 2027,
+        "estimated_cost": 0.000253,
+        "tool_calls": 0,
+        "retrieval_calls": 0,
+        "agent_latency_ms": 1032.152,
+        "total_latency_ms": 1032.152
+      },
+      {
+        "agent_role": "EVIDENCE",
+        "model": "openai/gpt-oss-20b",
+        "input_tokens": 1970,
+        "output_tokens": 75,
+        "total_tokens": 2045,
+        "estimated_cost": 0.000235,
+        "tool_calls": 0,
+        "retrieval_calls": 0,
+        "agent_latency_ms": 768.057,
+        "total_latency_ms": 768.057
+      },
+      {
+        "agent_role": "EVIDENCE",
+        "model": "openai/gpt-oss-20b",
+        "input_tokens": 2025,
+        "output_tokens": 327,
+        "total_tokens": 2352,
+        "estimated_cost": 0.000366,
+        "tool_calls": 0,
+        "retrieval_calls": 0,
+        "agent_latency_ms": 1136.282,
+        "total_latency_ms": 1136.282
+      },
+      {
+        "agent_role": "EVIDENCE",
+        "model": "openai/gpt-oss-20b",
+        "input_tokens": 2080,
+        "output_tokens": 299,
+        "total_tokens": 2379,
+        "estimated_cost": 0.000357,
+        "tool_calls": 0,
+        "retrieval_calls": 0,
+        "agent_latency_ms": 3002.093,
+        "total_latency_ms": 3002.093
+      },
+      {
+        "agent_role": "EVIDENCE",
+        "model": "openai/gpt-oss-20b",
+        "input_tokens": 2305,
+        "output_tokens": 161,
+        "total_tokens": 2466,
+        "estimated_cost": 0.000311,
+        "tool_calls": 0,
+        "retrieval_calls": 0,
+        "agent_latency_ms": 890.45,
+        "total_latency_ms": 890.45
+      },
+      {
+        "agent_role": "EVIDENCE",
+        "model": "openai/gpt-oss-20b",
+        "input_tokens": 2815,
+        "output_tokens": 272,
+        "total_tokens": 3087,
+        "estimated_cost": 0.000418,
+        "tool_calls": 0,
+        "retrieval_calls": 0,
+        "agent_latency_ms": 1240.142,
+        "total_latency_ms": 1240.142
+      },
+      {
+        "agent_role": "EVIDENCE",
+        "model": "openai/gpt-oss-20b",
+        "input_tokens": 2957,
+        "output_tokens": 330,
+        "total_tokens": 3287,
+        "estimated_cost": 0.000461,
+        "tool_calls": 0,
+        "retrieval_calls": 0,
+        "agent_latency_ms": 1155.321,
+        "total_latency_ms": 1155.321
+      },
+      {
+        "agent_role": "ORCHESTRATOR",
+        "model": "deterministic_rule_engine_v1",
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "total_tokens": 0,
+        "estimated_cost": 0.0,
+        "tool_calls": 0,
+        "retrieval_calls": 0,
+        "agent_latency_ms": 111397.496,
+        "total_latency_ms": 111397.496
+      },
+      {
+        "agent_role": "ORCHESTRATOR",
+        "model": "deterministic_rule_engine_v1",
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "total_tokens": 0,
+        "estimated_cost": 0.0,
+        "tool_calls": 0,
+        "retrieval_calls": 0,
+        "agent_latency_ms": 0.059,
+        "total_latency_ms": 0.059
+      },
+      {
+        "agent_role": "ORCHESTRATOR",
+        "model": "deterministic_rule_engine_v1",
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "total_tokens": 0,
+        "estimated_cost": 0.0,
+        "tool_calls": 0,
+        "retrieval_calls": 0,
+        "agent_latency_ms": 0.046,
+        "total_latency_ms": 0.046
+      },
+      {
+        "agent_role": "ORCHESTRATOR",
+        "model": "deterministic_rule_engine_v1",
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "total_tokens": 0,
+        "estimated_cost": 0.0,
+        "tool_calls": 0,
+        "retrieval_calls": 0,
+        "agent_latency_ms": 0.044,
+        "total_latency_ms": 0.044
+      },
+      {
+        "agent_role": "ORCHESTRATOR",
+        "model": "deterministic_rule_engine_v1",
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "total_tokens": 0,
+        "estimated_cost": 0.0,
+        "tool_calls": 0,
+        "retrieval_calls": 0,
+        "agent_latency_ms": 0.082,
+        "total_latency_ms": 0.082
+      }
+    ],
+    "retrieval_insufficiency_events": [],
+    "security_events": [
+      {
+        "type": "NUMERIC_VALIDATION_FAILED",
+        "agent_role": "HYPOTHESIS",
+        "field": "Hypothesis.statement",
+        "text": "Price-related contributions across product categories may be associated with the 52% revenue increase in November 2017.",
+        "violating_numbers": [
+          52.0,
+          2017.0
+        ]
+      },
+      {
+        "type": "NUMERIC_VALIDATION_FAILED",
+        "agent_role": "HYPOTHESIS",
+        "field": "Hypothesis.statement",
+        "text": "An increase in sales volume from seller states such as CA and TX may be associated with the revenue movement in November 2017.",
+        "violating_numbers": [
+          2017.0
+        ]
+      }
+    ],
+    "status_history": [
+      "PLANNED",
+      "SECURITY_VALIDATED",
+      "HYPOTHESES_GENERATED",
+      "EVIDENCE_COLLECTION",
+      "COUNTER_EVIDENCE",
+      "CONTRADICTION_ANALYSIS",
+      "METHOD_SELECTION",
+      "CONFIDENCE_EVALUATION",
+      "ABSTAINED (confidence judge abstained on every hypothesis)"
+    ]
+  },
+  "executive_investigation": {
+    "investigation_id": "november_2017_revenue_executive",
+    "requester_role": "EXECUTIVE",
+    "kpi_id": "revenue",
+    "period": "2017-11",
+    "movement": {
+      "absolute": 346051.9399999998,
+      "percentage": 52.09903901787393,
+      "current_value": 1010271.3699999999,
+      "previous_value": 664219.43
+    },
+    "hypotheses": [],
+    "evidence_ids": [],
+    "classified_evidence": [],
+    "counter_evidence_reports": [],
+    "contradictions": [],
+    "selected_methods": [],
+    "hypothesis_results": [],
+    "confidence": null,
+    "status": "ABSTAINED",
+    "budgets": {
+      "max_iterations": 20,
+      "max_agent_calls": 40,
+      "max_tool_calls": 60,
+      "max_retrieval_calls": 20,
+      "max_tokens": 200000,
+      "max_latency_seconds": 60.0,
+      "used_iterations": 2,
+      "used_agent_calls": 4,
+      "used_tool_calls": 4,
+      "used_retrieval_calls": 0,
+      "used_tokens": 0,
+      "used_latency_seconds": 0.0
+    },
+    "audit_trace": [
+      {
+        "agent_id": "EVIDENCE",
+        "agent_role": "EVIDENCE",
+        "timestamp": "2026-08-28T07:45:35.104870+00:00",
+        "input_state_hash": "2791bcb454be0bd1",
+        "tool_call": "compare_kpi",
+        "tool_arguments_hash": "4e8548785317e904",
+        "tool_result_ids": [
+          "ev_kpimove_6e864b5dccd95feb"
+        ],
+        "output": "1 result item(s)",
+        "token_usage": 0,
+        "latency_ms": 0.245,
+        "security_decision": "ALLOWED"
+      },
+      {
+        "agent_id": "HYPOTHESIS",
+        "agent_role": "HYPOTHESIS",
+        "timestamp": "2026-08-28T07:45:38.107787+00:00",
+        "input_state_hash": "2791bcb454be0bd1",
+        "tool_call": "get_driver_decomposition",
+        "tool_arguments_hash": "cd5eaad6ada6b442",
+        "tool_result_ids": [
+          "ev_driver_577168e89322d498",
+          "ev_driver_08a975013b2a5374",
+          "ev_driver_4f4ab44ae664ee42",
+          "ev_segment_dcdc2d10d9e70ec4",
+          "ev_segment_4a0e3e1d44ae2fce",
+          "ev_segment_b0fcdb23fcc0e2b8",
+          "ev_segment_d96668b471f334b8",
+          "ev_segment_b0b32db4e87ca6f7",
+          "ev_segment_908fbb63bc1458f8",
+          "ev_segment_f2b398b6640fac2f",
+          "ev_segment_b9ab59488ba1e4b4",
+          "ev_segment_95ab8aa6688a7ed6",
+          "ev_segment_54428f0699a71a37",
+          "ev_concurrent_bba110a5ea7279b5",
+          "ev_concurrent_6df70aa1d88c70bb",
+          "ev_concurrent_ff24c39db6f6226e",
+          "ev_concurrent_39e78f411e427064",
+          "ev_concurrent_bda784b6d7dc0264"
+        ],
+        "output": "18 result item(s)",
+        "token_usage": 0,
+        "latency_ms": 285.134,
+        "security_decision": "ALLOWED"
+      },
+      {
+        "agent_id": "HYPOTHESIS",
+        "agent_role": "HYPOTHESIS",
+        "timestamp": "2026-08-28T07:46:16.386893+00:00",
+        "input_state_hash": "2791bcb454be0bd1",
+        "tool_call": "get_concurrent_kpis",
+        "tool_arguments_hash": "dedfe9565d9048eb",
+        "tool_result_ids": [],
+        "output": "Unknown kpi_id 'sales'. Known KPIs: ['revenue', 'orders', 'aov', 'avg_delivery_days', 'avg_review_score', 'freight_revenue', 'review_volume', 'on_time_delivery_rate', 'quantity_sold', 'repeat_purchase_rate']",
+        "token_usage": 0,
+        "latency_ms": 0.417,
+        "security_decision": "DENIED"
+      },
+      {
+        "agent_id": "HYPOTHESIS",
+        "agent_role": "HYPOTHESIS",
+        "timestamp": "2026-08-28T07:46:19.477633+00:00",
+        "input_state_hash": "2791bcb454be0bd1",
+        "tool_call": "get_concurrent_kpis",
+        "tool_arguments_hash": "7c4545e557bd9518",
+        "tool_result_ids": [
+          "ev_concurrent_671e631e287d434f",
+          "ev_concurrent_bba110a5ea7279b5",
+          "ev_concurrent_6df70aa1d88c70bb",
+          "ev_concurrent_39e78f411e427064",
+          "ev_concurrent_bda784b6d7dc0264",
+          "ev_concurrent_ff24c39db6f6226e",
+          "ev_concurrent_b183a5fdc31fe9d9",
+          "ev_concurrent_4d6e1ab40bec28ab",
+          "ev_concurrent_44da46b3bf645501",
+          "ev_concurrent_5e2a09c44e8a2850"
+        ],
+        "output": "10 result item(s)",
+        "token_usage": 0,
+        "latency_ms": 156.114,
+        "security_decision": "ALLOWED"
+      }
+    ],
+    "telemetry": [
+      {
+        "agent_role": "HYPOTHESIS",
+        "model": "openai/gpt-oss-20b",
+        "input_tokens": 1443,
+        "output_tokens": 274,
+        "total_tokens": 1717,
+        "estimated_cost": 0.000281,
+        "tool_calls": 0,
+        "retrieval_calls": 0,
+        "agent_latency_ms": 2717.712,
+        "total_latency_ms": 2717.712
+      },
+      {
+        "agent_role": "HYPOTHESIS",
+        "model": "openai/gpt-oss-20b",
+        "input_tokens": 1815,
+        "output_tokens": 341,
+        "total_tokens": 2156,
+        "estimated_cost": 0.000352,
+        "tool_calls": 0,
+        "retrieval_calls": 0,
+        "agent_latency_ms": 38279.476,
+        "total_latency_ms": 38279.476
+      },
+      {
+        "agent_role": "HYPOTHESIS",
+        "model": "openai/gpt-oss-20b",
+        "input_tokens": 1982,
+        "output_tokens": 176,
+        "total_tokens": 2158,
+        "estimated_cost": 0.000286,
+        "tool_calls": 0,
+        "retrieval_calls": 0,
+        "agent_latency_ms": 2934.572,
+        "total_latency_ms": 2934.572
+      },
+      {
+        "agent_role": "HYPOTHESIS",
+        "model": "openai/gpt-oss-20b",
+        "input_tokens": 2265,
+        "output_tokens": 2158,
+        "total_tokens": 4423,
+        "estimated_cost": 0.001306,
+        "tool_calls": 0,
+        "retrieval_calls": 0,
+        "agent_latency_ms": 5786.077,
+        "total_latency_ms": 5786.077
+      },
+      {
+        "agent_role": "ORCHESTRATOR",
+        "model": "deterministic_rule_engine_v1",
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "total_tokens": 0,
+        "estimated_cost": 0.0,
+        "tool_calls": 0,
+        "retrieval_calls": 0,
+        "agent_latency_ms": 50188.717,
+        "total_latency_ms": 50188.717
+      }
+    ],
+    "retrieval_insufficiency_events": [],
+    "security_events": [
+      {
+        "type": "NUMERIC_VALIDATION_FAILED",
+        "agent_role": "HYPOTHESIS",
+        "field": "Hypothesis.statement",
+        "text": "Higher sales volume in certain product categories may be associated with the November 2017 revenue growth.",
+        "violating_numbers": [
+          2017.0
+        ]
+      },
+      {
+        "type": "NUMERIC_VALIDATION_FAILED",
+        "agent_role": "HYPOTHESIS",
+        "field": "Hypothesis.statement",
+        "text": "An increase in average selling price in a particular customer state may be associated with the November 2017 revenue growth.",
+        "violating_numbers": [
+          2017.0
+        ]
+      },
+      {
+        "type": "NUMERIC_VALIDATION_FAILED",
+        "agent_role": "HYPOTHESIS",
+        "field": "Hypothesis.statement",
+        "text": "A change in product category mix toward higher-margin categories may be associated with the November 2017 revenue growth.",
+        "violating_numbers": [
+          2017.0
+        ]
+      },
+      {
+        "type": "NUMERIC_VALIDATION_FAILED",
+        "agent_role": "HYPOTHESIS",
+        "field": "Hypothesis.statement",
+        "text": "An increase in order volume from a particular customer state may be associated with the November 2017 revenue growth.",
+        "violating_numbers": [
+          2017.0
+        ]
+      },
+      {
+        "type": "NUMERIC_VALIDATION_FAILED",
+        "agent_role": "HYPOTHESIS",
+        "field": "Hypothesis.statement",
+        "text": "Improved delivery performance in a specific seller state may be associated with the November 2017 revenue growth.",
+        "violating_numbers": [
+          2017.0
+        ]
+      }
+    ],
+    "status_history": [
+      "PLANNED",
+      "SECURITY_VALIDATED",
+      "HYPOTHESES_GENERATED",
+      "ABSTAINED (no hypothesis cleared its evidence-gated trigger condition)"
+    ]
+  },
+  "analyst_telemetry_summary": {
+    "total_llm_calls": 31,
+    "total_deterministic_calls": 6,
+    "total_input_tokens": 79841,
+    "total_output_tokens": 16515,
+    "total_tokens": 96356,
+    "total_estimated_cost": 0.016242,
+    "total_tool_calls": 31,
+    "total_retrieval_calls": 1,
+    "total_agent_latency_ms": 359291.664,
+    "by_agent_role": {
+      "ORCHESTRATOR": {
+        "calls": 6,
+        "tokens": 0,
+        "cost": 0.0
+      },
+      "HYPOTHESIS": {
+        "calls": 7,
+        "tokens": 25513,
+        "cost": 0.006027
+      },
+      "EVIDENCE": {
+        "calls": 24,
+        "tokens": 70843,
+        "cost": 0.010215
+      },
+      "COUNTER_EVIDENCE": {
+        "calls": 0,
+        "tokens": 0,
+        "cost": 0
+      },
+      "CAUSAL_SELECTOR": {
+        "calls": 0,
+        "tokens": 0,
+        "cost": 0
+      },
+      "CONFIDENCE_JUDGE": {
+        "calls": 0,
+        "tokens": 0,
+        "cost": 0
+      }
+    }
+  },
+  "executive_telemetry_summary": {
+    "total_llm_calls": 4,
+    "total_deterministic_calls": 1,
+    "total_input_tokens": 7505,
+    "total_output_tokens": 2949,
+    "total_tokens": 10454,
+    "total_estimated_cost": 0.002225,
+    "total_tool_calls": 4,
+    "total_retrieval_calls": 0,
+    "total_agent_latency_ms": 99906.554,
+    "by_agent_role": {
+      "ORCHESTRATOR": {
+        "calls": 1,
+        "tokens": 0,
+        "cost": 0.0
+      },
+      "HYPOTHESIS": {
+        "calls": 4,
+        "tokens": 10454,
+        "cost": 0.002225
+      },
+      "EVIDENCE": {
+        "calls": 0,
+        "tokens": 0,
+        "cost": 0
+      },
+      "COUNTER_EVIDENCE": {
+        "calls": 0,
+        "tokens": 0,
+        "cost": 0
+      },
+      "CAUSAL_SELECTOR": {
+        "calls": 0,
+        "tokens": 0,
+        "cost": 0
+      },
+      "CONFIDENCE_JUDGE": {
+        "calls": 0,
+        "tokens": 0,
+        "cost": 0
+      }
+    }
+  },
+  "tests": {
+    "returncode": 0,
+    "n_passed": 137,
+    "n_failed": 0,
+    "failed_tests": [],
+    "all_passed": true
+  }
+}

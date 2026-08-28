@@ -1,0 +1,923 @@
+{
+  "generated_at": "2026-08-28T11:04:29.986408+00:00",
+  "run_seconds": 0.03,
+  "required_value_checks": {
+    "delivery_delay": {
+      "expected": {
+        "top_recommendation_present": true,
+        "calculated_impact": 585.0,
+        "estimated_effect": 0.06,
+        "addressable_population": 12500,
+        "confidence": 0.78,
+        "not_a_generic_string": true
+      },
+      "actual": {
+        "top_recommendation_present": true,
+        "calculated_impact": 585.0,
+        "estimated_effect": 0.06,
+        "addressable_population": 12500,
+        "confidence": 0.78,
+        "not_a_generic_string": true
+      },
+      "match": true
+    },
+    "all_checks_pass": true,
+    "aov_decline_ontology_extensibility_proven": true,
+    "multiple_candidates_generated_delivery_delay": true,
+    "multiple_candidates_generated_aov_decline": true
+  },
+  "results": {
+    "delivery_delay": {
+      "request_id": "decision_delivery_delay_on_time_delivery_rate_2017-11",
+      "driver_signal": {
+        "driver": "delivery_delay",
+        "driver_category": "FULFILLMENT_LOGISTICS",
+        "kpi_id": "on_time_delivery_rate",
+        "period": "2017-11",
+        "observed_change_pct": -0.08,
+        "observed_change_absolute": null,
+        "addressable_population": 12500,
+        "addressable_population_source": "HISTORICAL_ESTIMATE",
+        "historical_estimated_effect": 0.06,
+        "historical_effect_source": "HISTORICAL_ESTIMATE",
+        "driver_confidence": 0.78,
+        "causal_claim_allowed": null,
+        "causal_result_id": null,
+        "source": "MANUAL",
+        "business_context": {
+          "budget_available": true,
+          "operational_capacity_available": true
+        }
+      },
+      "top_recommendation": {
+        "recommendation_id": "rec_delivery_delay_prioritize_high_value_customers",
+        "driver": "delivery_delay",
+        "driver_category": "FULFILLMENT_LOGISTICS",
+        "controllable_lever": "shipment_prioritization",
+        "possible_action": "Prioritize high-value customer shipments for on_time_delivery_rate (2017-11)",
+        "expected_impact": {
+          "metric": "on_time_delivery_rate",
+          "estimated_effect": 0.06,
+          "effect_unit": "pp",
+          "addressable_population": 12500,
+          "confidence": 0.78,
+          "calculated_impact": 585.0,
+          "revenue_impact": null,
+          "effect_source": "HISTORICAL_ESTIMATE",
+          "population_source": "HISTORICAL_ESTIMATE",
+          "confidence_basis": "driver_confidence=0.78 sourced from DriverSignal (source=MANUAL)",
+          "is_estimable": true
+        },
+        "owner": "Operations Manager",
+        "constraints": [
+          {
+            "constraint": "operational_capacity",
+            "status": "PASS",
+            "details": "operational capacity available",
+            "severity": "LOW"
+          }
+        ],
+        "controllability": 0.9,
+        "effort": 0.2,
+        "priority_score": 1679.535,
+        "monitoring_kpis": [
+          {
+            "kpi": "on_time_delivery_rate",
+            "direction": "increase",
+            "expected_effect": 0.06,
+            "target": "increase by approximately 0.06 within 8_weeks",
+            "window": "8_weeks",
+            "warning_threshold": 0.03,
+            "stop_condition": "no measurable improvement in on_time_delivery_rate after 8_weeks"
+          }
+        ],
+        "rationale": "delivery_delay is associated with a movement in on_time_delivery_rate; shipment_prioritization is a controllable lever the business can act on directly.",
+        "assumptions": [
+          "shipment_prioritization genuinely affects on_time_delivery_rate as ontology-declared."
+        ],
+        "score_breakdown": {
+          "confidence_factors": {
+            "driver_confidence": 0.78,
+            "data_quality": 0.1,
+            "historical_support": 1.0,
+            "action_link_strength": 0.6
+          },
+          "confidence_weights": {
+            "driver_confidence": 0.35,
+            "data_quality": 0.25,
+            "historical_support": 0.25,
+            "action_link_strength": 0.15
+          },
+          "confidence_score": 0.638,
+          "controllability_score": 0.9,
+          "controllability_basis": "controllability_tier='HIGH' (config/decision_scoring.yaml::controllability_tier_scores)",
+          "effort_score": 0.2,
+          "effort_basis": "effort_tier='LOW' (config/decision_scoring.yaml::effort_tier_scores)",
+          "priority_formula": "impact * confidence * controllability / effort",
+          "priority_score": 1679.535
+        },
+        "tier": "TOP",
+        "ranking_explanation": [
+          "Ranked #1 of 2: priority=1679.5350 = impact(585.0) x confidence(0.64) x controllability(0.90) / effort(0.20)"
+        ],
+        "action_justified_by_evidence": false,
+        "generated_by": "DETERMINISTIC_TEMPLATE",
+        "source_driver_signal_id": "delivery_delay_on_time_delivery_rate_2017-11"
+      },
+      "alternatives": [
+        {
+          "recommendation_id": "rec_delivery_delay_expedite_high_risk_shipments",
+          "driver": "delivery_delay",
+          "driver_category": "FULFILLMENT_LOGISTICS",
+          "controllable_lever": "seller_fulfillment_speed",
+          "possible_action": "Expedite high-risk shipments for delivery_delay in on_time_delivery_rate (2017-11)",
+          "expected_impact": {
+            "metric": "on_time_delivery_rate",
+            "estimated_effect": 0.06,
+            "effect_unit": "pp",
+            "addressable_population": 12500,
+            "confidence": 0.78,
+            "calculated_impact": 585.0,
+            "revenue_impact": null,
+            "effect_source": "HISTORICAL_ESTIMATE",
+            "population_source": "HISTORICAL_ESTIMATE",
+            "confidence_basis": "driver_confidence=0.78 sourced from DriverSignal (source=MANUAL)",
+            "is_estimable": true
+          },
+          "owner": "Operations Manager",
+          "constraints": [
+            {
+              "constraint": "budget",
+              "status": "PASS",
+              "details": "budget available",
+              "severity": "LOW"
+            },
+            {
+              "constraint": "operational_capacity",
+              "status": "PASS",
+              "details": "operational capacity available",
+              "severity": "LOW"
+            }
+          ],
+          "controllability": 0.9,
+          "effort": 0.5,
+          "priority_score": 719.199,
+          "monitoring_kpis": [
+            {
+              "kpi": "on_time_delivery_rate",
+              "direction": "increase",
+              "expected_effect": 0.06,
+              "target": "increase by approximately 0.06 within 8_weeks",
+              "window": "8_weeks",
+              "warning_threshold": 0.03,
+              "stop_condition": "no measurable improvement in on_time_delivery_rate after 8_weeks"
+            },
+            {
+              "kpi": "avg_delivery_days",
+              "direction": "decrease",
+              "expected_effect": null,
+              "target": "unknown",
+              "window": "8_weeks",
+              "warning_threshold": null,
+              "stop_condition": "no measurable improvement in avg_delivery_days after 8_weeks"
+            }
+          ],
+          "rationale": "delivery_delay is associated with a movement in on_time_delivery_rate; seller_fulfillment_speed is a controllable lever the business can act on directly.",
+          "assumptions": [
+            "seller_fulfillment_speed genuinely affects on_time_delivery_rate as ontology-declared."
+          ],
+          "score_breakdown": {
+            "confidence_factors": {
+              "driver_confidence": 0.78,
+              "data_quality": 0.1,
+              "historical_support": 1.0,
+              "action_link_strength": 0.9
+            },
+            "confidence_weights": {
+              "driver_confidence": 0.35,
+              "data_quality": 0.25,
+              "historical_support": 0.25,
+              "action_link_strength": 0.15
+            },
+            "confidence_score": 0.6829999999999999,
+            "controllability_score": 0.9,
+            "controllability_basis": "controllability_tier='HIGH' (config/decision_scoring.yaml::controllability_tier_scores)",
+            "effort_score": 0.5,
+            "effort_basis": "effort_tier='MEDIUM' (config/decision_scoring.yaml::effort_tier_scores)",
+            "priority_formula": "impact * confidence * controllability / effort",
+            "priority_score": 719.199
+          },
+          "tier": "ALTERNATIVE",
+          "ranking_explanation": [
+            "Ranked #2 of 2: priority=719.1990 = impact(585.0) x confidence(0.68) x controllability(0.90) / effort(0.50)"
+          ],
+          "action_justified_by_evidence": false,
+          "generated_by": "DETERMINISTIC_TEMPLATE",
+          "source_driver_signal_id": "delivery_delay_on_time_delivery_rate_2017-11"
+        }
+      ],
+      "conditional": [
+        {
+          "recommendation_id": "rec_delivery_delay_tighten_seller_dispatch_sla",
+          "driver": "delivery_delay",
+          "driver_category": "FULFILLMENT_LOGISTICS",
+          "controllable_lever": "seller_fulfillment_speed",
+          "possible_action": "Tighten seller dispatch SLA enforcement for on_time_delivery_rate (2017-11)",
+          "expected_impact": {
+            "metric": "on_time_delivery_rate",
+            "estimated_effect": 0.06,
+            "effect_unit": "pp",
+            "addressable_population": 12500,
+            "confidence": 0.78,
+            "calculated_impact": 585.0,
+            "revenue_impact": null,
+            "effect_source": "HISTORICAL_ESTIMATE",
+            "population_source": "HISTORICAL_ESTIMATE",
+            "confidence_basis": "driver_confidence=0.78 sourced from DriverSignal (source=MANUAL)",
+            "is_estimable": true
+          },
+          "owner": "Operations Manager",
+          "constraints": [
+            {
+              "constraint": "operational_capacity",
+              "status": "PASS",
+              "details": "operational capacity available",
+              "severity": "LOW"
+            },
+            {
+              "constraint": "decision_rights",
+              "status": "WARNING",
+              "details": "authorized owner roles unknown -- not supplied",
+              "severity": "MEDIUM"
+            }
+          ],
+          "controllability": 0.9,
+          "effort": 0.5,
+          "priority_score": 719.199,
+          "monitoring_kpis": [
+            {
+              "kpi": "on_time_delivery_rate",
+              "direction": "increase",
+              "expected_effect": 0.06,
+              "target": "increase by approximately 0.06 within 8_weeks",
+              "window": "8_weeks",
+              "warning_threshold": 0.03,
+              "stop_condition": "no measurable improvement in on_time_delivery_rate after 8_weeks"
+            },
+            {
+              "kpi": "avg_delivery_days",
+              "direction": "decrease",
+              "expected_effect": null,
+              "target": "unknown",
+              "window": "8_weeks",
+              "warning_threshold": null,
+              "stop_condition": "no measurable improvement in avg_delivery_days after 8_weeks"
+            }
+          ],
+          "rationale": "delivery_delay is associated with a movement in on_time_delivery_rate; seller_fulfillment_speed is a controllable lever the business can act on directly.",
+          "assumptions": [
+            "seller_fulfillment_speed genuinely affects on_time_delivery_rate as ontology-declared."
+          ],
+          "score_breakdown": {
+            "confidence_factors": {
+              "driver_confidence": 0.78,
+              "data_quality": 0.1,
+              "historical_support": 1.0,
+              "action_link_strength": 0.9
+            },
+            "confidence_weights": {
+              "driver_confidence": 0.35,
+              "data_quality": 0.25,
+              "historical_support": 0.25,
+              "action_link_strength": 0.15
+            },
+            "confidence_score": 0.6829999999999999,
+            "controllability_score": 0.9,
+            "controllability_basis": "controllability_tier='HIGH' (config/decision_scoring.yaml::controllability_tier_scores)",
+            "effort_score": 0.5,
+            "effort_basis": "effort_tier='MEDIUM' (config/decision_scoring.yaml::effort_tier_scores)",
+            "priority_formula": "impact * confidence * controllability / effort",
+            "priority_score": 719.199
+          },
+          "tier": "CONDITIONAL",
+          "ranking_explanation": [
+            "Constraint 'decision_rights' is WARNING: authorized owner roles unknown -- not supplied"
+          ],
+          "action_justified_by_evidence": false,
+          "generated_by": "DETERMINISTIC_TEMPLATE",
+          "source_driver_signal_id": "delivery_delay_on_time_delivery_rate_2017-11"
+        },
+        {
+          "recommendation_id": "rec_delivery_delay_move_inventory_to_regional_warehouses",
+          "driver": "delivery_delay",
+          "driver_category": "FULFILLMENT_LOGISTICS",
+          "controllable_lever": "inventory_positioning",
+          "possible_action": "Move inventory to regional warehouses closer to on_time_delivery_rate (2017-11)",
+          "expected_impact": {
+            "metric": "on_time_delivery_rate",
+            "estimated_effect": 0.06,
+            "effect_unit": "pp",
+            "addressable_population": 12500,
+            "confidence": 0.78,
+            "calculated_impact": 585.0,
+            "revenue_impact": null,
+            "effect_source": "HISTORICAL_ESTIMATE",
+            "population_source": "HISTORICAL_ESTIMATE",
+            "confidence_basis": "driver_confidence=0.78 sourced from DriverSignal (source=MANUAL)",
+            "is_estimable": true
+          },
+          "owner": "Supply Chain Manager",
+          "constraints": [
+            {
+              "constraint": "budget",
+              "status": "PASS",
+              "details": "budget available",
+              "severity": "LOW"
+            },
+            {
+              "constraint": "inventory",
+              "status": "WARNING",
+              "details": "inventory availability unknown -- not supplied",
+              "severity": "MEDIUM"
+            },
+            {
+              "constraint": "geography",
+              "status": "WARNING",
+              "details": "geography coverage unknown -- not supplied",
+              "severity": "MEDIUM"
+            }
+          ],
+          "controllability": 0.55,
+          "effort": 0.85,
+          "priority_score": 241.50176470588238,
+          "monitoring_kpis": [
+            {
+              "kpi": "on_time_delivery_rate",
+              "direction": "increase",
+              "expected_effect": 0.06,
+              "target": "increase by approximately 0.06 within 8_weeks",
+              "window": "8_weeks",
+              "warning_threshold": 0.03,
+              "stop_condition": "no measurable improvement in on_time_delivery_rate after 8_weeks"
+            },
+            {
+              "kpi": "avg_delivery_days",
+              "direction": "decrease",
+              "expected_effect": null,
+              "target": "unknown",
+              "window": "8_weeks",
+              "warning_threshold": null,
+              "stop_condition": "no measurable improvement in avg_delivery_days after 8_weeks"
+            }
+          ],
+          "rationale": "delivery_delay is associated with a movement in on_time_delivery_rate; inventory_positioning is a controllable lever the business can act on directly.",
+          "assumptions": [
+            "inventory_positioning genuinely affects on_time_delivery_rate as ontology-declared."
+          ],
+          "score_breakdown": {
+            "confidence_factors": {
+              "driver_confidence": 0.78,
+              "data_quality": 0.1,
+              "historical_support": 1.0,
+              "action_link_strength": 0.6
+            },
+            "confidence_weights": {
+              "driver_confidence": 0.35,
+              "data_quality": 0.25,
+              "historical_support": 0.25,
+              "action_link_strength": 0.15
+            },
+            "confidence_score": 0.638,
+            "controllability_score": 0.55,
+            "controllability_basis": "controllability_tier='MEDIUM' (config/decision_scoring.yaml::controllability_tier_scores)",
+            "effort_score": 0.85,
+            "effort_basis": "effort_tier='HIGH' (config/decision_scoring.yaml::effort_tier_scores)",
+            "priority_formula": "impact * confidence * controllability / effort",
+            "priority_score": 241.50176470588238
+          },
+          "tier": "CONDITIONAL",
+          "ranking_explanation": [
+            "Constraint 'inventory' is WARNING: inventory availability unknown -- not supplied",
+            "Constraint 'geography' is WARNING: geography coverage unknown -- not supplied"
+          ],
+          "action_justified_by_evidence": false,
+          "generated_by": "DETERMINISTIC_TEMPLATE",
+          "source_driver_signal_id": "delivery_delay_on_time_delivery_rate_2017-11"
+        },
+        {
+          "recommendation_id": "rec_delivery_delay_reroute_to_faster_carrier",
+          "driver": "delivery_delay",
+          "driver_category": "FULFILLMENT_LOGISTICS",
+          "controllable_lever": "carrier_selection",
+          "possible_action": "Shift shipments in on_time_delivery_rate (2017-11) to a faster carrier option",
+          "expected_impact": {
+            "metric": "on_time_delivery_rate",
+            "estimated_effect": 0.06,
+            "effect_unit": "pp",
+            "addressable_population": 12500,
+            "confidence": 0.78,
+            "calculated_impact": 585.0,
+            "revenue_impact": null,
+            "effect_source": "HISTORICAL_ESTIMATE",
+            "population_source": "HISTORICAL_ESTIMATE",
+            "confidence_basis": "driver_confidence=0.78 sourced from DriverSignal (source=MANUAL)",
+            "is_estimable": true
+          },
+          "owner": "Supply Chain Manager",
+          "constraints": [
+            {
+              "constraint": "budget",
+              "status": "PASS",
+              "details": "budget available",
+              "severity": "LOW"
+            },
+            {
+              "constraint": "geography",
+              "status": "WARNING",
+              "details": "geography coverage unknown -- not supplied",
+              "severity": "MEDIUM"
+            }
+          ],
+          "controllability": 0.55,
+          "effort": 0.85,
+          "priority_score": 241.50176470588238,
+          "monitoring_kpis": [
+            {
+              "kpi": "on_time_delivery_rate",
+              "direction": "increase",
+              "expected_effect": 0.06,
+              "target": "increase by approximately 0.06 within 8_weeks",
+              "window": "8_weeks",
+              "warning_threshold": 0.03,
+              "stop_condition": "no measurable improvement in on_time_delivery_rate after 8_weeks"
+            },
+            {
+              "kpi": "avg_delivery_days",
+              "direction": "decrease",
+              "expected_effect": null,
+              "target": "unknown",
+              "window": "8_weeks",
+              "warning_threshold": null,
+              "stop_condition": "no measurable improvement in avg_delivery_days after 8_weeks"
+            },
+            {
+              "kpi": "freight_ratio",
+              "direction": "decrease",
+              "expected_effect": null,
+              "target": "unknown",
+              "window": "8_weeks",
+              "warning_threshold": null,
+              "stop_condition": "no measurable improvement in freight_ratio after 8_weeks"
+            }
+          ],
+          "rationale": "delivery_delay is associated with a movement in on_time_delivery_rate; carrier_selection is a controllable lever the business can act on directly.",
+          "assumptions": [
+            "carrier_selection genuinely affects on_time_delivery_rate as ontology-declared."
+          ],
+          "score_breakdown": {
+            "confidence_factors": {
+              "driver_confidence": 0.78,
+              "data_quality": 0.1,
+              "historical_support": 1.0,
+              "action_link_strength": 0.6
+            },
+            "confidence_weights": {
+              "driver_confidence": 0.35,
+              "data_quality": 0.25,
+              "historical_support": 0.25,
+              "action_link_strength": 0.15
+            },
+            "confidence_score": 0.638,
+            "controllability_score": 0.55,
+            "controllability_basis": "controllability_tier='MEDIUM' (config/decision_scoring.yaml::controllability_tier_scores)",
+            "effort_score": 0.85,
+            "effort_basis": "effort_tier='HIGH' (config/decision_scoring.yaml::effort_tier_scores)",
+            "priority_formula": "impact * confidence * controllability / effort",
+            "priority_score": 241.50176470588238
+          },
+          "tier": "CONDITIONAL",
+          "ranking_explanation": [
+            "Constraint 'geography' is WARNING: geography coverage unknown -- not supplied"
+          ],
+          "action_justified_by_evidence": false,
+          "generated_by": "DETERMINISTIC_TEMPLATE",
+          "source_driver_signal_id": "delivery_delay_on_time_delivery_rate_2017-11"
+        }
+      ],
+      "blocked": [],
+      "all_candidates_evaluated": 5,
+      "pipeline_trace": [
+        "generated 5 candidate(s) for driver=delivery_delay",
+        "ranked 2 executable, 3 conditional, 0 blocked"
+      ]
+    },
+    "aov_decline": {
+      "request_id": "decision_aov_decline_aov_2017-11",
+      "driver_signal": {
+        "driver": "aov_decline",
+        "driver_category": "PRICING_PRODUCT_MIX",
+        "kpi_id": "aov",
+        "period": "2017-11",
+        "observed_change_pct": -0.05,
+        "observed_change_absolute": null,
+        "addressable_population": 85000,
+        "addressable_population_source": "HISTORICAL_ESTIMATE",
+        "historical_estimated_effect": 12.5,
+        "historical_effect_source": "HISTORICAL_ESTIMATE",
+        "driver_confidence": 0.72,
+        "causal_claim_allowed": null,
+        "causal_result_id": null,
+        "source": "MANUAL",
+        "business_context": {
+          "budget_available": true,
+          "inventory_units_available": 5000,
+          "authorized_owner_roles": [
+            "Pricing Manager",
+            "Commercial Manager",
+            "Product Manager"
+          ]
+        }
+      },
+      "top_recommendation": {
+        "recommendation_id": "rec_aov_decline_adjust_pricing_on_selected_skus",
+        "driver": "aov_decline",
+        "driver_category": "PRICING_PRODUCT_MIX",
+        "controllable_lever": "pricing_strategy",
+        "possible_action": "Adjust pricing on selected SKUs within aov (2017-11)",
+        "expected_impact": {
+          "metric": "aov",
+          "estimated_effect": 12.5,
+          "effect_unit": "currency",
+          "addressable_population": 85000,
+          "confidence": 0.72,
+          "calculated_impact": 765000.0,
+          "revenue_impact": 765000.0,
+          "effect_source": "HISTORICAL_ESTIMATE",
+          "population_source": "HISTORICAL_ESTIMATE",
+          "confidence_basis": "driver_confidence=0.72 sourced from DriverSignal (source=MANUAL)",
+          "is_estimable": true
+        },
+        "owner": "Pricing Manager",
+        "constraints": [
+          {
+            "constraint": "budget",
+            "status": "PASS",
+            "details": "budget available",
+            "severity": "LOW"
+          },
+          {
+            "constraint": "decision_rights",
+            "status": "PASS",
+            "details": "owner 'Pricing Manager' is authorized",
+            "severity": "LOW"
+          }
+        ],
+        "controllability": 0.9,
+        "effort": 0.2,
+        "priority_score": 2278935.0,
+        "monitoring_kpis": [
+          {
+            "kpi": "aov",
+            "direction": "increase",
+            "expected_effect": 12.5,
+            "target": "increase by approximately 12.5 within 8_weeks",
+            "window": "8_weeks",
+            "warning_threshold": 6.25,
+            "stop_condition": "no measurable improvement in aov after 8_weeks"
+          },
+          {
+            "kpi": "revenue",
+            "direction": "increase",
+            "expected_effect": null,
+            "target": "unknown",
+            "window": "8_weeks",
+            "warning_threshold": null,
+            "stop_condition": "no measurable improvement in revenue after 8_weeks"
+          }
+        ],
+        "rationale": "aov_decline is associated with a movement in aov; pricing_strategy is a controllable lever the business can act on directly.",
+        "assumptions": [
+          "pricing_strategy genuinely affects aov as ontology-declared."
+        ],
+        "score_breakdown": {
+          "confidence_factors": {
+            "driver_confidence": 0.72,
+            "data_quality": 0.1,
+            "historical_support": 1.0,
+            "action_link_strength": 0.9
+          },
+          "confidence_weights": {
+            "driver_confidence": 0.35,
+            "data_quality": 0.25,
+            "historical_support": 0.25,
+            "action_link_strength": 0.15
+          },
+          "confidence_score": 0.662,
+          "controllability_score": 0.9,
+          "controllability_basis": "controllability_tier='HIGH' (config/decision_scoring.yaml::controllability_tier_scores)",
+          "effort_score": 0.2,
+          "effort_basis": "effort_tier='LOW' (config/decision_scoring.yaml::effort_tier_scores)",
+          "priority_formula": "impact * confidence * controllability / effort",
+          "priority_score": 2278935.0
+        },
+        "tier": "TOP",
+        "ranking_explanation": [
+          "Ranked #1 of 4: priority=2278935.0000 = impact(765000.0) x confidence(0.66) x controllability(0.90) / effort(0.20)"
+        ],
+        "action_justified_by_evidence": false,
+        "generated_by": "DETERMINISTIC_TEMPLATE",
+        "source_driver_signal_id": "aov_decline_aov_2017-11"
+      },
+      "alternatives": [
+        {
+          "recommendation_id": "rec_aov_decline_introduce_bundle_pricing",
+          "driver": "aov_decline",
+          "driver_category": "PRICING_PRODUCT_MIX",
+          "controllable_lever": "pricing_strategy",
+          "possible_action": "Introduce bundle pricing for aov (2017-11) to lift AOV",
+          "expected_impact": {
+            "metric": "aov",
+            "estimated_effect": 12.5,
+            "effect_unit": "currency",
+            "addressable_population": 85000,
+            "confidence": 0.72,
+            "calculated_impact": 765000.0,
+            "revenue_impact": 765000.0,
+            "effect_source": "HISTORICAL_ESTIMATE",
+            "population_source": "HISTORICAL_ESTIMATE",
+            "confidence_basis": "driver_confidence=0.72 sourced from DriverSignal (source=MANUAL)",
+            "is_estimable": true
+          },
+          "owner": "Pricing Manager",
+          "constraints": [
+            {
+              "constraint": "budget",
+              "status": "PASS",
+              "details": "budget available",
+              "severity": "LOW"
+            },
+            {
+              "constraint": "inventory",
+              "status": "PASS",
+              "details": "sufficient inventory available",
+              "severity": "LOW"
+            },
+            {
+              "constraint": "decision_rights",
+              "status": "PASS",
+              "details": "owner 'Pricing Manager' is authorized",
+              "severity": "LOW"
+            }
+          ],
+          "controllability": 0.55,
+          "effort": 0.5,
+          "priority_score": 519205.50000000006,
+          "monitoring_kpis": [
+            {
+              "kpi": "aov",
+              "direction": "increase",
+              "expected_effect": 12.5,
+              "target": "increase by approximately 12.5 within 8_weeks",
+              "window": "8_weeks",
+              "warning_threshold": 6.25,
+              "stop_condition": "no measurable improvement in aov after 8_weeks"
+            },
+            {
+              "kpi": "revenue",
+              "direction": "increase",
+              "expected_effect": null,
+              "target": "unknown",
+              "window": "8_weeks",
+              "warning_threshold": null,
+              "stop_condition": "no measurable improvement in revenue after 8_weeks"
+            }
+          ],
+          "rationale": "aov_decline is associated with a movement in aov; pricing_strategy is a controllable lever the business can act on directly.",
+          "assumptions": [
+            "pricing_strategy genuinely affects aov as ontology-declared."
+          ],
+          "score_breakdown": {
+            "confidence_factors": {
+              "driver_confidence": 0.72,
+              "data_quality": 0.1,
+              "historical_support": 1.0,
+              "action_link_strength": 0.6
+            },
+            "confidence_weights": {
+              "driver_confidence": 0.35,
+              "data_quality": 0.25,
+              "historical_support": 0.25,
+              "action_link_strength": 0.15
+            },
+            "confidence_score": 0.617,
+            "controllability_score": 0.55,
+            "controllability_basis": "controllability_tier='MEDIUM' (config/decision_scoring.yaml::controllability_tier_scores)",
+            "effort_score": 0.5,
+            "effort_basis": "effort_tier='MEDIUM' (config/decision_scoring.yaml::effort_tier_scores)",
+            "priority_formula": "impact * confidence * controllability / effort",
+            "priority_score": 519205.50000000006
+          },
+          "tier": "ALTERNATIVE",
+          "ranking_explanation": [
+            "Ranked #2 of 4: priority=519205.5000 = impact(765000.0) x confidence(0.62) x controllability(0.55) / effort(0.50)"
+          ],
+          "action_justified_by_evidence": false,
+          "generated_by": "DETERMINISTIC_TEMPLATE",
+          "source_driver_signal_id": "aov_decline_aov_2017-11"
+        },
+        {
+          "recommendation_id": "rec_aov_decline_promote_cross_sell_products",
+          "driver": "aov_decline",
+          "driver_category": "PRICING_PRODUCT_MIX",
+          "controllable_lever": "cross_selling",
+          "possible_action": "Promote cross-sell products alongside aov (2017-11)",
+          "expected_impact": {
+            "metric": "aov",
+            "estimated_effect": 12.5,
+            "effect_unit": "currency",
+            "addressable_population": 85000,
+            "confidence": 0.72,
+            "calculated_impact": 765000.0,
+            "revenue_impact": 765000.0,
+            "effect_source": "HISTORICAL_ESTIMATE",
+            "population_source": "HISTORICAL_ESTIMATE",
+            "confidence_basis": "driver_confidence=0.72 sourced from DriverSignal (source=MANUAL)",
+            "is_estimable": true
+          },
+          "owner": "Commercial Manager",
+          "constraints": [
+            {
+              "constraint": "inventory",
+              "status": "PASS",
+              "details": "sufficient inventory available",
+              "severity": "LOW"
+            }
+          ],
+          "controllability": 0.55,
+          "effort": 0.5,
+          "priority_score": 519205.50000000006,
+          "monitoring_kpis": [
+            {
+              "kpi": "aov",
+              "direction": "increase",
+              "expected_effect": 12.5,
+              "target": "increase by approximately 12.5 within 8_weeks",
+              "window": "8_weeks",
+              "warning_threshold": 6.25,
+              "stop_condition": "no measurable improvement in aov after 8_weeks"
+            },
+            {
+              "kpi": "revenue",
+              "direction": "increase",
+              "expected_effect": null,
+              "target": "unknown",
+              "window": "8_weeks",
+              "warning_threshold": null,
+              "stop_condition": "no measurable improvement in revenue after 8_weeks"
+            }
+          ],
+          "rationale": "aov_decline is associated with a movement in aov; cross_selling is a controllable lever the business can act on directly.",
+          "assumptions": [
+            "cross_selling genuinely affects aov as ontology-declared."
+          ],
+          "score_breakdown": {
+            "confidence_factors": {
+              "driver_confidence": 0.72,
+              "data_quality": 0.1,
+              "historical_support": 1.0,
+              "action_link_strength": 0.6
+            },
+            "confidence_weights": {
+              "driver_confidence": 0.35,
+              "data_quality": 0.25,
+              "historical_support": 0.25,
+              "action_link_strength": 0.15
+            },
+            "confidence_score": 0.617,
+            "controllability_score": 0.55,
+            "controllability_basis": "controllability_tier='MEDIUM' (config/decision_scoring.yaml::controllability_tier_scores)",
+            "effort_score": 0.5,
+            "effort_basis": "effort_tier='MEDIUM' (config/decision_scoring.yaml::effort_tier_scores)",
+            "priority_formula": "impact * confidence * controllability / effort",
+            "priority_score": 519205.50000000006
+          },
+          "tier": "ALTERNATIVE",
+          "ranking_explanation": [
+            "Ranked #3 of 4: priority=519205.5000 = impact(765000.0) x confidence(0.62) x controllability(0.55) / effort(0.50)"
+          ],
+          "action_justified_by_evidence": false,
+          "generated_by": "DETERMINISTIC_TEMPLATE",
+          "source_driver_signal_id": "aov_decline_aov_2017-11"
+        },
+        {
+          "recommendation_id": "rec_aov_decline_promote_higher_margin_categories",
+          "driver": "aov_decline",
+          "driver_category": "PRICING_PRODUCT_MIX",
+          "controllable_lever": "product_mix_curation",
+          "possible_action": "Promote higher-margin categories within aov (2017-11)",
+          "expected_impact": {
+            "metric": "aov",
+            "estimated_effect": 12.5,
+            "effect_unit": "currency",
+            "addressable_population": 85000,
+            "confidence": 0.72,
+            "calculated_impact": 765000.0,
+            "revenue_impact": 765000.0,
+            "effect_source": "HISTORICAL_ESTIMATE",
+            "population_source": "HISTORICAL_ESTIMATE",
+            "confidence_basis": "driver_confidence=0.72 sourced from DriverSignal (source=MANUAL)",
+            "is_estimable": true
+          },
+          "owner": "Product Manager",
+          "constraints": [
+            {
+              "constraint": "inventory",
+              "status": "PASS",
+              "details": "sufficient inventory available",
+              "severity": "LOW"
+            },
+            {
+              "constraint": "decision_rights",
+              "status": "PASS",
+              "details": "owner 'Product Manager' is authorized",
+              "severity": "LOW"
+            }
+          ],
+          "controllability": 0.55,
+          "effort": 0.5,
+          "priority_score": 519205.50000000006,
+          "monitoring_kpis": [
+            {
+              "kpi": "aov",
+              "direction": "increase",
+              "expected_effect": 12.5,
+              "target": "increase by approximately 12.5 within 8_weeks",
+              "window": "8_weeks",
+              "warning_threshold": 6.25,
+              "stop_condition": "no measurable improvement in aov after 8_weeks"
+            },
+            {
+              "kpi": "revenue",
+              "direction": "increase",
+              "expected_effect": null,
+              "target": "unknown",
+              "window": "8_weeks",
+              "warning_threshold": null,
+              "stop_condition": "no measurable improvement in revenue after 8_weeks"
+            }
+          ],
+          "rationale": "aov_decline is associated with a movement in aov; product_mix_curation is a controllable lever the business can act on directly.",
+          "assumptions": [
+            "product_mix_curation genuinely affects aov as ontology-declared."
+          ],
+          "score_breakdown": {
+            "confidence_factors": {
+              "driver_confidence": 0.72,
+              "data_quality": 0.1,
+              "historical_support": 1.0,
+              "action_link_strength": 0.6
+            },
+            "confidence_weights": {
+              "driver_confidence": 0.35,
+              "data_quality": 0.25,
+              "historical_support": 0.25,
+              "action_link_strength": 0.15
+            },
+            "confidence_score": 0.617,
+            "controllability_score": 0.55,
+            "controllability_basis": "controllability_tier='MEDIUM' (config/decision_scoring.yaml::controllability_tier_scores)",
+            "effort_score": 0.5,
+            "effort_basis": "effort_tier='MEDIUM' (config/decision_scoring.yaml::effort_tier_scores)",
+            "priority_formula": "impact * confidence * controllability / effort",
+            "priority_score": 519205.50000000006
+          },
+          "tier": "ALTERNATIVE",
+          "ranking_explanation": [
+            "Ranked #4 of 4: priority=519205.5000 = impact(765000.0) x confidence(0.62) x controllability(0.55) / effort(0.50)"
+          ],
+          "action_justified_by_evidence": false,
+          "generated_by": "DETERMINISTIC_TEMPLATE",
+          "source_driver_signal_id": "aov_decline_aov_2017-11"
+        }
+      ],
+      "conditional": [],
+      "blocked": [],
+      "all_candidates_evaluated": 4,
+      "pipeline_trace": [
+        "generated 4 candidate(s) for driver=aov_decline",
+        "ranked 4 executable, 0 conditional, 0 blocked"
+      ]
+    }
+  },
+  "narratives": {
+    "delivery_delay": "Driver: delivery_delay (FULFILLMENT_LOGISTICS) observed in on_time_delivery_rate for 2017-11.\nTop recommendation: Prioritize high-value customer shipments for on_time_delivery_rate (2017-11)\nControllable lever: shipment_prioritization\nExpected impact: approximately 0.06 pp in on_time_delivery_rate, adjusted for 78% confidence\nOwner: Operations Manager\nConstraints: operational_capacity (pass): operational capacity available\nPriority score: 1679.5350\nMonitor: on_time_delivery_rate\n1 alternative action(s) were also evaluated and ranked below this one.\n3 action(s) are conditionally viable pending a flagged constraint.",
+    "aov_decline": "Driver: aov_decline (PRICING_PRODUCT_MIX) observed in aov for 2017-11.\nTop recommendation: Adjust pricing on selected SKUs within aov (2017-11)\nControllable lever: pricing_strategy\nExpected impact: approximately 12.5 currency in aov, adjusted for 72% confidence\nOwner: Pricing Manager\nConstraints: budget (pass): budget available; decision_rights (pass): owner 'Pricing Manager' is authorized\nPriority score: 2278935.0000\nMonitor: aov, revenue\n3 alternative action(s) were also evaluated and ranked below this one."
+  },
+  "tests": {
+    "returncode": 0,
+    "n_passed": 113,
+    "n_failed": 0,
+    "failed_tests": [],
+    "all_passed": true
+  }
+}

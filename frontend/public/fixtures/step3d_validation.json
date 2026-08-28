@@ -1,0 +1,1793 @@
+{
+  "step": "3D",
+  "scope": "Driver decomposition engine (deterministic PVM + segment contribution) over the Step 3B canonical KPI computation. No causal inference, RAG, LLM, agents, or recommendations exist in this module.",
+  "pvm_methodology": {
+    "formula": "Delta Revenue = Volume Effect + Price Effect + Mix Effect",
+    "volume_effect": "(Qty_new_total - Qty_old_total) * overall_avg_price_old",
+    "price_effect": "sum_over_category(Qty_new_cat * (Price_new_cat - Price_old_cat))",
+    "mix_effect": "Delta Revenue - Volume Effect - Price Effect (residual, exact by construction)",
+    "grain": "product_category (dim_product.category_name_en, NULL normalized to 'uncategorized')",
+    "reference": "docs/INVESTIGATION_SCENARIOS.md \u00a72; re-verified against data/processed/*.parquet before this module was written."
+  },
+  "revenue_checks": {
+    "october": {
+      "computed": 664219.43,
+      "required": 664219.43,
+      "matches": true
+    },
+    "november": {
+      "computed": 1010271.37,
+      "required": 1010271.37,
+      "matches": true
+    },
+    "change": {
+      "computed": 346051.94,
+      "required": 346051.94,
+      "matches": true
+    }
+  },
+  "pvm_checks": {
+    "volume": {
+      "computed": 417227.65,
+      "required": 417227.65,
+      "matches": true
+    },
+    "price": {
+      "computed": 4674.63,
+      "required": 4674.63,
+      "matches": true
+    },
+    "mix": {
+      "computed": -75850.34,
+      "required": -75850.34,
+      "matches": true
+    }
+  },
+  "pvm_checksum": {
+    "sum_of_effects": 346051.94,
+    "actual_change": 346051.94,
+    "error": 0.0,
+    "tolerance": 0.01,
+    "reconciled": true
+  },
+  "all_required_values_match": true,
+  "segment_reconciliation": {
+    "product_category": {
+      "sum_of_contributions": 346051.94,
+      "actual_change": 346051.9400000002,
+      "error": -1.7462298274040222e-10,
+      "tolerance": 0.01,
+      "reconciled": true
+    },
+    "seller": {
+      "sum_of_contributions": 346051.94,
+      "actual_change": 346051.9400000002,
+      "error": -1.7462298274040222e-10,
+      "tolerance": 0.01,
+      "reconciled": true
+    },
+    "customer_state": {
+      "sum_of_contributions": 346051.94,
+      "actual_change": 346051.9400000002,
+      "error": -1.7462298274040222e-10,
+      "tolerance": 0.01,
+      "reconciled": true
+    },
+    "seller_state": {
+      "sum_of_contributions": 346051.94000000006,
+      "actual_change": 346051.9400000002,
+      "error": -1.1641532182693481e-10,
+      "tolerance": 0.01,
+      "reconciled": true
+    }
+  },
+  "dimension_ranking": [
+    {
+      "dimension": "seller_state",
+      "max_absolute_contribution": 199072.00000000006,
+      "top_segment_value": "SP",
+      "total_absolute_contribution": 397517.8500000001,
+      "n_segment_values": 10
+    },
+    {
+      "dimension": "customer_state",
+      "max_absolute_contribution": 132346.39,
+      "top_segment_value": "SP",
+      "total_absolute_contribution": 332342.69,
+      "n_segment_values": 10
+    },
+    {
+      "dimension": "product_category",
+      "max_absolute_contribution": 43214.54000000001,
+      "top_segment_value": "bed_bath_table",
+      "total_absolute_contribution": 288103.16000000003,
+      "n_segment_values": 10
+    },
+    {
+      "dimension": "seller",
+      "max_absolute_contribution": 21368.04,
+      "top_segment_value": "53243585a1d6dc2643021fd1853d8905",
+      "total_absolute_contribution": 106363.85,
+      "n_segment_values": 10
+    }
+  ],
+  "november_investigation_context": {
+    "revenue_pct_change": 52.09903901787399,
+    "orders": {
+      "kpi_id": "orders",
+      "previous_value": 4631.0,
+      "current_value": 7544.0,
+      "absolute_change": 2913.0,
+      "percentage_change": 62.90218095443748,
+      "warnings": []
+    },
+    "aov": {
+      "kpi_id": "aov",
+      "previous_value": 145.40705560420315,
+      "current_value": 135.58869547711714,
+      "absolute_change": -9.81836012708601,
+      "percentage_change": -6.752327173044138,
+      "warnings": []
+    },
+    "freight_revenue": {
+      "kpi_id": "freight_revenue",
+      "previous_value": 105092.94,
+      "current_value": 168872.4,
+      "absolute_change": 63779.45999999999,
+      "percentage_change": 60.68862475443164,
+      "warnings": []
+    },
+    "avg_delivery_days": {
+      "kpi_id": "avg_delivery_days",
+      "previous_value": 11.856699698526128,
+      "current_value": 15.161131699241777,
+      "absolute_change": 3.3044320007156482,
+      "percentage_change": 27.86974524729181,
+      "warnings": [
+        "256 rows excluded due to missing/invalid delivery timestamps.",
+        "153 rows excluded due to missing/invalid delivery timestamps."
+      ]
+    },
+    "avg_review_score": {
+      "kpi_id": "avg_review_score",
+      "previous_value": 4.123448726322665,
+      "current_value": 3.9106951871657754,
+      "absolute_change": -0.21275353915688955,
+      "percentage_change": -5.159601907954981,
+      "warnings": []
+    },
+    "pvm": {
+      "volume": 417227.65,
+      "price": 4674.63,
+      "mix": -75850.34
+    },
+    "category_contribution_top10": [
+      {
+        "segment_value": "bed_bath_table",
+        "previous_value": 46198.0,
+        "current_value": 89412.54,
+        "absolute_change": 43214.54,
+        "percentage_change": 93.54201480583578,
+        "share_of_total_movement_pct": 12.49,
+        "rank": 1,
+        "sample_size": 975,
+        "history_periods": 11,
+        "confidence": "HIGH"
+      },
+      {
+        "segment_value": "health_beauty",
+        "previous_value": 41915.72,
+        "current_value": 79120.4,
+        "absolute_change": 37204.68,
+        "percentage_change": 88.7606845355394,
+        "share_of_total_movement_pct": 10.75,
+        "rank": 2,
+        "sample_size": 584,
+        "history_periods": 12,
+        "confidence": "HIGH"
+      },
+      {
+        "segment_value": "furniture_decor",
+        "previous_value": 30227.51,
+        "current_value": 63223.97,
+        "absolute_change": 32996.46,
+        "percentage_change": 109.16036418481048,
+        "share_of_total_movement_pct": 9.54,
+        "rank": 3,
+        "sample_size": 783,
+        "history_periods": 12,
+        "confidence": "HIGH"
+      },
+      {
+        "segment_value": "watches_gifts",
+        "previous_value": 65959.53,
+        "current_value": 97724.57,
+        "absolute_change": 31765.04,
+        "percentage_change": 48.15837832683163,
+        "share_of_total_movement_pct": 9.18,
+        "rank": 4,
+        "sample_size": 469,
+        "history_periods": 11,
+        "confidence": "HIGH"
+      },
+      {
+        "segment_value": "computers",
+        "previous_value": 40393.92,
+        "current_value": 9768.0,
+        "absolute_change": -30625.92,
+        "percentage_change": -75.81814292844071,
+        "share_of_total_movement_pct": -8.85,
+        "rank": 5,
+        "sample_size": 7,
+        "history_periods": 5,
+        "confidence": "MEDIUM"
+      },
+      {
+        "segment_value": "toys",
+        "previous_value": 34633.01,
+        "current_value": 64320.89,
+        "absolute_change": 29687.88,
+        "percentage_change": 85.72133926563124,
+        "share_of_total_movement_pct": 8.58,
+        "rank": 6,
+        "sample_size": 495,
+        "history_periods": 11,
+        "confidence": "HIGH"
+      },
+      {
+        "segment_value": "computers_accessories",
+        "previous_value": 44022.09,
+        "current_value": 72656.0,
+        "absolute_change": 28633.91,
+        "percentage_change": 65.04441292996313,
+        "share_of_total_movement_pct": 8.27,
+        "rank": 7,
+        "sample_size": 532,
+        "history_periods": 11,
+        "confidence": "HIGH"
+      },
+      {
+        "segment_value": "garden_tools",
+        "previous_value": 25978.74,
+        "current_value": 45972.18,
+        "absolute_change": 19993.44,
+        "percentage_change": 76.9607763886932,
+        "share_of_total_movement_pct": 5.78,
+        "rank": 8,
+        "sample_size": 550,
+        "history_periods": 11,
+        "confidence": "HIGH"
+      },
+      {
+        "segment_value": "housewares",
+        "previous_value": 15996.63,
+        "current_value": 34855.32,
+        "absolute_change": 18858.69,
+        "percentage_change": 117.89164342739689,
+        "share_of_total_movement_pct": 5.45,
+        "rank": 9,
+        "sample_size": 423,
+        "history_periods": 11,
+        "confidence": "HIGH"
+      },
+      {
+        "segment_value": "sports_leisure",
+        "previous_value": 49751.45,
+        "current_value": 64874.05,
+        "absolute_change": 15122.6,
+        "percentage_change": 30.396300007336485,
+        "share_of_total_movement_pct": 4.37,
+        "rank": 10,
+        "sample_size": 612,
+        "history_periods": 11,
+        "confidence": "HIGH"
+      }
+    ],
+    "seller_contribution_top10": [
+      {
+        "segment_value": "53243585a1d6dc2643021fd1853d8905",
+        "previous_value": 41708.0,
+        "current_value": 20339.96,
+        "absolute_change": -21368.04,
+        "percentage_change": -51.23247338640069,
+        "share_of_total_movement_pct": -6.17,
+        "rank": 1,
+        "sample_size": 50,
+        "history_periods": 3,
+        "confidence": "MEDIUM"
+      },
+      {
+        "segment_value": "b94cc9f10ddc85e4ba73a6f7974e7101",
+        "previous_value": 0.0,
+        "current_value": 14047.7,
+        "absolute_change": 14047.7,
+        "percentage_change": null,
+        "share_of_total_movement_pct": 4.06,
+        "rank": 2,
+        "sample_size": 23,
+        "history_periods": null,
+        "confidence": "MEDIUM"
+      },
+      {
+        "segment_value": "2bf6a2c1e71bbd29a4ad64e6d3c3629f",
+        "previous_value": 0.0,
+        "current_value": 12149.8,
+        "absolute_change": 12149.8,
+        "percentage_change": null,
+        "share_of_total_movement_pct": 3.51,
+        "rank": 3,
+        "sample_size": 7,
+        "history_periods": null,
+        "confidence": "MEDIUM"
+      },
+      {
+        "segment_value": "8160255418d5aaa7dbdc9f4c64ebda44",
+        "previous_value": 1225.9,
+        "current_value": 11493.9,
+        "absolute_change": 10268.0,
+        "percentage_change": 837.5887103352638,
+        "share_of_total_movement_pct": 2.97,
+        "rank": 4,
+        "sample_size": 102,
+        "history_periods": 1,
+        "confidence": "MEDIUM"
+      },
+      {
+        "segment_value": "1f50f920176fa81dab994f9023523100",
+        "previous_value": 8925.1,
+        "current_value": 19130.39,
+        "absolute_change": 10205.29,
+        "percentage_change": 114.34370483243883,
+        "share_of_total_movement_pct": 2.95,
+        "rank": 5,
+        "sample_size": 358,
+        "history_periods": 7,
+        "confidence": "HIGH"
+      },
+      {
+        "segment_value": "4a3ca9315b744ce9f8e9374361493884",
+        "previous_value": 12495.95,
+        "current_value": 21162.45,
+        "absolute_change": 8666.5,
+        "percentage_change": 69.35447084855493,
+        "share_of_total_movement_pct": 2.5,
+        "rank": 6,
+        "sample_size": 205,
+        "history_periods": 10,
+        "confidence": "HIGH"
+      },
+      {
+        "segment_value": "b33e7c55446eabf8fe1a42d037ac7d6d",
+        "previous_value": 1711.89,
+        "current_value": 10244.47,
+        "absolute_change": 8532.58,
+        "percentage_change": 498.43038980308324,
+        "share_of_total_movement_pct": 2.47,
+        "rank": 7,
+        "sample_size": 47,
+        "history_periods": 1,
+        "confidence": "MEDIUM"
+      },
+      {
+        "segment_value": "620c87c171fb2a6dd6e8bb4dec959fc6",
+        "previous_value": 1928.8,
+        "current_value": 9299.3,
+        "absolute_change": 7370.5,
+        "percentage_change": 382.12878473662374,
+        "share_of_total_movement_pct": 2.13,
+        "rank": 8,
+        "sample_size": 67,
+        "history_periods": 11,
+        "confidence": "HIGH"
+      },
+      {
+        "segment_value": "1025f0e2d44d7041d6cf58b6550e0bfa",
+        "previous_value": 6325.6,
+        "current_value": 13434.04,
+        "absolute_change": 7108.44,
+        "percentage_change": 112.37574301252057,
+        "share_of_total_movement_pct": 2.05,
+        "rank": 9,
+        "sample_size": 179,
+        "history_periods": 4,
+        "confidence": "MEDIUM"
+      },
+      {
+        "segment_value": "5d378b73ab7dd6f0418d743e5dcb0bd1",
+        "previous_value": 9945.0,
+        "current_value": 3298.0,
+        "absolute_change": -6647.0,
+        "percentage_change": -66.83760683760683,
+        "share_of_total_movement_pct": -1.92,
+        "rank": 10,
+        "sample_size": 2,
+        "history_periods": 1,
+        "confidence": "LOW"
+      }
+    ],
+    "customer_state_contribution_top10": [
+      {
+        "segment_value": "SP",
+        "previous_value": 227905.5,
+        "current_value": 360251.89,
+        "absolute_change": 132346.39,
+        "percentage_change": 58.07073107055337,
+        "share_of_total_movement_pct": 38.24,
+        "rank": 1,
+        "sample_size": 3437,
+        "history_periods": 12,
+        "confidence": "HIGH"
+      },
+      {
+        "segment_value": "RJ",
+        "previous_value": 97252.86,
+        "current_value": 150539.39,
+        "absolute_change": 53286.53,
+        "percentage_change": 54.791735687773105,
+        "share_of_total_movement_pct": 15.4,
+        "rank": 2,
+        "sample_size": 1212,
+        "history_periods": 11,
+        "confidence": "HIGH"
+      },
+      {
+        "segment_value": "MG",
+        "previous_value": 82012.09,
+        "current_value": 134288.65,
+        "absolute_change": 52276.56,
+        "percentage_change": 63.74250430637727,
+        "share_of_total_movement_pct": 15.11,
+        "rank": 3,
+        "sample_size": 1089,
+        "history_periods": 11,
+        "confidence": "HIGH"
+      },
+      {
+        "segment_value": "RS",
+        "previous_value": 37571.11,
+        "current_value": 58699.88,
+        "absolute_change": 21128.77,
+        "percentage_change": 56.23674679827132,
+        "share_of_total_movement_pct": 6.11,
+        "rank": 4,
+        "sample_size": 482,
+        "history_periods": 12,
+        "confidence": "HIGH"
+      },
+      {
+        "segment_value": "SC",
+        "previous_value": 21022.55,
+        "current_value": 40312.9,
+        "absolute_change": 19290.35,
+        "percentage_change": 91.76027646503398,
+        "share_of_total_movement_pct": 5.57,
+        "rank": 5,
+        "sample_size": 354,
+        "history_periods": 11,
+        "confidence": "HIGH"
+      },
+      {
+        "segment_value": "DF",
+        "previous_value": 13093.39,
+        "current_value": 27759.84,
+        "absolute_change": 14666.45,
+        "percentage_change": 112.01415370656494,
+        "share_of_total_movement_pct": 4.24,
+        "rank": 6,
+        "sample_size": 182,
+        "history_periods": 11,
+        "confidence": "HIGH"
+      },
+      {
+        "segment_value": "ES",
+        "previous_value": 10380.69,
+        "current_value": 24302.25,
+        "absolute_change": 13921.56,
+        "percentage_change": 134.1101603072628,
+        "share_of_total_movement_pct": 4.02,
+        "rank": 7,
+        "sample_size": 195,
+        "history_periods": 11,
+        "confidence": "HIGH"
+      },
+      {
+        "segment_value": "PR",
+        "previous_value": 33400.66,
+        "current_value": 46853.49,
+        "absolute_change": 13452.83,
+        "percentage_change": 40.27713823619055,
+        "share_of_total_movement_pct": 3.89,
+        "rank": 8,
+        "sample_size": 446,
+        "history_periods": 12,
+        "confidence": "HIGH"
+      },
+      {
+        "segment_value": "CE",
+        "previous_value": 12399.11,
+        "current_value": 18655.44,
+        "absolute_change": 6256.33,
+        "percentage_change": 50.45789576832529,
+        "share_of_total_movement_pct": 1.81,
+        "rank": 9,
+        "sample_size": 123,
+        "history_periods": 11,
+        "confidence": "HIGH"
+      },
+      {
+        "segment_value": "PB",
+        "previous_value": 10284.31,
+        "current_value": 4567.39,
+        "absolute_change": -5716.92,
+        "percentage_change": -55.58875607600315,
+        "share_of_total_movement_pct": -1.65,
+        "rank": 10,
+        "sample_size": 30,
+        "history_periods": 11,
+        "confidence": "HIGH"
+      }
+    ],
+    "seller_state_contribution_top10": [
+      {
+        "segment_value": "SP",
+        "previous_value": 423229.92,
+        "current_value": 622301.92,
+        "absolute_change": 199072.0,
+        "percentage_change": 47.03637209770048,
+        "share_of_total_movement_pct": 57.53,
+        "rank": 1,
+        "sample_size": 6238,
+        "history_periods": 11,
+        "confidence": "HIGH"
+      },
+      {
+        "segment_value": "RJ",
+        "previous_value": 31309.01,
+        "current_value": 86336.87,
+        "absolute_change": 55027.86,
+        "percentage_change": 175.7572660393925,
+        "share_of_total_movement_pct": 15.9,
+        "rank": 2,
+        "sample_size": 424,
+        "history_periods": 11,
+        "confidence": "HIGH"
+      },
+      {
+        "segment_value": "PR",
+        "previous_value": 47685.34,
+        "current_value": 92972.46,
+        "absolute_change": 45287.12,
+        "percentage_change": 94.97073943480326,
+        "share_of_total_movement_pct": 13.09,
+        "rank": 3,
+        "sample_size": 625,
+        "history_periods": 13,
+        "confidence": "HIGH"
+      },
+      {
+        "segment_value": "SC",
+        "previous_value": 24231.5,
+        "current_value": 51303.02,
+        "absolute_change": 27071.52,
+        "percentage_change": 111.72036398902254,
+        "share_of_total_movement_pct": 7.82,
+        "rank": 4,
+        "sample_size": 297,
+        "history_periods": 11,
+        "confidence": "HIGH"
+      },
+      {
+        "segment_value": "MG",
+        "previous_value": 51383.61,
+        "current_value": 77508.56,
+        "absolute_change": 26124.95,
+        "percentage_change": 50.84296334959727,
+        "share_of_total_movement_pct": 7.55,
+        "rank": 5,
+        "sample_size": 682,
+        "history_periods": 12,
+        "confidence": "HIGH"
+      },
+      {
+        "segment_value": "BA",
+        "previous_value": 47924.84,
+        "current_value": 23131.08,
+        "absolute_change": -24793.76,
+        "percentage_change": -51.73467454455769,
+        "share_of_total_movement_pct": -7.16,
+        "rank": 6,
+        "sample_size": 64,
+        "history_periods": 11,
+        "confidence": "HIGH"
+      },
+      {
+        "segment_value": "RS",
+        "previous_value": 19600.66,
+        "current_value": 33411.69,
+        "absolute_change": 13811.03,
+        "percentage_change": 70.4620660732853,
+        "share_of_total_movement_pct": 3.99,
+        "rank": 7,
+        "sample_size": 152,
+        "history_periods": 11,
+        "confidence": "HIGH"
+      },
+      {
+        "segment_value": "PB",
+        "previous_value": 0.0,
+        "current_value": 2838.5,
+        "absolute_change": 2838.5,
+        "percentage_change": null,
+        "share_of_total_movement_pct": 0.82,
+        "rank": 8,
+        "sample_size": 3,
+        "history_periods": 6,
+        "confidence": "MEDIUM"
+      },
+      {
+        "segment_value": "DF",
+        "previous_value": 8743.35,
+        "current_value": 6921.82,
+        "absolute_change": -1821.53,
+        "percentage_change": -20.833319036753654,
+        "share_of_total_movement_pct": -0.53,
+        "rank": 9,
+        "sample_size": 76,
+        "history_periods": 11,
+        "confidence": "HIGH"
+      },
+      {
+        "segment_value": "PE",
+        "previous_value": 222.98,
+        "current_value": 1892.56,
+        "absolute_change": 1669.58,
+        "percentage_change": 748.7577361198314,
+        "share_of_total_movement_pct": 0.48,
+        "rank": 10,
+        "sample_size": 8,
+        "history_periods": 9,
+        "confidence": "MEDIUM"
+      }
+    ],
+    "dimension_ranking": [
+      {
+        "dimension": "seller_state",
+        "max_absolute_contribution": 199072.00000000006,
+        "top_segment_value": "SP",
+        "total_absolute_contribution": 397517.8500000001,
+        "n_segment_values": 10
+      },
+      {
+        "dimension": "customer_state",
+        "max_absolute_contribution": 132346.39,
+        "top_segment_value": "SP",
+        "total_absolute_contribution": 332342.69,
+        "n_segment_values": 10
+      },
+      {
+        "dimension": "product_category",
+        "max_absolute_contribution": 43214.54000000001,
+        "top_segment_value": "bed_bath_table",
+        "total_absolute_contribution": 288103.16000000003,
+        "n_segment_values": 10
+      },
+      {
+        "dimension": "seller",
+        "max_absolute_contribution": 21368.04,
+        "top_segment_value": "53243585a1d6dc2643021fd1853d8905",
+        "total_absolute_contribution": 106363.85,
+        "n_segment_values": 10
+      }
+    ],
+    "note": "Evidence package only -- no causal conclusion is drawn here or anywhere in this module. This is deterministic input for a future Agentic Investigation Engine, not built in Step 3D."
+  },
+  "contribution_tree_sample": {
+    "kpi": "revenue",
+    "movement": {
+      "absolute": 346051.94,
+      "percentage": 52.09903901787399
+    },
+    "drivers": [
+      {
+        "name": "volume",
+        "contribution": 417227.65
+      },
+      {
+        "name": "price",
+        "contribution": 4674.63
+      },
+      {
+        "name": "mix",
+        "contribution": -75850.34
+      }
+    ],
+    "segments": {
+      "product_category": [
+        {
+          "segment_value": "bed_bath_table",
+          "contribution": 43214.54000000001,
+          "rank": 1
+        },
+        {
+          "segment_value": "health_beauty",
+          "contribution": 37204.67999999999,
+          "rank": 2
+        },
+        {
+          "segment_value": "furniture_decor",
+          "contribution": 32996.46000000001,
+          "rank": 3
+        },
+        {
+          "segment_value": "watches_gifts",
+          "contribution": 31765.040000000008,
+          "rank": 4
+        },
+        {
+          "segment_value": "computers",
+          "contribution": -30625.92,
+          "rank": 5
+        },
+        {
+          "segment_value": "toys",
+          "contribution": 29687.879999999997,
+          "rank": 6
+        },
+        {
+          "segment_value": "computers_accessories",
+          "contribution": 28633.910000000003,
+          "rank": 7
+        },
+        {
+          "segment_value": "garden_tools",
+          "contribution": 19993.44,
+          "rank": 8
+        },
+        {
+          "segment_value": "housewares",
+          "contribution": 18858.69,
+          "rank": 9
+        },
+        {
+          "segment_value": "sports_leisure",
+          "contribution": 15122.600000000006,
+          "rank": 10
+        }
+      ],
+      "seller": [
+        {
+          "segment_value": "53243585a1d6dc2643021fd1853d8905",
+          "contribution": -21368.04,
+          "rank": 1
+        },
+        {
+          "segment_value": "b94cc9f10ddc85e4ba73a6f7974e7101",
+          "contribution": 14047.699999999999,
+          "rank": 2
+        },
+        {
+          "segment_value": "2bf6a2c1e71bbd29a4ad64e6d3c3629f",
+          "contribution": 12149.8,
+          "rank": 3
+        },
+        {
+          "segment_value": "8160255418d5aaa7dbdc9f4c64ebda44",
+          "contribution": 10268.000000000002,
+          "rank": 4
+        },
+        {
+          "segment_value": "1f50f920176fa81dab994f9023523100",
+          "contribution": 10205.289999999999,
+          "rank": 5
+        },
+        {
+          "segment_value": "4a3ca9315b744ce9f8e9374361493884",
+          "contribution": 8666.5,
+          "rank": 6
+        },
+        {
+          "segment_value": "b33e7c55446eabf8fe1a42d037ac7d6d",
+          "contribution": 8532.580000000002,
+          "rank": 7
+        },
+        {
+          "segment_value": "620c87c171fb2a6dd6e8bb4dec959fc6",
+          "contribution": 7370.499999999999,
+          "rank": 8
+        },
+        {
+          "segment_value": "1025f0e2d44d7041d6cf58b6550e0bfa",
+          "contribution": 7108.440000000001,
+          "rank": 9
+        },
+        {
+          "segment_value": "5d378b73ab7dd6f0418d743e5dcb0bd1",
+          "contribution": -6647.0,
+          "rank": 10
+        }
+      ],
+      "customer_state": [
+        {
+          "segment_value": "SP",
+          "contribution": 132346.39,
+          "rank": 1
+        },
+        {
+          "segment_value": "RJ",
+          "contribution": 53286.53000000001,
+          "rank": 2
+        },
+        {
+          "segment_value": "MG",
+          "contribution": 52276.56,
+          "rank": 3
+        },
+        {
+          "segment_value": "RS",
+          "contribution": 21128.769999999997,
+          "rank": 4
+        },
+        {
+          "segment_value": "SC",
+          "contribution": 19290.350000000002,
+          "rank": 5
+        },
+        {
+          "segment_value": "DF",
+          "contribution": 14666.45,
+          "rank": 6
+        },
+        {
+          "segment_value": "ES",
+          "contribution": 13921.56,
+          "rank": 7
+        },
+        {
+          "segment_value": "PR",
+          "contribution": 13452.830000000002,
+          "rank": 8
+        },
+        {
+          "segment_value": "CE",
+          "contribution": 6256.329999999998,
+          "rank": 9
+        },
+        {
+          "segment_value": "PB",
+          "contribution": -5716.919999999999,
+          "rank": 10
+        }
+      ],
+      "seller_state": [
+        {
+          "segment_value": "SP",
+          "contribution": 199072.00000000006,
+          "rank": 1
+        },
+        {
+          "segment_value": "RJ",
+          "contribution": 55027.86,
+          "rank": 2
+        },
+        {
+          "segment_value": "PR",
+          "contribution": 45287.12000000001,
+          "rank": 3
+        },
+        {
+          "segment_value": "SC",
+          "contribution": 27071.519999999997,
+          "rank": 4
+        },
+        {
+          "segment_value": "MG",
+          "contribution": 26124.949999999997,
+          "rank": 5
+        },
+        {
+          "segment_value": "BA",
+          "contribution": -24793.760000000002,
+          "rank": 6
+        },
+        {
+          "segment_value": "RS",
+          "contribution": 13811.030000000002,
+          "rank": 7
+        },
+        {
+          "segment_value": "PB",
+          "contribution": 2838.5,
+          "rank": 8
+        },
+        {
+          "segment_value": "DF",
+          "contribution": -1821.5300000000007,
+          "rank": 9
+        },
+        {
+          "segment_value": "PE",
+          "contribution": 1669.58,
+          "rank": 10
+        }
+      ]
+    },
+    "reconciliation": {
+      "sum_of_contributions": 346051.9400000002,
+      "actual_change": 346051.9400000002,
+      "error": 0.0
+    },
+    "causal_claim": false
+  },
+  "full_result": {
+    "kpi_id": "revenue",
+    "period_current": "2017-11",
+    "period_previous": "2017-10",
+    "total_change": {
+      "absolute": 346051.94,
+      "percentage": 52.09903901787399
+    },
+    "drivers": [
+      {
+        "driver": "volume",
+        "contribution_value": 417227.65,
+        "contribution_pct_of_change": 120.56792694865396,
+        "direction": "positive",
+        "method": "PVM",
+        "period_current": "2017-11",
+        "period_previous": "2017-10",
+        "evidence_type": "deterministic",
+        "confidence": "HIGH",
+        "lineage": [
+          {
+            "layer": "kpi",
+            "reference": "revenue"
+          },
+          {
+            "layer": "semantic_definition",
+            "reference": "docs/KPI_SEMANTICS_PREVIEW.md#causa_revenue"
+          },
+          {
+            "layer": "canonical_table_field",
+            "reference": "agg_order_items.item_price_total"
+          },
+          {
+            "layer": "raw_table_column",
+            "reference": "order_items.price"
+          }
+        ],
+        "causal_claim": false
+      },
+      {
+        "driver": "price",
+        "contribution_value": 4674.63,
+        "contribution_pct_of_change": 1.3508462554593508,
+        "direction": "positive",
+        "method": "PVM",
+        "period_current": "2017-11",
+        "period_previous": "2017-10",
+        "evidence_type": "deterministic",
+        "confidence": "HIGH",
+        "lineage": [
+          {
+            "layer": "kpi",
+            "reference": "revenue"
+          },
+          {
+            "layer": "semantic_definition",
+            "reference": "docs/KPI_SEMANTICS_PREVIEW.md#causa_revenue"
+          },
+          {
+            "layer": "canonical_table_field",
+            "reference": "agg_order_items.item_price_total"
+          },
+          {
+            "layer": "raw_table_column",
+            "reference": "order_items.price"
+          }
+        ],
+        "causal_claim": false
+      },
+      {
+        "driver": "mix",
+        "contribution_value": -75850.34,
+        "contribution_pct_of_change": -21.91877320411332,
+        "direction": "negative",
+        "method": "PVM",
+        "period_current": "2017-11",
+        "period_previous": "2017-10",
+        "evidence_type": "deterministic",
+        "confidence": "HIGH",
+        "lineage": [
+          {
+            "layer": "kpi",
+            "reference": "revenue"
+          },
+          {
+            "layer": "semantic_definition",
+            "reference": "docs/KPI_SEMANTICS_PREVIEW.md#causa_revenue"
+          },
+          {
+            "layer": "canonical_table_field",
+            "reference": "agg_order_items.item_price_total"
+          },
+          {
+            "layer": "raw_table_column",
+            "reference": "order_items.price"
+          }
+        ],
+        "causal_claim": false
+      }
+    ],
+    "segment_contributions": {
+      "product_category": [
+        {
+          "segment_type": "product_category",
+          "segment_value": "bed_bath_table",
+          "previous_value": 46198.0,
+          "current_value": 89412.54000000001,
+          "absolute_change": 43214.54000000001,
+          "percentage_change": 93.54201480583578,
+          "share_of_total_movement": 12.487876819878538,
+          "rank": 1,
+          "sample_size": 975,
+          "history_periods": 11,
+          "confidence": "HIGH",
+          "method": "deterministic_contribution_analysis",
+          "evidence_type": "deterministic",
+          "causal_claim": false
+        },
+        {
+          "segment_type": "product_category",
+          "segment_value": "health_beauty",
+          "previous_value": 41915.72,
+          "current_value": 79120.4,
+          "absolute_change": 37204.67999999999,
+          "percentage_change": 88.7606845355394,
+          "share_of_total_movement": 10.751183767384738,
+          "rank": 2,
+          "sample_size": 584,
+          "history_periods": 12,
+          "confidence": "HIGH",
+          "method": "deterministic_contribution_analysis",
+          "evidence_type": "deterministic",
+          "causal_claim": false
+        },
+        {
+          "segment_type": "product_category",
+          "segment_value": "furniture_decor",
+          "previous_value": 30227.51,
+          "current_value": 63223.97,
+          "absolute_change": 32996.46000000001,
+          "percentage_change": 109.16036418481048,
+          "share_of_total_movement": 9.535117762957777,
+          "rank": 3,
+          "sample_size": 783,
+          "history_periods": 12,
+          "confidence": "HIGH",
+          "method": "deterministic_contribution_analysis",
+          "evidence_type": "deterministic",
+          "causal_claim": false
+        },
+        {
+          "segment_type": "product_category",
+          "segment_value": "watches_gifts",
+          "previous_value": 65959.53,
+          "current_value": 97724.57,
+          "absolute_change": 31765.040000000008,
+          "percentage_change": 48.15837832683163,
+          "share_of_total_movement": 9.179269447239623,
+          "rank": 4,
+          "sample_size": 469,
+          "history_periods": 11,
+          "confidence": "HIGH",
+          "method": "deterministic_contribution_analysis",
+          "evidence_type": "deterministic",
+          "causal_claim": false
+        },
+        {
+          "segment_type": "product_category",
+          "segment_value": "computers",
+          "previous_value": 40393.92,
+          "current_value": 9768.0,
+          "absolute_change": -30625.92,
+          "percentage_change": -75.81814292844071,
+          "share_of_total_movement": -8.8500934281715,
+          "rank": 5,
+          "sample_size": 7,
+          "history_periods": 5,
+          "confidence": "MEDIUM",
+          "method": "deterministic_contribution_analysis",
+          "evidence_type": "deterministic",
+          "causal_claim": false
+        },
+        {
+          "segment_type": "product_category",
+          "segment_value": "toys",
+          "previous_value": 34633.01,
+          "current_value": 64320.89,
+          "absolute_change": 29687.879999999997,
+          "percentage_change": 85.72133926563124,
+          "share_of_total_movement": 8.57902429328961,
+          "rank": 6,
+          "sample_size": 495,
+          "history_periods": 11,
+          "confidence": "HIGH",
+          "method": "deterministic_contribution_analysis",
+          "evidence_type": "deterministic",
+          "causal_claim": false
+        },
+        {
+          "segment_type": "product_category",
+          "segment_value": "computers_accessories",
+          "previous_value": 44022.09,
+          "current_value": 72656.0,
+          "absolute_change": 28633.910000000003,
+          "percentage_change": 65.04441292996313,
+          "share_of_total_movement": 8.274454407046523,
+          "rank": 7,
+          "sample_size": 532,
+          "history_periods": 11,
+          "confidence": "HIGH",
+          "method": "deterministic_contribution_analysis",
+          "evidence_type": "deterministic",
+          "causal_claim": false
+        },
+        {
+          "segment_type": "product_category",
+          "segment_value": "garden_tools",
+          "previous_value": 25978.74,
+          "current_value": 45972.18,
+          "absolute_change": 19993.44,
+          "percentage_change": 76.9607763886932,
+          "share_of_total_movement": 5.777583561589046,
+          "rank": 8,
+          "sample_size": 550,
+          "history_periods": 11,
+          "confidence": "HIGH",
+          "method": "deterministic_contribution_analysis",
+          "evidence_type": "deterministic",
+          "causal_claim": false
+        },
+        {
+          "segment_type": "product_category",
+          "segment_value": "housewares",
+          "previous_value": 15996.630000000001,
+          "current_value": 34855.32,
+          "absolute_change": 18858.69,
+          "percentage_change": 117.89164342739689,
+          "share_of_total_movement": 5.449670358732851,
+          "rank": 9,
+          "sample_size": 423,
+          "history_periods": 11,
+          "confidence": "HIGH",
+          "method": "deterministic_contribution_analysis",
+          "evidence_type": "deterministic",
+          "causal_claim": false
+        },
+        {
+          "segment_type": "product_category",
+          "segment_value": "sports_leisure",
+          "previous_value": 49751.45,
+          "current_value": 64874.05,
+          "absolute_change": 15122.600000000006,
+          "percentage_change": 30.396300007336485,
+          "share_of_total_movement": 4.370037630767219,
+          "rank": 10,
+          "sample_size": 612,
+          "history_periods": 11,
+          "confidence": "HIGH",
+          "method": "deterministic_contribution_analysis",
+          "evidence_type": "deterministic",
+          "causal_claim": false
+        }
+      ],
+      "seller": [
+        {
+          "segment_type": "seller",
+          "segment_value": "53243585a1d6dc2643021fd1853d8905",
+          "previous_value": 41708.0,
+          "current_value": 20339.96,
+          "absolute_change": -21368.04,
+          "percentage_change": -51.23247338640069,
+          "share_of_total_movement": -6.1748071691203315,
+          "rank": 1,
+          "sample_size": 50,
+          "history_periods": 3,
+          "confidence": "MEDIUM",
+          "method": "deterministic_contribution_analysis",
+          "evidence_type": "deterministic",
+          "causal_claim": false
+        },
+        {
+          "segment_type": "seller",
+          "segment_value": "b94cc9f10ddc85e4ba73a6f7974e7101",
+          "previous_value": 0.0,
+          "current_value": 14047.699999999999,
+          "absolute_change": 14047.699999999999,
+          "percentage_change": null,
+          "share_of_total_movement": 4.05941951950912,
+          "rank": 2,
+          "sample_size": 23,
+          "history_periods": null,
+          "confidence": "MEDIUM",
+          "method": "deterministic_contribution_analysis",
+          "evidence_type": "deterministic",
+          "causal_claim": false
+        },
+        {
+          "segment_type": "seller",
+          "segment_value": "2bf6a2c1e71bbd29a4ad64e6d3c3629f",
+          "previous_value": 0.0,
+          "current_value": 12149.8,
+          "absolute_change": 12149.8,
+          "percentage_change": null,
+          "share_of_total_movement": 3.510975837904563,
+          "rank": 3,
+          "sample_size": 7,
+          "history_periods": null,
+          "confidence": "MEDIUM",
+          "method": "deterministic_contribution_analysis",
+          "evidence_type": "deterministic",
+          "causal_claim": false
+        },
+        {
+          "segment_type": "seller",
+          "segment_value": "8160255418d5aaa7dbdc9f4c64ebda44",
+          "previous_value": 1225.9,
+          "current_value": 11493.900000000001,
+          "absolute_change": 10268.000000000002,
+          "percentage_change": 837.5887103352638,
+          "share_of_total_movement": 2.9671846370807797,
+          "rank": 4,
+          "sample_size": 102,
+          "history_periods": 1,
+          "confidence": "MEDIUM",
+          "method": "deterministic_contribution_analysis",
+          "evidence_type": "deterministic",
+          "causal_claim": false
+        },
+        {
+          "segment_type": "seller",
+          "segment_value": "1f50f920176fa81dab994f9023523100",
+          "previous_value": 8925.1,
+          "current_value": 19130.39,
+          "absolute_change": 10205.289999999999,
+          "percentage_change": 114.34370483243883,
+          "share_of_total_movement": 2.949063079952678,
+          "rank": 5,
+          "sample_size": 358,
+          "history_periods": 7,
+          "confidence": "HIGH",
+          "method": "deterministic_contribution_analysis",
+          "evidence_type": "deterministic",
+          "causal_claim": false
+        },
+        {
+          "segment_type": "seller",
+          "segment_value": "4a3ca9315b744ce9f8e9374361493884",
+          "previous_value": 12495.95,
+          "current_value": 21162.45,
+          "absolute_change": 8666.5,
+          "percentage_change": 69.35447084855493,
+          "share_of_total_movement": 2.5043928376763316,
+          "rank": 6,
+          "sample_size": 205,
+          "history_periods": 10,
+          "confidence": "HIGH",
+          "method": "deterministic_contribution_analysis",
+          "evidence_type": "deterministic",
+          "causal_claim": false
+        },
+        {
+          "segment_type": "seller",
+          "segment_value": "b33e7c55446eabf8fe1a42d037ac7d6d",
+          "previous_value": 1711.8899999999999,
+          "current_value": 10244.470000000001,
+          "absolute_change": 8532.580000000002,
+          "percentage_change": 498.43038980308324,
+          "share_of_total_movement": 2.4656934447470507,
+          "rank": 7,
+          "sample_size": 47,
+          "history_periods": 1,
+          "confidence": "MEDIUM",
+          "method": "deterministic_contribution_analysis",
+          "evidence_type": "deterministic",
+          "causal_claim": false
+        },
+        {
+          "segment_type": "seller",
+          "segment_value": "620c87c171fb2a6dd6e8bb4dec959fc6",
+          "previous_value": 1928.8,
+          "current_value": 9299.3,
+          "absolute_change": 7370.499999999999,
+          "percentage_change": 382.12878473662374,
+          "share_of_total_movement": 2.1298825835219986,
+          "rank": 8,
+          "sample_size": 67,
+          "history_periods": 11,
+          "confidence": "HIGH",
+          "method": "deterministic_contribution_analysis",
+          "evidence_type": "deterministic",
+          "causal_claim": false
+        },
+        {
+          "segment_type": "seller",
+          "segment_value": "1025f0e2d44d7041d6cf58b6550e0bfa",
+          "previous_value": 6325.599999999999,
+          "current_value": 13434.04,
+          "absolute_change": 7108.440000000001,
+          "percentage_change": 112.37574301252057,
+          "share_of_total_movement": 2.0541540671611314,
+          "rank": 9,
+          "sample_size": 179,
+          "history_periods": 4,
+          "confidence": "MEDIUM",
+          "method": "deterministic_contribution_analysis",
+          "evidence_type": "deterministic",
+          "causal_claim": false
+        },
+        {
+          "segment_type": "seller",
+          "segment_value": "5d378b73ab7dd6f0418d743e5dcb0bd1",
+          "previous_value": 9945.0,
+          "current_value": 3298.0,
+          "absolute_change": -6647.0,
+          "percentage_change": -66.83760683760683,
+          "share_of_total_movement": -1.92080992234865,
+          "rank": 10,
+          "sample_size": 2,
+          "history_periods": 1,
+          "confidence": "LOW",
+          "method": "deterministic_contribution_analysis",
+          "evidence_type": "deterministic",
+          "causal_claim": false
+        }
+      ],
+      "customer_state": [
+        {
+          "segment_type": "customer_state",
+          "segment_value": "SP",
+          "previous_value": 227905.5,
+          "current_value": 360251.89,
+          "absolute_change": 132346.39,
+          "percentage_change": 58.07073107055337,
+          "share_of_total_movement": 38.24466061366393,
+          "rank": 1,
+          "sample_size": 3437,
+          "history_periods": 12,
+          "confidence": "HIGH",
+          "method": "deterministic_contribution_analysis",
+          "evidence_type": "deterministic",
+          "causal_claim": false
+        },
+        {
+          "segment_type": "customer_state",
+          "segment_value": "RJ",
+          "previous_value": 97252.86,
+          "current_value": 150539.39,
+          "absolute_change": 53286.53000000001,
+          "percentage_change": 54.791735687773105,
+          "share_of_total_movement": 15.39841967075809,
+          "rank": 2,
+          "sample_size": 1212,
+          "history_periods": 11,
+          "confidence": "HIGH",
+          "method": "deterministic_contribution_analysis",
+          "evidence_type": "deterministic",
+          "causal_claim": false
+        },
+        {
+          "segment_type": "customer_state",
+          "segment_value": "MG",
+          "previous_value": 82012.09,
+          "current_value": 134288.65,
+          "absolute_change": 52276.56,
+          "percentage_change": 63.74250430637727,
+          "share_of_total_movement": 15.106564638822706,
+          "rank": 3,
+          "sample_size": 1089,
+          "history_periods": 11,
+          "confidence": "HIGH",
+          "method": "deterministic_contribution_analysis",
+          "evidence_type": "deterministic",
+          "causal_claim": false
+        },
+        {
+          "segment_type": "customer_state",
+          "segment_value": "RS",
+          "previous_value": 37571.11,
+          "current_value": 58699.88,
+          "absolute_change": 21128.769999999997,
+          "percentage_change": 56.23674679827132,
+          "share_of_total_movement": 6.105664369342934,
+          "rank": 4,
+          "sample_size": 482,
+          "history_periods": 12,
+          "confidence": "HIGH",
+          "method": "deterministic_contribution_analysis",
+          "evidence_type": "deterministic",
+          "causal_claim": false
+        },
+        {
+          "segment_type": "customer_state",
+          "segment_value": "SC",
+          "previous_value": 21022.55,
+          "current_value": 40312.9,
+          "absolute_change": 19290.350000000002,
+          "percentage_change": 91.76027646503398,
+          "share_of_total_movement": 5.574408858970706,
+          "rank": 5,
+          "sample_size": 354,
+          "history_periods": 11,
+          "confidence": "HIGH",
+          "method": "deterministic_contribution_analysis",
+          "evidence_type": "deterministic",
+          "causal_claim": false
+        },
+        {
+          "segment_type": "customer_state",
+          "segment_value": "DF",
+          "previous_value": 13093.39,
+          "current_value": 27759.84,
+          "absolute_change": 14666.45,
+          "percentage_change": 112.01415370656494,
+          "share_of_total_movement": 4.238222158211277,
+          "rank": 6,
+          "sample_size": 182,
+          "history_periods": 11,
+          "confidence": "HIGH",
+          "method": "deterministic_contribution_analysis",
+          "evidence_type": "deterministic",
+          "causal_claim": false
+        },
+        {
+          "segment_type": "customer_state",
+          "segment_value": "ES",
+          "previous_value": 10380.69,
+          "current_value": 24302.25,
+          "absolute_change": 13921.56,
+          "percentage_change": 134.1101603072628,
+          "share_of_total_movement": 4.0229683440006125,
+          "rank": 7,
+          "sample_size": 195,
+          "history_periods": 11,
+          "confidence": "HIGH",
+          "method": "deterministic_contribution_analysis",
+          "evidence_type": "deterministic",
+          "causal_claim": false
+        },
+        {
+          "segment_type": "customer_state",
+          "segment_value": "PR",
+          "previous_value": 33400.659999999996,
+          "current_value": 46853.49,
+          "absolute_change": 13452.830000000002,
+          "percentage_change": 40.27713823619055,
+          "share_of_total_movement": 3.887517579008514,
+          "rank": 8,
+          "sample_size": 446,
+          "history_periods": 12,
+          "confidence": "HIGH",
+          "method": "deterministic_contribution_analysis",
+          "evidence_type": "deterministic",
+          "causal_claim": false
+        },
+        {
+          "segment_type": "customer_state",
+          "segment_value": "CE",
+          "previous_value": 12399.11,
+          "current_value": 18655.44,
+          "absolute_change": 6256.329999999998,
+          "percentage_change": 50.45789576832529,
+          "share_of_total_movement": 1.8079164647942718,
+          "rank": 9,
+          "sample_size": 123,
+          "history_periods": 11,
+          "confidence": "HIGH",
+          "method": "deterministic_contribution_analysis",
+          "evidence_type": "deterministic",
+          "causal_claim": false
+        },
+        {
+          "segment_type": "customer_state",
+          "segment_value": "PB",
+          "previous_value": 10284.31,
+          "current_value": 4567.39,
+          "absolute_change": -5716.919999999999,
+          "percentage_change": -55.58875607600315,
+          "share_of_total_movement": -1.6520410202006082,
+          "rank": 10,
+          "sample_size": 30,
+          "history_periods": 11,
+          "confidence": "HIGH",
+          "method": "deterministic_contribution_analysis",
+          "evidence_type": "deterministic",
+          "causal_claim": false
+        }
+      ],
+      "seller_state": [
+        {
+          "segment_type": "seller_state",
+          "segment_value": "SP",
+          "previous_value": 423229.92,
+          "current_value": 622301.92,
+          "absolute_change": 199072.00000000006,
+          "percentage_change": 47.03637209770048,
+          "share_of_total_movement": 57.526624471459385,
+          "rank": 1,
+          "sample_size": 6238,
+          "history_periods": 11,
+          "confidence": "HIGH",
+          "method": "deterministic_contribution_analysis",
+          "evidence_type": "deterministic",
+          "causal_claim": false
+        },
+        {
+          "segment_type": "seller_state",
+          "segment_value": "RJ",
+          "previous_value": 31309.01,
+          "current_value": 86336.87,
+          "absolute_change": 55027.86,
+          "percentage_change": 175.7572660393925,
+          "share_of_total_movement": 15.901618699204512,
+          "rank": 2,
+          "sample_size": 424,
+          "history_periods": 11,
+          "confidence": "HIGH",
+          "method": "deterministic_contribution_analysis",
+          "evidence_type": "deterministic",
+          "causal_claim": false
+        },
+        {
+          "segment_type": "seller_state",
+          "segment_value": "PR",
+          "previous_value": 47685.34,
+          "current_value": 92972.46,
+          "absolute_change": 45287.12000000001,
+          "percentage_change": 94.97073943480326,
+          "share_of_total_movement": 13.086798473084702,
+          "rank": 3,
+          "sample_size": 625,
+          "history_periods": 13,
+          "confidence": "HIGH",
+          "method": "deterministic_contribution_analysis",
+          "evidence_type": "deterministic",
+          "causal_claim": false
+        },
+        {
+          "segment_type": "seller_state",
+          "segment_value": "SC",
+          "previous_value": 24231.5,
+          "current_value": 51303.02,
+          "absolute_change": 27071.519999999997,
+          "percentage_change": 111.72036398902254,
+          "share_of_total_movement": 7.822964379277857,
+          "rank": 4,
+          "sample_size": 297,
+          "history_periods": 11,
+          "confidence": "HIGH",
+          "method": "deterministic_contribution_analysis",
+          "evidence_type": "deterministic",
+          "causal_claim": false
+        },
+        {
+          "segment_type": "seller_state",
+          "segment_value": "MG",
+          "previous_value": 51383.61,
+          "current_value": 77508.56,
+          "absolute_change": 26124.949999999997,
+          "percentage_change": 50.84296334959727,
+          "share_of_total_movement": 7.549430296504041,
+          "rank": 5,
+          "sample_size": 682,
+          "history_periods": 12,
+          "confidence": "HIGH",
+          "method": "deterministic_contribution_analysis",
+          "evidence_type": "deterministic",
+          "causal_claim": false
+        },
+        {
+          "segment_type": "seller_state",
+          "segment_value": "BA",
+          "previous_value": 47924.840000000004,
+          "current_value": 23131.08,
+          "absolute_change": -24793.760000000002,
+          "percentage_change": -51.73467454455769,
+          "share_of_total_movement": -7.164751048643157,
+          "rank": 6,
+          "sample_size": 64,
+          "history_periods": 11,
+          "confidence": "HIGH",
+          "method": "deterministic_contribution_analysis",
+          "evidence_type": "deterministic",
+          "causal_claim": false
+        },
+        {
+          "segment_type": "seller_state",
+          "segment_value": "RS",
+          "previous_value": 19600.66,
+          "current_value": 33411.69,
+          "absolute_change": 13811.030000000002,
+          "percentage_change": 70.4620660732853,
+          "share_of_total_movement": 3.9910280520317256,
+          "rank": 7,
+          "sample_size": 152,
+          "history_periods": 11,
+          "confidence": "HIGH",
+          "method": "deterministic_contribution_analysis",
+          "evidence_type": "deterministic",
+          "causal_claim": false
+        },
+        {
+          "segment_type": "seller_state",
+          "segment_value": "PB",
+          "previous_value": 0.0,
+          "current_value": 2838.5,
+          "absolute_change": 2838.5,
+          "percentage_change": null,
+          "share_of_total_movement": 0.820252589827989,
+          "rank": 8,
+          "sample_size": 3,
+          "history_periods": 6,
+          "confidence": "MEDIUM",
+          "method": "deterministic_contribution_analysis",
+          "evidence_type": "deterministic",
+          "causal_claim": false
+        },
+        {
+          "segment_type": "seller_state",
+          "segment_value": "DF",
+          "previous_value": 8743.35,
+          "current_value": 6921.82,
+          "absolute_change": -1821.5300000000007,
+          "percentage_change": -20.833319036753654,
+          "share_of_total_movement": -0.526374740161838,
+          "rank": 9,
+          "sample_size": 76,
+          "history_periods": 11,
+          "confidence": "HIGH",
+          "method": "deterministic_contribution_analysis",
+          "evidence_type": "deterministic",
+          "causal_claim": false
+        },
+        {
+          "segment_type": "seller_state",
+          "segment_value": "PE",
+          "previous_value": 222.98,
+          "current_value": 1892.56,
+          "absolute_change": 1669.58,
+          "percentage_change": 748.7577361198314,
+          "share_of_total_movement": 0.48246514670601154,
+          "rank": 10,
+          "sample_size": 8,
+          "history_periods": 9,
+          "confidence": "MEDIUM",
+          "method": "deterministic_contribution_analysis",
+          "evidence_type": "deterministic",
+          "causal_claim": false
+        }
+      ]
+    },
+    "concurrent_kpis": {
+      "orders": {
+        "kpi_id": "orders",
+        "previous_value": 4631.0,
+        "current_value": 7544.0,
+        "absolute_change": 2913.0,
+        "percentage_change": 62.90218095443748,
+        "warnings": []
+      },
+      "aov": {
+        "kpi_id": "aov",
+        "previous_value": 145.40705560420315,
+        "current_value": 135.58869547711714,
+        "absolute_change": -9.81836012708601,
+        "percentage_change": -6.752327173044138,
+        "warnings": []
+      },
+      "freight_revenue": {
+        "kpi_id": "freight_revenue",
+        "previous_value": 105092.94,
+        "current_value": 168872.4,
+        "absolute_change": 63779.45999999999,
+        "percentage_change": 60.68862475443164,
+        "warnings": []
+      },
+      "avg_delivery_days": {
+        "kpi_id": "avg_delivery_days",
+        "previous_value": 11.856699698526128,
+        "current_value": 15.161131699241777,
+        "absolute_change": 3.3044320007156482,
+        "percentage_change": 27.86974524729181,
+        "warnings": [
+          "256 rows excluded due to missing/invalid delivery timestamps.",
+          "153 rows excluded due to missing/invalid delivery timestamps."
+        ]
+      },
+      "avg_review_score": {
+        "kpi_id": "avg_review_score",
+        "previous_value": 4.123448726322665,
+        "current_value": 3.9106951871657754,
+        "absolute_change": -0.21275353915688955,
+        "percentage_change": -5.159601907954981,
+        "warnings": []
+      }
+    },
+    "reconciliation": {
+      "sum_of_contributions": 346051.9400000002,
+      "actual_change": 346051.9400000002,
+      "error": 0.0,
+      "tolerance": 0.01,
+      "reconciled": true
+    },
+    "data_quality": {
+      "sample_size_previous": 5322,
+      "sample_size_current": 8665,
+      "coverage_previous": 0.9863960267760743,
+      "coverage_current": 0.9876723223753977,
+      "data_quality": "HIGH",
+      "segment_reconciliation": {
+        "product_category": {
+          "sum_of_contributions": 346051.94,
+          "actual_change": 346051.9400000002,
+          "error": -1.7462298274040222e-10,
+          "tolerance": 0.01,
+          "reconciled": true
+        },
+        "seller": {
+          "sum_of_contributions": 346051.94,
+          "actual_change": 346051.9400000002,
+          "error": -1.7462298274040222e-10,
+          "tolerance": 0.01,
+          "reconciled": true
+        },
+        "customer_state": {
+          "sum_of_contributions": 346051.94,
+          "actual_change": 346051.9400000002,
+          "error": -1.7462298274040222e-10,
+          "tolerance": 0.01,
+          "reconciled": true
+        },
+        "seller_state": {
+          "sum_of_contributions": 346051.94000000006,
+          "actual_change": 346051.9400000002,
+          "error": -1.1641532182693481e-10,
+          "tolerance": 0.01,
+          "reconciled": true
+        }
+      },
+      "warnings": []
+    },
+    "lineage": [
+      {
+        "layer": "kpi",
+        "reference": "revenue"
+      },
+      {
+        "layer": "semantic_definition",
+        "reference": "docs/KPI_SEMANTICS_PREVIEW.md#causa_revenue"
+      },
+      {
+        "layer": "canonical_table_field",
+        "reference": "agg_order_items.item_price_total"
+      },
+      {
+        "layer": "raw_table_column",
+        "reference": "order_items.price"
+      }
+    ],
+    "causal_claim": false
+  },
+  "test_results": {
+    "returncode": 0,
+    "n_passed": 42,
+    "n_failed": 0,
+    "failed_tests": [],
+    "all_passed": true
+  },
+  "cache_stats": {
+    "entries": 10,
+    "hits": 0,
+    "misses": 10
+  }
+}
