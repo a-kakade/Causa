@@ -1,0 +1,32 @@
+{
+  "bm25": {
+    "PT": {
+      "total": 34,
+      "recall": 0.1471
+    }
+  },
+  "bm25_expand": {
+    "PT": {
+      "total": 34,
+      "recall": 0.1471
+    }
+  },
+  "dense_e5small": {
+    "PT": {
+      "total": 34,
+      "recall": 0.0588
+    }
+  },
+  "hybrid": {
+    "PT": {
+      "total": 34,
+      "recall": 0.1471
+    }
+  },
+  "hybrid_expand": {
+    "PT": {
+      "total": 34,
+      "recall": 0.1471
+    }
+  }
+}

@@ -13,14 +13,50 @@ has skipped ahead of what the prior step actually established.
 
 ## Where we are right now
 
-**Step 3D complete.** Causa can now compute a KPI value (3B), decide whether a
-movement is materially worth investigating (3C), and mathematically decompose
-*how much* each measurable factor contributed to it (3D — Price/Volume/Mix for
-Revenue, plus category/seller/geographic contribution). **Still no causal
-inference, RAG, LLM, agents, recommendations, or frontend anywhere** — every
-step through 3D answers "what changed" and "how much did each driver
-contribute," never "why" or "what should we do." 354 tests pass across the
-whole repo. Step 4 (or whatever comes after) has not been started.
+**Step 4A complete, then corrected (2026-08-28).** Step 4 (Evidence Fabric) was
+built and validated, but its retrieval evaluation revealed P@5≈0, P@10=0.017,
+MRR=0.017 using multilingual-e5-small. Step 4A was a mandated deep-dive to
+diagnose and fix that failure — without hiding or reclassifying it. That
+diagnosis was itself revisited once a fresh HF token unblocked the remaining
+Step 4A work (E5-base/large, cross-encoder reranking): comparing cached vs.
+freshly re-encoded vectors exposed a real bug, not just an E5-small
+limitation. Full writeup: `STEP4A_VALIDATION.md` §0.
+
+**Actual root cause found 2026-08-28:** `EmbeddingCache.save()` persisted
+orphaned vector rows left over from duplicate-text batches (427 of 5,019
+reviews share identical short text, e.g. "Otimo produto"), while `_load()`
+re-derives each key's array index positionally from the sorted keys list —
+desyncing the key→vector mapping for most of the corpus on every disk
+round-trip. `cache.get(key)` silently returned some *other* review's real
+(but wrong) embedding instead of the requested one. Fixed in
+`src/evidence/embeddings.py` (`put_many()`, `save()`); 2 new regression
+tests added; the corrupted on-disk cache was rebuilt from scratch and
+verified byte-identical to a fresh full-corpus re-encode.
+
+**Step 4A findings (corrected):**
+- Dense E5-small was never as broken as first measured: corrected MRR=0.333
+  (was reported as 0.017 — the cache bug, not model weakness, explains most
+  of that gap). BM25+expansion still wins overall, but by +17% MRR
+  (0.389 vs. 0.333), not 19.6×.
+- BM25 baseline implemented (MRR=0.389 with expansion, 0.9-1.0ms, <1MB memory)
+  — still the recommended production retriever.
+- Hybrid RRF implemented — still does NOT beat BM25-alone, even now that
+  dense retrieval has genuine signal (a more robust finding than the
+  original "noise dilutes signal" explanation, which assumed dense MRR=0).
+- Query expansion adds +0.056 MRR with a governed bilingual synonym table.
+- HF auth restored 2026-08-28: E5-base and E5-large were evaluated and both
+  score *below* E5-small (MRR=0.190 vs. 0.333) — counter-intuitive, likely
+  eval-set-size noise (6 queries), flagged as a hypothesis not a conclusion.
+  Cross-encoder reranking (`amberoad/bert-multilingual-passage-reranking-msmarco`)
+  ties E5-small's MRR at 450-500× the latency — not recommended either.
+- RETRIEVAL_INSUFFICIENT sentinel implemented for the future Confidence Judge;
+  its score floors were re-validated against the corrected numbers (no change
+  needed).
+- **Recommended production retriever: BM25 + query expansion (unchanged).**
+- 547 tests pass (545 + 2 new regression tests), 0 regressions. Steps 2–3D
+  untouched.
+
+**Still no causal inference, LLM, agents, or frontend anywhere.**
 
 ---
 
@@ -34,7 +70,9 @@ whole repo. Step 4 (or whatever comes after) has not been started.
 | 3B | Deterministic KPI computation engine | ✅ Complete | [STEP3B_VALIDATION.md](STEP3B_VALIDATION.md) |
 | 3C | Materiality / anomaly detection engine | ✅ Complete | [STEP3C_VALIDATION.md](STEP3C_VALIDATION.md) |
 | 3D | Driver decomposition engine (PVM + contribution) | ✅ Complete | [STEP3D_VALIDATION.md](STEP3D_VALIDATION.md) |
-| — | Causal inference, RAG, LLM, agents, recommendations, frontend | ⬜ Not started | — |
+| 4 | Evidence Fabric (structured + unstructured RAG) | ✅ Complete | [STEP4_VALIDATION.md](STEP4_VALIDATION.md) |
+| 4A | Retrieval failure analysis + BM25 + hybrid architecture | ✅ Complete | [STEP4A_VALIDATION.md](STEP4A_VALIDATION.md) |
+| — | Causal inference, LLM, agents, recommendations, frontend | ⬜ Not started | — |
 
 ---
 
@@ -279,6 +317,113 @@ and seller_state contributions all reconcile exactly to the same
 Full detail: [STEP3D_VALIDATION.md](STEP3D_VALIDATION.md),
 [docs/DRIVER_DECOMPOSITION.md](docs/DRIVER_DECOMPOSITION.md),
 [reports/step3d_validation.json](reports/step3d_validation.json).
+
+---
+
+## Step 4 — Evidence Fabric (Structured + Unstructured RAG)
+
+**What was built:** `src/evidence/` — full Evidence Fabric over the
+October-November 2017 review corpus. Schema (`schema.py`, Pydantic strict
+mode), structured adapter (`structured_adapter.py` — converts Step 3B/3C/3D
+outputs into `EvidenceObject`s with zero pandas in the module), review
+ingestion pipeline (`review_ingestion.py` — NFKC normalization, category
+attribution with 4 confidence levels), language/PII/safety detection,
+embedding (`embeddings.py` — E5-small, disk cache), vector index
+(`vector_index.py` — FlatCosineIndex, brute-force cosine, exact), retrieval
+(`retrieval.py` — structured-first mandatory pipeline, MMR diversity
+reranking), evidence graph (`graph.py` — NetworkX, 39 nodes/29 edges),
+access control (`access_control.py` — 3-level clearance). 130 new tests
+across 9 files; 508 total pass.
+
+**Findings:** All structured evidence (KPI movements, PVM, anomaly,
+segments) reproduced the exact Step 3B/3C/3D numbers. 56 EvidenceObjects
+built for the November 2017 package. **But retrieval metrics revealed:**
+P@5=0, P@10=0.017, MRR=0.017 — honestly disclosed, not hidden. (Corrected
+2026-08-28: mostly an `EmbeddingCache` bug, not model weakness — real
+corrected numbers are P@5=0.067, MRR=0.333. See Step 4A below and
+`STEP4A_VALIDATION.md` §0.)
+
+Full detail: [STEP4_VALIDATION.md](STEP4_VALIDATION.md),
+[docs/EVIDENCE_FABRIC.md](docs/EVIDENCE_FABRIC.md),
+[docs/RAG_GOVERNANCE.md](docs/RAG_GOVERNANCE.md).
+
+## Step 4A — Retrieval Failure Analysis and Optimization
+
+**Trigger:** P@5≈0 and P@10=0.017 on the engineering eval set could not
+be accepted as-is. Step 4A was a mandated diagnostic and remediation pass.
+
+**What was found (2026-08-27, later corrected — see below):** All 10
+diagnostic axes were audited. Believed root cause at the time: E5-small
+cosine similarity gap between on-topic and off-topic short Portuguese
+reviews is only ~0.05. For "atraso na entrega, demora" (delivery query),
+the best on-topic score (0.904) is barely above off-topic generic reviews
+(0.844-0.87). With 5,019 candidates and only 5 expected documents, this
+gap looked insufficient. All 31 expected eval row_ids ARE in the index (0
+missing). Every other pipeline component (prefix convention, normalization,
+similarity direction, candidate restriction, ranking direction) was
+verified correct.
+
+**Corrected 2026-08-28:** that diagnosis was wrong. The actual root cause
+was an `EmbeddingCache` disk-persistence bug — `save()` wrote orphaned
+vector rows left over from duplicate-text batches (427 of 5,019 reviews
+share identical short text), while `_load()` re-derives each key's index
+positionally, desyncing the key→vector mapping on every reload for most of
+the corpus. `cache.get(key)` silently returned a *different* review's real
+embedding. Found by comparing cached vs. freshly re-encoded vectors row by
+row while unblocking the E5-base/large/cross-encoder work below with a
+fresh HF token. Fixed in `src/evidence/embeddings.py`; full writeup in
+`STEP4A_VALIDATION.md` §0. The ~0.05 discrimination gap above is real (and
+re-confirmed post-fix) but was never the dominant cause of the eval set's
+near-zero score.
+
+**What was built:**
+- `src/evidence/bm25_retriever.py` — BM25+ index (k1=1.5, b=0.75, delta=1.0),
+  Portuguese-aware tokenizer, bilingual stop-words, governed query expansion
+  vocabulary (no LLM). Build: 36ms, query: 0.9ms.
+- `src/evidence/retriever_interface.py` — EmbeddingProvider and Retriever
+  protocols (injected, never hardcoded), RETRIEVAL_INSUFFICIENT sentinel.
+- `src/evidence/dense_retriever.py` — DenseRetriever with E5EmbeddingProvider
+  (model injected, supports E5-small/base/large via from_model_name()).
+- `src/evidence/hybrid_retriever.py` — HybridRetriever (RRF, k=60),
+  LexicalRetriever wrapper.
+- `scripts/step4a_retrieval_benchmark.py` — full benchmark script.
+- `tests/test_bm25.py` — 37 new tests.
+- `STEP4_RETRIEVAL_DIAGNOSTIC.md` — concrete per-component audit.
+- `STEP4A_VALIDATION.md` — this step's validation document.
+
+**Benchmark results (6-query eval set, Oct-Nov 2017 corpus, corrected 2026-08-28
+after the cache fix):**
+
+| Method | P@5 | P@10 | MRR | Latency |
+|---|---|---|---|---|
+| Dense E5-small | 0.067 | 0.033 | 0.333 | ~1,087ms cold / ~20ms warm |
+| Dense E5-base | 0.033 | 0.050 | 0.190 | ~28ms |
+| Dense E5-large | 0.033 | 0.033 | 0.190 | ~45ms |
+| **BM25** | **0.133** | **0.083** | 0.333 | **0.9ms** |
+| **BM25 + expansion** | **0.133** | 0.083 | **0.389** | 1.0ms |
+| Hybrid RRF | 0.067 | 0.083 | 0.296 | 14.9ms |
+| Hybrid RRF + expand | 0.033 | 0.083 | 0.230 | 14.0ms |
+| BM25+expand → CE rerank | 0.067 | 0.050 | 0.333 | 459.6ms |
+
+*(Originally reported, superseded: "E5-small (Step 4)" 0.000/0.017/0.017 at
+1,284ms and "Dense E5-small" 0.000/0.000/0.000 — both were reading a
+corrupted embedding cache, see `STEP4A_VALIDATION.md` §0.)*
+
+**Key finding (corrected):** BM25+expansion (MRR=0.389) outperforms dense
+E5-small by +17%, not 22× — dense retrieval was never as broken as first
+measured. Hybrid RRF still does NOT beat BM25-alone, even now that dense
+has genuine signal — a more robust finding than the original explanation
+assumed. E5-base/E5-large both score *below* E5-small (unexpected; may be
+eval-set-size noise). Cross-encoder reranking ties E5-small's MRR at
+450-500× the latency. **Recommended production retriever: BM25 + query
+expansion (unchanged).**
+
+547 tests pass (37 new in Step 4A + 2 new regression tests for the cache
+bug, 0 regressions). Steps 2–3D unchanged.
+
+Full detail: [STEP4A_VALIDATION.md](STEP4A_VALIDATION.md),
+[STEP4_RETRIEVAL_DIAGNOSTIC.md](STEP4_RETRIEVAL_DIAGNOSTIC.md),
+[reports/step4a_retrieval_benchmark.json](reports/step4a_retrieval_benchmark.json).
 
 ---
 

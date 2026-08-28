@@ -9,3 +9,7 @@ langdetect>=1.0.9
 pyarrow>=14.0
 PyYAML>=6.0
 jsonschema>=4.20
+pydantic>=2.5
+networkx>=3.2
+sentence-transformers>=2.7
+torch>=2.2

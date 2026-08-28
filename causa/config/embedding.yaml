@@ -1,0 +1,34 @@
+# Causa Evidence Fabric — embedding model configuration (Step 4)
+#
+# Single source of truth for which embedding model backs the review-retrieval
+# vector index, and how it's addressed. Read by src/evidence/embeddings.py.
+# Do not change `model`/`revision`/`embedding_version` without regenerating
+# data/evidence/embedding_cache/ and data/evidence/vector_index/ (both are
+# rebuildable, neither is a source of truth -- see docs/EVIDENCE_FABRIC.md).
+
+model: intfloat/multilingual-e5-small
+
+# Exact commit SHA on the Hugging Face Hub, resolved once via
+# `huggingface_hub.model_info(model, token=False).sha` and pinned here so the
+# index is reproducible even if the model repo's "main" branch moves later.
+revision: "614241f622f53c4eeff9890bdc4f31cfecc418b3"
+
+# Bumped manually whenever this repo's own prefixing/normalization logic
+# around the model changes -- independent of `revision` above (which tracks
+# the upstream model weights, not our usage of them).
+embedding_version: e5-small-v1
+
+dimension: 384
+
+# E5 convention: queries and passages are embedded asymmetrically.
+query_prefix: "query: "
+passage_prefix: "passage: "
+
+cache_path: data/evidence/embedding_cache/reviews_e5_small_v1.npz
+vector_index_dir: data/evidence/vector_index
+
+# This environment's cached Hugging Face auth token is expired, which makes
+# *authenticated* Hub calls fail with 401 even for this fully public model.
+# Anonymous access works fine, so embeddings.py always resolves/loads with
+# `token=False` rather than relying on ambient HF_TOKEN state.
+hub_token_mode: anonymous
