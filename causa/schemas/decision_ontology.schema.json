@@ -1,0 +1,74 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://causa.internal/schemas/decision_ontology.schema.json",
+  "title": "Causa Decision Ontology",
+  "description": "Governed, machine-readable business ontology for Step 7's Decision & Action Intelligence Engine: Driver -> Driver Category -> Controllable Lever -> Action Types -> Likely Owner -> Relevant Constraints -> Monitoring KPIs. Defines the vocabulary of possible actions -- computes no numeric impact itself.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["version", "generated", "unsupported_driver_policy", "drivers"],
+  "properties": {
+    "version": { "type": "string" },
+    "generated": { "type": "string" },
+    "unsupported_driver_policy": { "type": "string", "enum": ["abstain"] },
+    "drivers": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/driverEntry" }
+    }
+  },
+  "$defs": {
+    "driverEntry": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["driver", "driver_category", "controllable_levers"],
+      "properties": {
+        "driver": { "type": "string", "pattern": "^[a-z][a-z0-9_]*$" },
+        "driver_category": { "type": "string" },
+        "aliases": { "type": "array", "items": { "type": "string" } },
+        "controllable_levers": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "$ref": "#/$defs/leverEntry" }
+        }
+      }
+    },
+    "leverEntry": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["lever", "action_types"],
+      "properties": {
+        "lever": { "type": "string" },
+        "action_types": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "$ref": "#/$defs/actionType" }
+        }
+      }
+    },
+    "actionType": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "action_id", "template", "likely_owners", "effort_tier",
+        "controllability_tier", "action_link_strength", "relevant_constraints",
+        "monitoring_kpis"
+      ],
+      "properties": {
+        "action_id": { "type": "string", "pattern": "^[a-z][a-z0-9_]*$" },
+        "template": { "type": "string", "minLength": 1 },
+        "likely_owners": { "type": "array", "minItems": 1, "items": { "type": "string" } },
+        "effort_tier": { "type": "string", "enum": ["LOW", "MEDIUM", "HIGH"] },
+        "controllability_tier": { "type": "string", "enum": ["LOW", "MEDIUM", "HIGH"] },
+        "action_link_strength": { "type": "string", "enum": ["WEAK", "MODERATE", "STRONG"] },
+        "relevant_constraints": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": ["budget", "operational_capacity", "inventory", "geography", "decision_rights"]
+          }
+        },
+        "monitoring_kpis": { "type": "array", "minItems": 1, "items": { "type": "string" } }
+      }
+    }
+  }
+}

@@ -1,0 +1,32 @@
+# Causa Storytelling Configuration — Step 8
+#
+# Every retry/tolerance/LLM-call policy the Persona-Aware KPI Storytelling
+# engine uses. Validated (not executed) by src/story/config.py::StorytellingConfig.
+# No JSON Schema companion -- small, purely numeric/policy, same precedent as
+# config/decision_scoring.yaml and config/embedding.yaml.
+
+version: "1.0"
+
+llm:
+  provider: "groq"      # informational only -- src/agents/llm_client.GroqLLMClient is the actual implementation;
+                          # this repo has exactly one LLM provider integration (Step 5), reused as-is for Step 8
+                          # rather than introducing a second, parallel env-var/provider convention.
+  model: null             # null == use agents.llm_client.DEFAULT_MODEL (itself GROQ_MODEL env var, or its own
+                          # hardcoded default). Set a string here only to override the model name; never an API key.
+  temperature: 0.2
+  max_tokens_planner: 800
+  max_tokens_generator: 1500
+
+generation:
+  max_generation_retries: 2   # total regeneration attempts AFTER the first, i.e. up to 3 attempts total
+  prompt_version: "v1"
+
+verification:
+  numeric_tolerance: 0.0005        # relative tolerance -- same default/semantics as agents.models.validate_numeric_claims
+  numeric_absolute_floor: 0.01
+  minimum_magnitude: 20.0           # reused convention from agents.models: a bare small integer with no
+                                    # currency/percent/decimal marker is a structural label, not a business number
+
+fallback:
+  allow_deterministic_fallback: true   # if false, persistent verification failure raises StoryGenerationFailed
+                                        # instead of falling back to the deterministic template story

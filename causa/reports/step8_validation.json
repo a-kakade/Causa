@@ -1,0 +1,1036 @@
+{
+  "generated_at": "2026-08-28T13:10:11.285409+00:00",
+  "run_seconds": 0.01,
+  "required_value_checks": {
+    "all_four_personas_generated": true,
+    "all_stories_verified_approved": true,
+    "personas_produce_different_section_ordering": true,
+    "executive_story_present": true,
+    "finance_story_present": true,
+    "operations_story_present": true,
+    "marketing_story_present": true,
+    "all_checks_pass": true
+  },
+  "evidence_package": {
+    "package_id": "pkg_revenue_2017-11",
+    "kpi_id": "revenue",
+    "period": "2017-11",
+    "items": [
+      {
+        "evidence_id": "EV001",
+        "metric": "revenue",
+        "value": 52.1,
+        "unit": "percent",
+        "direction": "increase",
+        "period": "2017-10-01..2017-11-30",
+        "source_system": "kpi_engine",
+        "timestamp": "2026-08-28T13:10:07.810485+00:00",
+        "analytical_method": "kpi.engine.KPIEngine.compare_periods",
+        "confidence": "HIGH",
+        "claim_type": "FACT",
+        "evidence_type": "KPI_MOVEMENT",
+        "evidence_tier": "T1_DESCRIPTIVE",
+        "supporting_evidence": [],
+        "limitations": []
+      },
+      {
+        "evidence_id": "EV002",
+        "metric": "orders",
+        "value": 62.9,
+        "unit": "percent",
+        "direction": "increase",
+        "period": "2017-10-01..2017-11-30",
+        "source_system": "kpi_engine",
+        "timestamp": "2026-08-28T13:10:07.810554+00:00",
+        "analytical_method": "kpi.engine.KPIEngine.compare_periods",
+        "confidence": "HIGH",
+        "claim_type": "FACT",
+        "evidence_type": "KPI_MOVEMENT",
+        "evidence_tier": "T1_DESCRIPTIVE",
+        "supporting_evidence": [],
+        "limitations": []
+      },
+      {
+        "evidence_id": "EV003",
+        "metric": "aov",
+        "value": -6.75,
+        "unit": "percent",
+        "direction": "decrease",
+        "period": "2017-10-01..2017-11-30",
+        "source_system": "kpi_engine",
+        "timestamp": "2026-08-28T13:10:07.810593+00:00",
+        "analytical_method": "kpi.engine.KPIEngine.compare_periods",
+        "confidence": "HIGH",
+        "claim_type": "FACT",
+        "evidence_type": "KPI_MOVEMENT",
+        "evidence_tier": "T1_DESCRIPTIVE",
+        "supporting_evidence": [],
+        "limitations": []
+      },
+      {
+        "evidence_id": "EV004",
+        "metric": "volume",
+        "value": 417000.0,
+        "unit": "BRL",
+        "direction": "increase",
+        "period": "2017-10-01..2017-11-30",
+        "source_system": "kpi_engine",
+        "timestamp": "2026-08-28T13:10:07.810627+00:00",
+        "analytical_method": "kpi.engine.KPIEngine.compare_periods",
+        "confidence": "HIGH",
+        "claim_type": "ANALYTICAL_FINDING",
+        "evidence_type": "DRIVER_CONTRIBUTION",
+        "evidence_tier": "T2_ARITHMETIC",
+        "supporting_evidence": [],
+        "limitations": []
+      },
+      {
+        "evidence_id": "EV005",
+        "metric": "mix",
+        "value": -75900.0,
+        "unit": "BRL",
+        "direction": "decrease",
+        "period": "2017-10-01..2017-11-30",
+        "source_system": "kpi_engine",
+        "timestamp": "2026-08-28T13:10:07.810662+00:00",
+        "analytical_method": "kpi.engine.KPIEngine.compare_periods",
+        "confidence": "HIGH",
+        "claim_type": "ANALYTICAL_FINDING",
+        "evidence_type": "DRIVER_CONTRIBUTION",
+        "evidence_tier": "T2_ARITHMETIC",
+        "supporting_evidence": [],
+        "limitations": []
+      },
+      {
+        "evidence_id": "EV006",
+        "metric": "on_time_delivery_rate",
+        "value": 27.9,
+        "unit": "percent",
+        "direction": "decrease",
+        "period": "2017-10-01..2017-11-30",
+        "source_system": "kpi_engine",
+        "timestamp": "2026-08-28T13:10:07.810699+00:00",
+        "analytical_method": "kpi.engine.KPIEngine.compare_periods",
+        "confidence": "HIGH",
+        "claim_type": "ASSOCIATION",
+        "evidence_type": "ANOMALY_SIGNAL",
+        "evidence_tier": "T3_STATISTICAL",
+        "supporting_evidence": [],
+        "limitations": []
+      },
+      {
+        "evidence_id": "EV007",
+        "metric": "avg_review_score",
+        "value": -5.2,
+        "unit": "percent",
+        "direction": "decrease",
+        "period": "2017-10-01..2017-11-30",
+        "source_system": "kpi_engine",
+        "timestamp": "2026-08-28T13:10:07.810734+00:00",
+        "analytical_method": "kpi.engine.KPIEngine.compare_periods",
+        "confidence": "HIGH",
+        "claim_type": "ASSOCIATION",
+        "evidence_type": "CONCURRENT_KPI",
+        "evidence_tier": "T1_DESCRIPTIVE",
+        "supporting_evidence": [],
+        "limitations": []
+      },
+      {
+        "evidence_id": "rec_delivery_delay_expedite",
+        "metric": "on_time_delivery_rate",
+        "value": 585.0,
+        "unit": "pp",
+        "direction": null,
+        "period": "2017-11",
+        "source_system": "decision_engine",
+        "timestamp": "2026-08-28T13:10:07.810886+00:00",
+        "analytical_method": "decision_pipeline",
+        "confidence": 0.78,
+        "claim_type": "UNKNOWN",
+        "evidence_type": "ACTION_RESULT",
+        "evidence_tier": null,
+        "supporting_evidence": [],
+        "limitations": [
+          "assumption"
+        ]
+      }
+    ],
+    "recommendations": [
+      {
+        "recommendation_id": "rec_delivery_delay_expedite",
+        "driver": "delivery_delay",
+        "driver_category": "FULFILLMENT_LOGISTICS",
+        "controllable_lever": "shipment_prioritization",
+        "possible_action": "Expedite high-risk shipments.",
+        "expected_impact": {
+          "metric": "on_time_delivery_rate",
+          "estimated_effect": 0.06,
+          "effect_unit": "pp",
+          "addressable_population": 12500,
+          "confidence": 0.78,
+          "calculated_impact": 585.0,
+          "revenue_impact": null,
+          "effect_source": "HISTORICAL_ESTIMATE",
+          "population_source": "HISTORICAL_ESTIMATE",
+          "confidence_basis": "test",
+          "is_estimable": true
+        },
+        "owner": "Operations Manager",
+        "constraints": [],
+        "controllability": 0.9,
+        "effort": 0.2,
+        "priority_score": 1679.5,
+        "monitoring_kpis": [],
+        "rationale": "delivery_delay is associated with a movement in on_time_delivery_rate.",
+        "assumptions": [
+          "assumption"
+        ],
+        "score_breakdown": {
+          "confidence_factors": {},
+          "confidence_weights": {},
+          "confidence_score": 0.78,
+          "controllability_score": 0.9,
+          "controllability_basis": "test",
+          "effort_score": 0.2,
+          "effort_basis": "test",
+          "priority_formula": "impact * confidence * controllability / effort",
+          "priority_score": 1679.5
+        },
+        "tier": "TOP",
+        "ranking_explanation": [
+          "ranked #1"
+        ],
+        "action_justified_by_evidence": false,
+        "generated_by": "DETERMINISTIC_TEMPLATE",
+        "source_driver_signal_id": "sig1"
+      }
+    ],
+    "version": "1.0",
+    "content_hash": "420f12a87cffb2f4",
+    "created_at": "2026-08-28T13:10:07.811128+00:00"
+  },
+  "stories": {
+    "EXECUTIVE": {
+      "persona": "EXECUTIVE",
+      "headline": "revenue increased 52.1% in 2017-11.",
+      "sections": [
+        {
+          "title": "Key movement",
+          "statements": [
+            {
+              "text": "revenue increased 52.1% in 2017-11.",
+              "claim_type": "FACT",
+              "evidence_ids": [
+                "EV001"
+              ],
+              "confidence": "HIGH",
+              "numeric_claims": [
+                {
+                  "raw_text": "52.1%",
+                  "normalized_value": 52.1,
+                  "unit": "percent",
+                  "matched_evidence_id": "EV001",
+                  "status": "APPROVED",
+                  "rejection_reason": null
+                }
+              ],
+              "validation_status": "APPROVED",
+              "rejection_reason": null
+            },
+            {
+              "text": "orders increased 62.9% in 2017-11.",
+              "claim_type": "FACT",
+              "evidence_ids": [
+                "EV002"
+              ],
+              "confidence": "HIGH",
+              "numeric_claims": [
+                {
+                  "raw_text": "62.9%",
+                  "normalized_value": 62.9,
+                  "unit": "percent",
+                  "matched_evidence_id": "EV002",
+                  "status": "APPROVED",
+                  "rejection_reason": null
+                }
+              ],
+              "validation_status": "APPROVED",
+              "rejection_reason": null
+            }
+          ]
+        },
+        {
+          "title": "Main drivers",
+          "statements": [
+            {
+              "text": "aov decreased -6.75% in 2017-11.",
+              "claim_type": "FACT",
+              "evidence_ids": [
+                "EV003"
+              ],
+              "confidence": "HIGH",
+              "numeric_claims": [
+                {
+                  "raw_text": "-6.75%",
+                  "normalized_value": -6.75,
+                  "unit": "percent",
+                  "matched_evidence_id": "EV003",
+                  "status": "APPROVED",
+                  "rejection_reason": null
+                }
+              ],
+              "validation_status": "APPROVED",
+              "rejection_reason": null
+            },
+            {
+              "text": "volume explains R$417000.0 in 2017-11.",
+              "claim_type": "ANALYTICAL_FINDING",
+              "evidence_ids": [
+                "EV004"
+              ],
+              "confidence": "HIGH",
+              "numeric_claims": [
+                {
+                  "raw_text": "R$417000.0",
+                  "normalized_value": 417000.0,
+                  "unit": "BRL",
+                  "matched_evidence_id": "EV004",
+                  "status": "APPROVED",
+                  "rejection_reason": null
+                }
+              ],
+              "validation_status": "APPROVED",
+              "rejection_reason": null
+            }
+          ]
+        },
+        {
+          "title": "Business implication",
+          "statements": [
+            {
+              "text": "mix explains -R$75900.0 in 2017-11.",
+              "claim_type": "ANALYTICAL_FINDING",
+              "evidence_ids": [
+                "EV005"
+              ],
+              "confidence": "HIGH",
+              "numeric_claims": [
+                {
+                  "raw_text": "-R$75900.0",
+                  "normalized_value": -75900.0,
+                  "unit": "BRL",
+                  "matched_evidence_id": "EV005",
+                  "status": "APPROVED",
+                  "rejection_reason": null
+                }
+              ],
+              "validation_status": "APPROVED",
+              "rejection_reason": null
+            },
+            {
+              "text": "on_time_delivery_rate coincided with 27.9% in 2017-11.",
+              "claim_type": "ASSOCIATION",
+              "evidence_ids": [
+                "EV006"
+              ],
+              "confidence": "HIGH",
+              "numeric_claims": [
+                {
+                  "raw_text": "27.9%",
+                  "normalized_value": 27.9,
+                  "unit": "percent",
+                  "matched_evidence_id": "EV006",
+                  "status": "APPROVED",
+                  "rejection_reason": null
+                }
+              ],
+              "validation_status": "APPROVED",
+              "rejection_reason": null
+            }
+          ]
+        },
+        {
+          "title": "Recommended actions",
+          "statements": [
+            {
+              "text": "Recommended action: Expedite high-risk shipments.",
+              "claim_type": "ANALYTICAL_FINDING",
+              "evidence_ids": [
+                "rec_delivery_delay_expedite"
+              ],
+              "confidence": 0.78,
+              "numeric_claims": [],
+              "validation_status": "APPROVED",
+              "rejection_reason": null
+            }
+          ]
+        },
+        {
+          "title": "Risks and uncertainty",
+          "statements": [
+            {
+              "text": "avg_review_score coincided with -5.2% in 2017-11.",
+              "claim_type": "ASSOCIATION",
+              "evidence_ids": [
+                "EV007"
+              ],
+              "confidence": "HIGH",
+              "numeric_claims": [
+                {
+                  "raw_text": "-5.2%",
+                  "normalized_value": -5.2,
+                  "unit": "percent",
+                  "matched_evidence_id": "EV007",
+                  "status": "APPROVED",
+                  "rejection_reason": null
+                }
+              ],
+              "validation_status": "APPROVED",
+              "rejection_reason": null
+            },
+            {
+              "text": "Available evidence is insufficient to determine the on_time_delivery_rate movement in 2017-11.",
+              "claim_type": "UNKNOWN",
+              "evidence_ids": [
+                "rec_delivery_delay_expedite"
+              ],
+              "confidence": 0.78,
+              "numeric_claims": [],
+              "validation_status": "APPROVED",
+              "rejection_reason": null
+            }
+          ]
+        }
+      ],
+      "verification": {
+        "status": "APPROVED",
+        "claims_checked": 9,
+        "claims_rejected": 0,
+        "rejected_claims": []
+      },
+      "generated_by": "DETERMINISTIC_TEMPLATE",
+      "generated_at": "2026-08-28T13:10:07.811811+00:00",
+      "model_info": {
+        "provider": "deterministic_template"
+      },
+      "evidence_package_id": "pkg_revenue_2017-11",
+      "evidence_package_version": "1.0",
+      "evidence_package_hash": "420f12a87cffb2f4",
+      "generation_attempts": 1
+    },
+    "FINANCE": {
+      "persona": "FINANCE",
+      "headline": "revenue increased 52.1% in 2017-11.",
+      "sections": [
+        {
+          "title": "Revenue bridge",
+          "statements": [
+            {
+              "text": "revenue increased 52.1% in 2017-11.",
+              "claim_type": "FACT",
+              "evidence_ids": [
+                "EV001"
+              ],
+              "confidence": "HIGH",
+              "numeric_claims": [
+                {
+                  "raw_text": "52.1%",
+                  "normalized_value": 52.1,
+                  "unit": "percent",
+                  "matched_evidence_id": "EV001",
+                  "status": "APPROVED",
+                  "rejection_reason": null
+                }
+              ],
+              "validation_status": "APPROVED",
+              "rejection_reason": null
+            },
+            {
+              "text": "aov decreased -6.75% in 2017-11.",
+              "claim_type": "FACT",
+              "evidence_ids": [
+                "EV003"
+              ],
+              "confidence": "HIGH",
+              "numeric_claims": [
+                {
+                  "raw_text": "-6.75%",
+                  "normalized_value": -6.75,
+                  "unit": "percent",
+                  "matched_evidence_id": "EV003",
+                  "status": "APPROVED",
+                  "rejection_reason": null
+                }
+              ],
+              "validation_status": "APPROVED",
+              "rejection_reason": null
+            },
+            {
+              "text": "volume explains R$417000.0 in 2017-11.",
+              "claim_type": "ANALYTICAL_FINDING",
+              "evidence_ids": [
+                "EV004"
+              ],
+              "confidence": "HIGH",
+              "numeric_claims": [
+                {
+                  "raw_text": "R$417000.0",
+                  "normalized_value": 417000.0,
+                  "unit": "BRL",
+                  "matched_evidence_id": "EV004",
+                  "status": "APPROVED",
+                  "rejection_reason": null
+                }
+              ],
+              "validation_status": "APPROVED",
+              "rejection_reason": null
+            },
+            {
+              "text": "mix explains -R$75900.0 in 2017-11.",
+              "claim_type": "ANALYTICAL_FINDING",
+              "evidence_ids": [
+                "EV005"
+              ],
+              "confidence": "HIGH",
+              "numeric_claims": [
+                {
+                  "raw_text": "-R$75900.0",
+                  "normalized_value": -75900.0,
+                  "unit": "BRL",
+                  "matched_evidence_id": "EV005",
+                  "status": "APPROVED",
+                  "rejection_reason": null
+                }
+              ],
+              "validation_status": "APPROVED",
+              "rejection_reason": null
+            },
+            {
+              "text": "orders increased 62.9% in 2017-11.",
+              "claim_type": "FACT",
+              "evidence_ids": [
+                "EV002"
+              ],
+              "confidence": "HIGH",
+              "numeric_claims": [
+                {
+                  "raw_text": "62.9%",
+                  "normalized_value": 62.9,
+                  "unit": "percent",
+                  "matched_evidence_id": "EV002",
+                  "status": "APPROVED",
+                  "rejection_reason": null
+                }
+              ],
+              "validation_status": "APPROVED",
+              "rejection_reason": null
+            }
+          ]
+        },
+        {
+          "title": "Price, volume, and mix",
+          "statements": [
+            {
+              "text": "on_time_delivery_rate coincided with 27.9% in 2017-11.",
+              "claim_type": "ASSOCIATION",
+              "evidence_ids": [
+                "EV006"
+              ],
+              "confidence": "HIGH",
+              "numeric_claims": [
+                {
+                  "raw_text": "27.9%",
+                  "normalized_value": 27.9,
+                  "unit": "percent",
+                  "matched_evidence_id": "EV006",
+                  "status": "APPROVED",
+                  "rejection_reason": null
+                }
+              ],
+              "validation_status": "APPROVED",
+              "rejection_reason": null
+            },
+            {
+              "text": "avg_review_score coincided with -5.2% in 2017-11.",
+              "claim_type": "ASSOCIATION",
+              "evidence_ids": [
+                "EV007"
+              ],
+              "confidence": "HIGH",
+              "numeric_claims": [
+                {
+                  "raw_text": "-5.2%",
+                  "normalized_value": -5.2,
+                  "unit": "percent",
+                  "matched_evidence_id": "EV007",
+                  "status": "APPROVED",
+                  "rejection_reason": null
+                }
+              ],
+              "validation_status": "APPROVED",
+              "rejection_reason": null
+            },
+            {
+              "text": "Available evidence is insufficient to determine the on_time_delivery_rate movement in 2017-11.",
+              "claim_type": "UNKNOWN",
+              "evidence_ids": [
+                "rec_delivery_delay_expedite"
+              ],
+              "confidence": 0.78,
+              "numeric_claims": [],
+              "validation_status": "APPROVED",
+              "rejection_reason": null
+            }
+          ]
+        },
+        {
+          "title": "Margin and risk",
+          "statements": []
+        },
+        {
+          "title": "Recommended actions",
+          "statements": [
+            {
+              "text": "Recommended action: Expedite high-risk shipments.",
+              "claim_type": "ANALYTICAL_FINDING",
+              "evidence_ids": [
+                "rec_delivery_delay_expedite"
+              ],
+              "confidence": 0.78,
+              "numeric_claims": [],
+              "validation_status": "APPROVED",
+              "rejection_reason": null
+            }
+          ]
+        }
+      ],
+      "verification": {
+        "status": "APPROVED",
+        "claims_checked": 9,
+        "claims_rejected": 0,
+        "rejected_claims": []
+      },
+      "generated_by": "DETERMINISTIC_TEMPLATE",
+      "generated_at": "2026-08-28T13:10:07.812259+00:00",
+      "model_info": {
+        "provider": "deterministic_template"
+      },
+      "evidence_package_id": "pkg_revenue_2017-11",
+      "evidence_package_version": "1.0",
+      "evidence_package_hash": "420f12a87cffb2f4",
+      "generation_attempts": 1
+    },
+    "OPERATIONS": {
+      "persona": "OPERATIONS",
+      "headline": "revenue increased 52.1% in 2017-11.",
+      "sections": [
+        {
+          "title": "Delivery and fulfillment",
+          "statements": [
+            {
+              "text": "on_time_delivery_rate coincided with 27.9% in 2017-11.",
+              "claim_type": "ASSOCIATION",
+              "evidence_ids": [
+                "EV006"
+              ],
+              "confidence": "HIGH",
+              "numeric_claims": [
+                {
+                  "raw_text": "27.9%",
+                  "normalized_value": 27.9,
+                  "unit": "percent",
+                  "matched_evidence_id": "EV006",
+                  "status": "APPROVED",
+                  "rejection_reason": null
+                }
+              ],
+              "validation_status": "APPROVED",
+              "rejection_reason": null
+            },
+            {
+              "text": "avg_review_score coincided with -5.2% in 2017-11.",
+              "claim_type": "ASSOCIATION",
+              "evidence_ids": [
+                "EV007"
+              ],
+              "confidence": "HIGH",
+              "numeric_claims": [
+                {
+                  "raw_text": "-5.2%",
+                  "normalized_value": -5.2,
+                  "unit": "percent",
+                  "matched_evidence_id": "EV007",
+                  "status": "APPROVED",
+                  "rejection_reason": null
+                }
+              ],
+              "validation_status": "APPROVED",
+              "rejection_reason": null
+            },
+            {
+              "text": "Available evidence is insufficient to determine the on_time_delivery_rate movement in 2017-11.",
+              "claim_type": "UNKNOWN",
+              "evidence_ids": [
+                "rec_delivery_delay_expedite"
+              ],
+              "confidence": 0.78,
+              "numeric_claims": [],
+              "validation_status": "APPROVED",
+              "rejection_reason": null
+            },
+            {
+              "text": "volume explains R$417000.0 in 2017-11.",
+              "claim_type": "ANALYTICAL_FINDING",
+              "evidence_ids": [
+                "EV004"
+              ],
+              "confidence": "HIGH",
+              "numeric_claims": [
+                {
+                  "raw_text": "R$417000.0",
+                  "normalized_value": 417000.0,
+                  "unit": "BRL",
+                  "matched_evidence_id": "EV004",
+                  "status": "APPROVED",
+                  "rejection_reason": null
+                }
+              ],
+              "validation_status": "APPROVED",
+              "rejection_reason": null
+            },
+            {
+              "text": "mix explains -R$75900.0 in 2017-11.",
+              "claim_type": "ANALYTICAL_FINDING",
+              "evidence_ids": [
+                "EV005"
+              ],
+              "confidence": "HIGH",
+              "numeric_claims": [
+                {
+                  "raw_text": "-R$75900.0",
+                  "normalized_value": -75900.0,
+                  "unit": "BRL",
+                  "matched_evidence_id": "EV005",
+                  "status": "APPROVED",
+                  "rejection_reason": null
+                }
+              ],
+              "validation_status": "APPROVED",
+              "rejection_reason": null
+            }
+          ]
+        },
+        {
+          "title": "Affected segments",
+          "statements": [
+            {
+              "text": "revenue increased 52.1% in 2017-11.",
+              "claim_type": "FACT",
+              "evidence_ids": [
+                "EV001"
+              ],
+              "confidence": "HIGH",
+              "numeric_claims": [
+                {
+                  "raw_text": "52.1%",
+                  "normalized_value": 52.1,
+                  "unit": "percent",
+                  "matched_evidence_id": "EV001",
+                  "status": "APPROVED",
+                  "rejection_reason": null
+                }
+              ],
+              "validation_status": "APPROVED",
+              "rejection_reason": null
+            },
+            {
+              "text": "orders increased 62.9% in 2017-11.",
+              "claim_type": "FACT",
+              "evidence_ids": [
+                "EV002"
+              ],
+              "confidence": "HIGH",
+              "numeric_claims": [
+                {
+                  "raw_text": "62.9%",
+                  "normalized_value": 62.9,
+                  "unit": "percent",
+                  "matched_evidence_id": "EV002",
+                  "status": "APPROVED",
+                  "rejection_reason": null
+                }
+              ],
+              "validation_status": "APPROVED",
+              "rejection_reason": null
+            },
+            {
+              "text": "aov decreased -6.75% in 2017-11.",
+              "claim_type": "FACT",
+              "evidence_ids": [
+                "EV003"
+              ],
+              "confidence": "HIGH",
+              "numeric_claims": [
+                {
+                  "raw_text": "-6.75%",
+                  "normalized_value": -6.75,
+                  "unit": "percent",
+                  "matched_evidence_id": "EV003",
+                  "status": "APPROVED",
+                  "rejection_reason": null
+                }
+              ],
+              "validation_status": "APPROVED",
+              "rejection_reason": null
+            }
+          ]
+        },
+        {
+          "title": "Service risk",
+          "statements": []
+        },
+        {
+          "title": "Recommended actions",
+          "statements": [
+            {
+              "text": "Recommended action: Expedite high-risk shipments.",
+              "claim_type": "ANALYTICAL_FINDING",
+              "evidence_ids": [
+                "rec_delivery_delay_expedite"
+              ],
+              "confidence": 0.78,
+              "numeric_claims": [],
+              "validation_status": "APPROVED",
+              "rejection_reason": null
+            }
+          ]
+        }
+      ],
+      "verification": {
+        "status": "APPROVED",
+        "claims_checked": 9,
+        "claims_rejected": 0,
+        "rejected_claims": []
+      },
+      "generated_by": "DETERMINISTIC_TEMPLATE",
+      "generated_at": "2026-08-28T13:10:07.812580+00:00",
+      "model_info": {
+        "provider": "deterministic_template"
+      },
+      "evidence_package_id": "pkg_revenue_2017-11",
+      "evidence_package_version": "1.0",
+      "evidence_package_hash": "420f12a87cffb2f4",
+      "generation_attempts": 1
+    },
+    "MARKETING": {
+      "persona": "MARKETING",
+      "headline": "revenue increased 52.1% in 2017-11.",
+      "sections": [
+        {
+          "title": "Demand and orders",
+          "statements": [
+            {
+              "text": "revenue increased 52.1% in 2017-11.",
+              "claim_type": "FACT",
+              "evidence_ids": [
+                "EV001"
+              ],
+              "confidence": "HIGH",
+              "numeric_claims": [
+                {
+                  "raw_text": "52.1%",
+                  "normalized_value": 52.1,
+                  "unit": "percent",
+                  "matched_evidence_id": "EV001",
+                  "status": "APPROVED",
+                  "rejection_reason": null
+                }
+              ],
+              "validation_status": "APPROVED",
+              "rejection_reason": null
+            },
+            {
+              "text": "orders increased 62.9% in 2017-11.",
+              "claim_type": "FACT",
+              "evidence_ids": [
+                "EV002"
+              ],
+              "confidence": "HIGH",
+              "numeric_claims": [
+                {
+                  "raw_text": "62.9%",
+                  "normalized_value": 62.9,
+                  "unit": "percent",
+                  "matched_evidence_id": "EV002",
+                  "status": "APPROVED",
+                  "rejection_reason": null
+                }
+              ],
+              "validation_status": "APPROVED",
+              "rejection_reason": null
+            },
+            {
+              "text": "aov decreased -6.75% in 2017-11.",
+              "claim_type": "FACT",
+              "evidence_ids": [
+                "EV003"
+              ],
+              "confidence": "HIGH",
+              "numeric_claims": [
+                {
+                  "raw_text": "-6.75%",
+                  "normalized_value": -6.75,
+                  "unit": "percent",
+                  "matched_evidence_id": "EV003",
+                  "status": "APPROVED",
+                  "rejection_reason": null
+                }
+              ],
+              "validation_status": "APPROVED",
+              "rejection_reason": null
+            }
+          ]
+        },
+        {
+          "title": "Customer behavior",
+          "statements": [
+            {
+              "text": "volume explains R$417000.0 in 2017-11.",
+              "claim_type": "ANALYTICAL_FINDING",
+              "evidence_ids": [
+                "EV004"
+              ],
+              "confidence": "HIGH",
+              "numeric_claims": [
+                {
+                  "raw_text": "R$417000.0",
+                  "normalized_value": 417000.0,
+                  "unit": "BRL",
+                  "matched_evidence_id": "EV004",
+                  "status": "APPROVED",
+                  "rejection_reason": null
+                }
+              ],
+              "validation_status": "APPROVED",
+              "rejection_reason": null
+            },
+            {
+              "text": "mix explains -R$75900.0 in 2017-11.",
+              "claim_type": "ANALYTICAL_FINDING",
+              "evidence_ids": [
+                "EV005"
+              ],
+              "confidence": "HIGH",
+              "numeric_claims": [
+                {
+                  "raw_text": "-R$75900.0",
+                  "normalized_value": -75900.0,
+                  "unit": "BRL",
+                  "matched_evidence_id": "EV005",
+                  "status": "APPROVED",
+                  "rejection_reason": null
+                }
+              ],
+              "validation_status": "APPROVED",
+              "rejection_reason": null
+            },
+            {
+              "text": "on_time_delivery_rate coincided with 27.9% in 2017-11.",
+              "claim_type": "ASSOCIATION",
+              "evidence_ids": [
+                "EV006"
+              ],
+              "confidence": "HIGH",
+              "numeric_claims": [
+                {
+                  "raw_text": "27.9%",
+                  "normalized_value": 27.9,
+                  "unit": "percent",
+                  "matched_evidence_id": "EV006",
+                  "status": "APPROVED",
+                  "rejection_reason": null
+                }
+              ],
+              "validation_status": "APPROVED",
+              "rejection_reason": null
+            }
+          ]
+        },
+        {
+          "title": "Category breakdown",
+          "statements": [
+            {
+              "text": "avg_review_score coincided with -5.2% in 2017-11.",
+              "claim_type": "ASSOCIATION",
+              "evidence_ids": [
+                "EV007"
+              ],
+              "confidence": "HIGH",
+              "numeric_claims": [
+                {
+                  "raw_text": "-5.2%",
+                  "normalized_value": -5.2,
+                  "unit": "percent",
+                  "matched_evidence_id": "EV007",
+                  "status": "APPROVED",
+                  "rejection_reason": null
+                }
+              ],
+              "validation_status": "APPROVED",
+              "rejection_reason": null
+            },
+            {
+              "text": "Available evidence is insufficient to determine the on_time_delivery_rate movement in 2017-11.",
+              "claim_type": "UNKNOWN",
+              "evidence_ids": [
+                "rec_delivery_delay_expedite"
+              ],
+              "confidence": 0.78,
+              "numeric_claims": [],
+              "validation_status": "APPROVED",
+              "rejection_reason": null
+            }
+          ]
+        },
+        {
+          "title": "Recommended actions",
+          "statements": [
+            {
+              "text": "Recommended action: Expedite high-risk shipments.",
+              "claim_type": "ANALYTICAL_FINDING",
+              "evidence_ids": [
+                "rec_delivery_delay_expedite"
+              ],
+              "confidence": 0.78,
+              "numeric_claims": [],
+              "validation_status": "APPROVED",
+              "rejection_reason": null
+            }
+          ]
+        }
+      ],
+      "verification": {
+        "status": "APPROVED",
+        "claims_checked": 9,
+        "claims_rejected": 0,
+        "rejected_claims": []
+      },
+      "generated_by": "DETERMINISTIC_TEMPLATE",
+      "generated_at": "2026-08-28T13:10:07.812884+00:00",
+      "model_info": {
+        "provider": "deterministic_template"
+      },
+      "evidence_package_id": "pkg_revenue_2017-11",
+      "evidence_package_version": "1.0",
+      "evidence_package_hash": "420f12a87cffb2f4",
+      "generation_attempts": 1
+    }
+  },
+  "tests": {
+    "returncode": 0,
+    "n_passed": 105,
+    "n_failed": 0,
+    "failed_tests": [],
+    "all_passed": true
+  }
+}

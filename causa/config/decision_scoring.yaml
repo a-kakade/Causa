@@ -1,0 +1,87 @@
+# Causa Decision Scoring Configuration — Step 7
+#
+# Every weight/formula/threshold the Decision & Action Intelligence Engine
+# uses to turn a candidate action into a confidence score, controllability
+# score, effort score, and priority score. Validated (not executed) by
+# src/decision/ontology.py::DecisionScoringConfig. No JSON Schema companion --
+# this file is small, purely numeric, and its real invariants (weight sums,
+# tier monotonicity) are arithmetic checks better expressed as Python
+# assertions in the loader than as a JSON Schema (same precedent as
+# config/embedding.yaml, which also has no schema file).
+#
+# Changing a value here changes computed scores; it never changes what an
+# action IS (that's config/decision_ontology.yaml's job).
+
+version: "1.0"
+
+# Weighted-sum confidence formula (src/decision/confidence_engine.py):
+#   confidence = w1*driver_confidence + w2*data_quality
+#              + w3*historical_support + w4*action_link_strength
+# Must sum to 1.0 -- enforced by DecisionScoringConfig.load().
+confidence_weights:
+  driver_confidence: 0.35
+  data_quality: 0.25
+  historical_support: 0.25
+  action_link_strength: 0.15
+
+# Maps decision_ontology.yaml's action_link_strength enum to a 0-1 factor
+# value fed into the confidence formula above.
+action_link_strength_scores:
+  WEAK: 0.25
+  MODERATE: 0.6
+  STRONG: 0.9
+
+# Maps decision_ontology.yaml's effort_tier -> a 0-1 effort score (higher =
+# more effort).
+effort_tier_scores:
+  LOW: 0.2
+  MEDIUM: 0.5
+  HIGH: 0.85
+
+# Maps decision_ontology.yaml's controllability_tier -> a 0-1 score.
+controllability_tier_scores:
+  LOW: 0.25
+  MEDIUM: 0.55
+  HIGH: 0.9
+
+# Data-quality label (from DriverSignal.business_context.data_quality, if
+# supplied) -> a 0-1 factor fed into the confidence formula. UNKNOWN is the
+# default whenever the caller does not supply a data_quality label.
+data_quality_scores:
+  HIGH: 1.0
+  MEDIUM: 0.6
+  LOW: 0.3
+  UNKNOWN: 0.1
+
+# src/decision/scoring.py::compute_priority(). The formula string below is
+# echoed into ScoreBreakdown.priority_formula for audit purposes; the one
+# Python expression actually evaluated is impact * confidence *
+# controllability / effort, with effort clamped to divide_by_zero_floor
+# before division. A fully swappable formula interpreter is documented
+# future work, not built in this pass (avoids eval() and over-engineering
+# for an MVP).
+prioritization:
+  formula: "impact * confidence * controllability / effort"
+  divide_by_zero_floor: 0.05
+
+# Thresholds src/decision/constraint_engine.py's checkers read when
+# DriverSignal.business_context supplies a numeric value rather than a bare
+# boolean.
+constraint_thresholds:
+  budget:
+    warning_below_pct: 20
+    blocked_below_pct: 0
+  operational_capacity:
+    warning_utilization_pct: 85
+    blocked_utilization_pct: 100
+  inventory:
+    warning_below_units: 100
+    blocked_below_units: 0
+  geography:
+    blocked_if_coverage_missing: true
+  decision_rights:
+    blocked_if_owner_role_not_in_allowlist: true
+
+# src/decision/monitoring.py's default measurement window when
+# business_context supplies no override.
+default_monitoring_window: "8_weeks"

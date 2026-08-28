@@ -1,0 +1,100 @@
+# Causa Feedback & Learning Loop Configuration — Step 9
+#
+# Documents (for governance visibility) the closed vocabularies enforced in
+# code by src/feedback/models.py's enums, plus the evaluation/review policy
+# knobs the offline evaluator and review workflow read. Validated (not
+# executed) by src/feedback/config.py::FeedbackConfig -- same posture as
+# config/storytelling.yaml / config/decision_scoring.yaml. No JSON Schema
+# companion (small, policy-only, same precedent as those two files).
+#
+# IMPORTANT: the enums in src/feedback/models.py (FeedbackRating,
+# FeedbackCategory, FeedbackStatus, ReviewStatus, ContextType,
+# CorrectionType) are the ENFORCED source of truth. The lists below must
+# stay in sync with those enums (validate() checks this) -- this file exists
+# so the taxonomy is visible and reviewable in one place, not to let a
+# config edit silently add a category application code doesn't understand.
+
+version: "1.0"
+
+feedback_ratings:
+  - CORRECT
+  - INCORRECT
+  - MISSING_DRIVER
+  - WRONG_RECOMMENDATION
+  - WRONG_CONFIDENCE
+  - COMMENT_ONLY
+
+feedback_categories:
+  - DATA
+  - KPI_DEFINITION
+  - DRIVER
+  - EVIDENCE
+  - CONFIDENCE
+  - RECOMMENDATION
+  - NARRATIVE
+
+feedback_statuses:
+  - UNREVIEWED
+  - ACCEPTED
+  - REJECTED
+  - CONTESTED
+
+review_statuses:
+  - PENDING
+  - REVIEWED
+  - APPROVED_FOR_EVALUATION
+  - REJECTED
+
+context_types:
+  - PROMOTION
+  - HOLIDAY
+  - CAMPAIGN
+  - STOCKOUT
+  - PRICING_EVENT
+  - COMPETITOR_EVENT
+  - OPERATIONAL_EVENT
+  - POLICY_CHANGE
+  - MARKET_EVENT
+  - OTHER
+
+correction_types:
+  - WRONG_KPI_DEFINITION
+  - WRONG_METRIC_VALUE
+  - WRONG_DRIVER
+  - MISSING_DRIVER
+  - WRONG_CAUSAL_RELATIONSHIP
+  - WRONG_EVIDENCE_INTERPRETATION
+  - WRONG_CONFIDENCE
+  - WRONG_RECOMMENDATION
+  - WRONG_PRIORITY
+  - WRONG_NARRATIVE_WORDING
+  - MISSING_CONTEXT
+  - OTHER
+
+review_workflow:
+  # Minimum distinct reviewers whose approval a Feedback needs before
+  # evaluation_case.create_evaluation_case() may be called for it.
+  # Enforcement of a value > 1 is left to the calling workflow (this repo
+  # has no multi-user session concept yet) -- documented here so the policy
+  # is explicit rather than assumed.
+  min_approvals_required: 1
+
+evaluation:
+  # Minimum passing rate (0-1) for each metric name below, used only as a
+  # documented reference threshold -- run_offline_evaluation() itself never
+  # reads this file; a caller comparing an EvaluationReport against these
+  # thresholds is a deliberate, separate, human-reviewed step (spec section 19).
+  thresholds:
+    numeric_accuracy: 0.95
+    evidence_grounding: 0.90
+    causal_correctness: 0.90
+    driver_accuracy: 0.80
+    recommendation_accuracy: 0.80
+    confidence_accuracy: 0.80
+    unsupported_claim_rate_max: 0.05
+
+dataset_versioning:
+  # Version strings are always "v<N>", N monotonically increasing, minted by
+  # feedback.evaluation_case.next_dataset_version() from what is already
+  # stored -- this policy value exists for documentation only.
+  version_prefix: "v"

@@ -13,6 +13,12 @@ data/evidence/embedding_cache/*.npz
 data/evidence/vector_index/*.npy
 data/evidence/vector_index/*.jsonl
 
+# Feedback store (Step 9) — demo/test-run-generated append-only records,
+# fully reproducible via scripts/step9_feedback_learning_demo.py; not a
+# source of truth committed to the repo (unlike the fixtures the demo
+# script hardcodes, which ARE version-controlled as code).
+data/feedback/*.jsonl
+
 # Python
 __pycache__/
 *.pyc

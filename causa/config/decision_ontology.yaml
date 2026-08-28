@@ -1,0 +1,130 @@
+# Causa Decision Ontology — governed business mapping for Step 7
+#
+# Driver -> Driver Category -> Controllable Lever -> Action Types -> Likely
+# Owner -> Relevant Constraints -> Monitoring KPIs. This file is the source
+# of truth for what actions the Decision & Action Intelligence Engine may
+# ever propose. It conforms to schemas/decision_ontology.schema.json,
+# validated (not executed) by src/decision/ontology.py.
+#
+# STRICT RULE: no numeric business impact is computed anywhere in this file.
+# This file defines the business vocabulary; src/decision/impact_estimator.py
+# and src/decision/scoring.py compute numbers, always from real DriverSignal
+# data, never from anything written here.
+#
+# Adding a new driver is a pure YAML addition -- no code change required, as
+# long as the new driver's action_ids are globally unique and its
+# controllability_tier/effort_tier/action_link_strength values are one of the
+# tiers declared in config/decision_scoring.yaml.
+
+version: "1.0"
+generated: "2026-08-28"
+
+# What happens when candidate_generator.generate_candidates() is asked about
+# a driver with no matching entry below. "abstain" means: return zero
+# candidates and record the reason in DecisionResult.pipeline_trace -- never
+# fall back to a generic "improve X" action.
+unsupported_driver_policy: "abstain"
+
+drivers:
+
+  # ============================================================
+  # 1. DELIVERY DELAY (Fulfillment / Logistics)
+  # ============================================================
+  - driver: delivery_delay
+    driver_category: FULFILLMENT_LOGISTICS
+    aliases: ["seller_fulfillment_delay", "late_shipment", "delivery_delay_increase"]
+    controllable_levers:
+      - lever: seller_fulfillment_speed
+        action_types:
+          - action_id: expedite_high_risk_shipments
+            template: "Expedite high-risk shipments for {driver} in {segment}"
+            likely_owners: ["Operations Manager"]
+            effort_tier: MEDIUM
+            controllability_tier: HIGH
+            action_link_strength: STRONG
+            relevant_constraints: ["budget", "operational_capacity"]
+            monitoring_kpis: ["on_time_delivery_rate", "avg_delivery_days"]
+          - action_id: tighten_seller_dispatch_sla
+            template: "Tighten seller dispatch SLA enforcement for {segment}"
+            likely_owners: ["Operations Manager", "Supply Chain Manager"]
+            effort_tier: MEDIUM
+            controllability_tier: HIGH
+            action_link_strength: STRONG
+            relevant_constraints: ["operational_capacity", "decision_rights"]
+            monitoring_kpis: ["on_time_delivery_rate", "avg_delivery_days"]
+      - lever: carrier_selection
+        action_types:
+          - action_id: reroute_to_faster_carrier
+            template: "Shift shipments in {segment} to a faster carrier option"
+            likely_owners: ["Supply Chain Manager"]
+            effort_tier: HIGH
+            controllability_tier: MEDIUM
+            action_link_strength: MODERATE
+            relevant_constraints: ["budget", "geography"]
+            monitoring_kpis: ["on_time_delivery_rate", "avg_delivery_days", "freight_ratio"]
+      - lever: shipment_prioritization
+        action_types:
+          - action_id: prioritize_high_value_customers
+            template: "Prioritize high-value customer shipments for {segment}"
+            likely_owners: ["Operations Manager"]
+            effort_tier: LOW
+            controllability_tier: HIGH
+            action_link_strength: MODERATE
+            relevant_constraints: ["operational_capacity"]
+            monitoring_kpis: ["on_time_delivery_rate"]
+      - lever: inventory_positioning
+        action_types:
+          - action_id: move_inventory_to_regional_warehouses
+            template: "Move inventory to regional warehouses closer to {segment}"
+            likely_owners: ["Supply Chain Manager"]
+            effort_tier: HIGH
+            controllability_tier: MEDIUM
+            action_link_strength: MODERATE
+            relevant_constraints: ["budget", "inventory", "geography"]
+            monitoring_kpis: ["on_time_delivery_rate", "avg_delivery_days"]
+
+  # ============================================================
+  # 2. AOV DECLINE (Pricing / Product Mix)
+  # ============================================================
+  - driver: aov_decline
+    driver_category: PRICING_PRODUCT_MIX
+    aliases: ["average_order_value_decline", "aov_decrease"]
+    controllable_levers:
+      - lever: pricing_strategy
+        action_types:
+          - action_id: introduce_bundle_pricing
+            template: "Introduce bundle pricing for {segment} to lift AOV"
+            likely_owners: ["Pricing Manager", "Commercial Manager"]
+            effort_tier: MEDIUM
+            controllability_tier: MEDIUM
+            action_link_strength: MODERATE
+            relevant_constraints: ["budget", "inventory", "decision_rights"]
+            monitoring_kpis: ["aov", "revenue"]
+          - action_id: adjust_pricing_on_selected_skus
+            template: "Adjust pricing on selected SKUs within {segment}"
+            likely_owners: ["Pricing Manager"]
+            effort_tier: LOW
+            controllability_tier: HIGH
+            action_link_strength: STRONG
+            relevant_constraints: ["decision_rights", "budget"]
+            monitoring_kpis: ["aov", "revenue"]
+      - lever: cross_selling
+        action_types:
+          - action_id: promote_cross_sell_products
+            template: "Promote cross-sell products alongside {segment}"
+            likely_owners: ["Commercial Manager", "Product Manager"]
+            effort_tier: MEDIUM
+            controllability_tier: MEDIUM
+            action_link_strength: MODERATE
+            relevant_constraints: ["inventory"]
+            monitoring_kpis: ["aov", "revenue"]
+      - lever: product_mix_curation
+        action_types:
+          - action_id: promote_higher_margin_categories
+            template: "Promote higher-margin categories within {segment}"
+            likely_owners: ["Product Manager", "Commercial Manager"]
+            effort_tier: MEDIUM
+            controllability_tier: MEDIUM
+            action_link_strength: MODERATE
+            relevant_constraints: ["inventory", "decision_rights"]
+            monitoring_kpis: ["aov", "revenue"]

@@ -1,0 +1,89 @@
+# Causa Persona Configuration — governed persona definitions for Step 8
+#
+# Every persona's story is built from the SAME trusted evidence package --
+# this file governs how each persona's evidence is SELECTED, ORDERED, and
+# BOUNDED (never what the underlying numbers are). Validated (not executed)
+# by src/story/persona.py::PersonaEngine.
+#
+# excluded_evidence_types is a hard block (never selected for that persona,
+# by design, not for lack of evidence). preferred_metrics/preferred_evidence_types
+# only affect ORDERING/priority within a section -- an unlisted metric is
+# still eligible, just not prioritized.
+
+version: "1.0"
+
+personas:
+
+  executive:
+    display_name: "Executive"
+    priority_questions:
+      - "What happened?"
+      - "Why?"
+      - "What is the business impact?"
+      - "What should I do?"
+    focus_areas: [revenue, major_drivers, business_impact, actions, risks]
+    preferred_metrics: [revenue, orders, aov]
+    preferred_evidence_types: [KPI_OBSERVATION, KPI_MOVEMENT, DRIVER_CONTRIBUTION]
+    excluded_evidence_types: [CUSTOMER_REVIEW]
+    detail_level: LOW
+    max_statements_per_section: 2
+    language_style: CONCISE_BUSINESS
+    section_order: ["Headline", "Key movement", "Main drivers", "Business implication",
+                     "Recommended actions", "Risks and uncertainty"]
+    include_recommendations: true
+    max_recommendations: 2
+
+  finance:
+    display_name: "Finance"
+    priority_questions:
+      - "What is the revenue bridge?"
+      - "How did price, volume, and mix each contribute?"
+      - "What is the margin or financial risk?"
+      - "Is this growth sustainable?"
+    focus_areas: [revenue_bridge, price, volume, mix, margin, financial_risk]
+    preferred_metrics: [revenue, aov, price, volume, mix]
+    preferred_evidence_types: [DRIVER_CONTRIBUTION, SEGMENT_CONTRIBUTION, KPI_MOVEMENT]
+    excluded_evidence_types: [CUSTOMER_REVIEW]
+    detail_level: HIGH
+    max_statements_per_section: 5
+    language_style: PRECISE_QUANTITATIVE
+    section_order: ["Headline", "Revenue bridge", "Price, volume, and mix", "Margin and risk",
+                     "Recommended actions"]
+    include_recommendations: true
+    max_recommendations: 3
+
+  operations:
+    display_name: "Operations"
+    priority_questions:
+      - "What is happening with delivery and fulfillment?"
+      - "Which sellers or regions are affected?"
+      - "What service-level risk exists?"
+    focus_areas: [delivery, fulfillment, sellers, geography, service_risk]
+    preferred_metrics: [on_time_delivery_rate, avg_delivery_days, avg_review_score]
+    preferred_evidence_types: [ANOMALY_SIGNAL, SEGMENT_CONTRIBUTION, DRIVER_CONTRIBUTION]
+    excluded_evidence_types: []
+    detail_level: HIGH
+    max_statements_per_section: 5
+    language_style: OPERATIONAL_ACTIONABLE
+    section_order: ["Headline", "Delivery and fulfillment", "Affected segments", "Service risk",
+                     "Recommended actions"]
+    include_recommendations: true
+    max_recommendations: 3
+
+  marketing:
+    display_name: "Marketing"
+    priority_questions:
+      - "What is happening with demand and orders?"
+      - "How is customer behavior changing?"
+      - "Which categories are affected?"
+    focus_areas: [demand, categories, customer_behavior, campaigns]
+    preferred_metrics: [orders, aov, revenue]
+    preferred_evidence_types: [KPI_MOVEMENT, SEGMENT_CONTRIBUTION, CUSTOMER_REVIEW]
+    excluded_evidence_types: []
+    detail_level: MEDIUM
+    max_statements_per_section: 3
+    language_style: NARRATIVE_ENGAGING
+    section_order: ["Headline", "Demand and orders", "Customer behavior", "Category breakdown",
+                     "Recommended actions"]
+    include_recommendations: true
+    max_recommendations: 2

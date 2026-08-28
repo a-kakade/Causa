@@ -13,6 +13,151 @@ has skipped ahead of what the prior step actually established.
 
 ## Where we are right now
 
+**Step 9 complete (2026-08-28): the Human Feedback & Learning Loop.** The
+system now learns from analysts without ever automatically fine-tuning or
+retraining anything: `Feedback → Structured Classification → Stored
+Correction/Business Context → Evaluation Dataset → Offline Evaluation →
+Regression Tests`, never `Feedback → automatic model training`.
+`src/feedback/` (9 files): a `Feedback` capture layer requiring no
+authentication (user_id is always optional), a deterministic multi-category
+classifier (`DATA/KPI_DEFINITION/DRIVER/EVIDENCE/CONFIDENCE/RECOMMENDATION/
+NARRATIVE`, with an optional validated LLM-assist that always falls back to
+the deterministic rules), a `Correction`/`BusinessContext` capture layer
+that preserves the ORIGINAL AI claim alongside the human correction (never
+overwrites it), a two-axis status model (`FeedbackStatus` for trust —
+`UNREVIEWED/ACCEPTED/REJECTED/CONTESTED` — kept deliberately separate from
+`ReviewStatus` for eval-promotion — `PENDING/REVIEWED/
+APPROVED_FOR_EVALUATION/REJECTED`), append-only JSONL storage
+(`data/feedback/`, this repo's first genuinely durable store — status
+changes are appended events folded at read time, never in-place edits), a
+versioned `EvaluationCase` dataset (`v1`, `v2`, ... — a changed expectation
+mints a new version, never rewrites a prior one) capturing both `
+expected_claims` and `forbidden_claims`, a review-gated promotion path
+(`APPROVED_FOR_EVALUATION` only, set exclusively by an explicit
+human-named reviewer) to runnable `RegressionTest`s, and an offline
+evaluator that reuses Step 8's own `claim_verifier.verify_claim` /
+`language_rules` / `numeric_verifier` unmodified rather than writing a
+second verification pipeline.
+
+**Claim identity without touching Step 8.** `story.models.NarrativeClaim`
+has no standalone `claim_id` — Step 9 doesn't add one. Instead
+`feedback.models.claim_key(story_id, section_index, claim_index)` is a pure,
+derived reference string any caller can resolve back to a real claim
+(`story.sections[i].statements[j]`) without Step 8 growing a new field.
+Same posture for evidence/recommendation references: `EvidenceItem.
+evidence_id` and `ActionRecommendation.recommendation_id` are cited
+verbatim, never reinvented.
+
+**Conflicting feedback is preserved, never arbitrated.** When two analysts
+disagree (`review.contest_feedback()`), both `Feedback` records are marked
+`CONTESTED` and a `ConflictRecord` stores both competing hypotheses side by
+side — the system never silently picks a winner.
+
+**Real demo run, all 5 required fixtures.** `scripts/step9_feedback_learning_demo.py`
+walks CORRECT / wrong-driver / wrong-recommendation / wrong-confidence /
+missing-driver feedback through all 9 pipeline stages. The wrong-driver
+case is the spec's own worked example end-to-end: AI claims delivery
+deterioration "coincided with" lower reviews (ASSOCIATION, already
+correctly hedged) → analyst corrects the DRIVER to a November holiday
+campaign → a regression test is created forbidding "delivery caused review
+decline" → a deliberately-regressed candidate that reintroduces that exact
+causal claim is caught and fails the regression test, proving the loop is
+actually enforceable, not just recorded. The wrong-recommendation case
+integrates Step 7 directly: an `EvaluationCase`'s `input_context` feeds
+`decision.constraint_engine.evaluate_constraints()` unmodified
+(`operational_capacity_available: False` → `BLOCKED`), and a candidate that
+still ranks the recommendation `TOP` under that constraint fails offline
+evaluation. A dataset-level baseline-vs-candidate comparison
+(`evaluator.compare_baseline_candidate`) demonstrates the full "measure,
+compare, human decides whether to deploy" loop — deployment is never
+automatic. 93/93 Step 9 tests pass; zero regressions against Steps 1–8
+(976 prior + 93 new = 1069 total).
+
+An explicit AST-scan safety test (`tests/test_feedback_safety.py`, same
+technique `tests/test_orchestrator.py` uses for Step 5's Orchestrator)
+proves no file under `src/feedback/` imports a training/fine-tuning
+library or calls anything resembling `fit()`/`train()`/`deploy()`; separate
+tests prove feedback submission never mutates a live `NarrativeClaim`/
+`EvidenceItem`/`ActionRecommendation` object it references.
+
+Full detail: [STEP9_VALIDATION.md](STEP9_VALIDATION.md),
+[docs/FEEDBACK_ARCHITECTURE.md](docs/FEEDBACK_ARCHITECTURE.md),
+[reports/step9_validation.json](reports/step9_validation.json).
+
+**Step 8 complete (2026-08-28): Persona-Aware KPI Storytelling.** The first
+step where an LLM is a core component — but never the source of numerical
+truth. `src/story/` (10 files): an `EvidencePackage` builder wrapping real
+Step 4/6/7 objects (`EvidenceObject`, `CausalResult`, `ActionRecommendation`)
+without recomputing any of their numbers, a new `ClaimType` epistemic axis
+(FACT/ANALYTICAL_FINDING/ASSOCIATION/HYPOTHESIS/UNKNOWN) deliberately
+distinct from Step 4's `EvidenceType`/`EvidenceTier`, a persona engine
+(Executive/Finance/Operations/Marketing) with config-driven evidence
+selection and ordering, a Narrative Planner and Evidence-Grounded Narrative
+Generator (both LLM-backed via Step 5's `agents.llm_client`, both with a
+fully deterministic fallback), and a claim-level verification pipeline
+(evidence-ID validity, epistemic-type consistency, causal-language rules,
+and a deterministic numeric verifier extending Step 5's guardrail with
+currency K/M-suffix handling and unit-scoped evidence matching) that
+independently re-checks every number before a story is ever returned — the
+LLM is never asked "are these numbers correct?"
+
+**Retry-with-feedback, never silent fallback on rejection.** A generated
+narrative that fails verification triggers a regeneration attempt with an
+explicit feedback message citing the exact failed claim and trusted value,
+up to a configurable retry limit; persistent failure either falls back to
+an explicitly-labeled deterministic template (itself re-verified) or raises
+`StoryGenerationFailed`, per configuration — never a silently-presented
+unverified narrative either way.
+
+**Real demo run, all 4 required personas, one shared evidence package.**
+Using the task's own exact example numbers (Revenue +52.1%, Orders +62.9%,
+AOV -6.75%, Volume +R$417K, Mix -R$75.9K, Delivery +27.9%, Reviews -5.2%)
+plus one Step 7 recommendation, all 4 personas generated independently
+`APPROVED` stories with genuinely different section groupings/ordering
+(Executive leads with business impact and actions; Finance leads with the
+revenue bridge and explicitly never invents a margin figure it has no
+evidence for; Operations leads with delivery/fulfillment; Marketing leads
+with demand/orders) while every one of the 4 stories cites the identical
+trusted numbers, independently re-verified. 105/105 Step 8 tests pass;
+zero regressions against Steps 1–7.
+
+Full detail: [STEP8_VALIDATION.md](STEP8_VALIDATION.md).
+
+**Step 7 complete (2026-08-28): the Decision & Action Intelligence Engine.**
+A governed, configuration-driven layer that answers "what should the
+business do?" — never as an LLM freely generating advice like "improve
+logistics," but as a structured pipeline: Driver → Controllable Lever →
+Possible Action → Expected Impact → Owner → Constraints → Confidence →
+Monitoring KPI. `src/decision/` (9 files): a business ontology loaded from
+`config/decision_ontology.yaml` (2 drivers — delivery_delay, aov_decline —
+extensible by pure YAML addition, no code change), a deterministic candidate
+generator producing multiple template-based action alternatives per driver,
+a constraint engine (budget/operational_capacity/inventory/geography/
+decision_rights, each PASS/WARNING/BLOCKED), an impact estimator computing
+`expected_impact = effect × addressable_population × confidence` and never
+fabricating a missing input (marked `"unknown"` instead), a confidence
+engine (weighted sum of driver_confidence/data_quality/historical_support/
+action_link_strength, weights from `config/decision_scoring.yaml`),
+controllability/effort/priority scoring (`priority = impact × confidence ×
+controllability ÷ effort`, divide-by-zero guarded), a ranking pipeline
+splitting recommendations into top/alternatives/conditional/blocked with an
+explicit `ranking_explanation` citing real computed numbers, a monitoring-
+plan builder, and an optional explanation layer whose LLM path (if wired in)
+can only verbalize already-computed facts — never invent a number, checked
+by the same numeric/causal-language guardrails Step 5 already established.
+
+**Real demo run, both required scenarios.** Delivery delay (the task's own
+exact input values: -8% observed change, 12,500 addressable shipments, +6pp
+historical effect, 0.78 confidence) produced 5 candidate actions; top
+recommendation "Prioritize high-value customer shipments," owned by
+Operations Manager, `calculated_impact = 0.06 × 12,500 × 0.78 = 585.0`,
+`priority_score = 1679.535` — a concrete, quantified action, never a generic
+string. AOV decline (proving ontology extensibility) produced 4 candidates,
+top recommendation "Adjust pricing on selected SKUs," owned by Pricing
+Manager. 113/113 Step 7 tests pass; zero regressions against Steps 1–6.
+
+Full detail: [STEP7_VALIDATION.md](STEP7_VALIDATION.md).
+
 **Step 6 complete (2026-08-28): the Causal Analysis and Evidence-Tier
 Engine.** A governed layer that answers "what's the strongest evidence tier
 the data can defensibly support?" for a specific causal hypothesis — never
@@ -173,7 +318,10 @@ feedback learning, and a frontend still don't exist.)**
 | 4A | Retrieval failure analysis + BM25 + hybrid architecture | ✅ Complete | [STEP4A_VALIDATION.md](STEP4A_VALIDATION.md) |
 | 5 | Secure Multi-Agent Investigation Engine | ✅ Complete | [STEP5_VALIDATION.md](STEP5_VALIDATION.md) |
 | 6 | Causal Analysis and Evidence-Tier Engine | ✅ Complete | [STEP6_VALIDATION.md](STEP6_VALIDATION.md) |
-| — | Action recommendations, persona narratives, feedback learning, frontend | ⬜ Not started | — |
+| 7 | Decision & Action Intelligence Engine | ✅ Complete | [STEP7_VALIDATION.md](STEP7_VALIDATION.md) |
+| 8 | Persona-Aware KPI Storytelling | ✅ Complete | [STEP8_VALIDATION.md](STEP8_VALIDATION.md) |
+| 9 | Human Feedback & Learning Loop | ✅ Complete | [STEP9_VALIDATION.md](STEP9_VALIDATION.md) |
+| — | Frontend/API | ⬜ Not started | — |
 
 ---
 
@@ -710,12 +858,27 @@ Full detail: [STEP6_VALIDATION.md](STEP6_VALIDATION.md),
 - Geolocation is not in the canonical layer (see Step 2).
 - `order_status` default filtering for "recognized revenue" is an open question,
   deliberately exposed as a filter rather than decided (see Step 3A).
-- No action recommendations, persona-specific narratives, feedback learning,
-  or frontend exist anywhere in this repository yet. Step 6 added causal
-  inference EXECUTION (`src/causal/` — eligibility, method selection,
-  DiD/ITS/CausalImpact estimators) on top of Step 5's Causal Method
-  Selector (which only ever *selected* a rigor label and never ran an
-  estimation procedure of its own).
+- No frontend/API exists anywhere in this repository yet (Steps 1-9 are all
+  Python-callable, matching the task's own "don't introduce a UI/API unless
+  one already exists" instruction). Step 6 added causal inference EXECUTION
+  (`src/causal/` — eligibility, method selection, DiD/ITS/CausalImpact
+  estimators) on top of Step 5's Causal Method Selector (which only ever
+  *selected* a rigor label and never ran an estimation procedure of its
+  own). Step 7 added action recommendations, Step 8 added persona-specific
+  narratives, Step 9 added the feedback/evaluation loop.
+- Step 9's `EvaluationCase`/`RegressionTest` machinery is a general-purpose
+  offline evaluator, but the demo's `candidate_runner` callables are
+  hand-built stand-ins (`CandidateOutput(...)` literals) rather than live
+  wrappers around `story.engine.generate_kpi_story()` / a re-run Step 7
+  pipeline — wiring a real end-to-end candidate_runner against the live
+  generator is natural future work, deliberately left open since it
+  requires a live LLM call to be interesting (this demo runs
+  `llm_client=None` throughout for reproducibility, same as Steps 7/8).
+- Step 9's review workflow (`review_feedback`) supports exactly one
+  reviewer per decision — `config/feedback.yaml`'s
+  `review_workflow.min_approvals_required` is documented but not enforced
+  in code (this repo has no multi-user session concept yet to count
+  distinct reviewers against).
 - `causal.did._build_did_inputs` (Step 6, called from `engine.py`) only
   assembles a single pre/post value pair from canonical data, not a real
   multi-period pre-trend series — so `did.py`'s parallel-trends diagnostic
@@ -750,11 +913,11 @@ Full detail: [STEP6_VALIDATION.md](STEP6_VALIDATION.md),
 
 1. Read this file top to bottom.
 2. Read the most recent step's own validation doc in full (currently
-   [STEP6_VALIDATION.md](STEP6_VALIDATION.md)).
+   [STEP9_VALIDATION.md](STEP9_VALIDATION.md)).
 3. Reproduce the current state if needed:
    ```bash
    python scripts/step2_04_build_canonical.py     # rebuild data/processed/
-   python -m pytest tests/ -q                      # should show 758 passed, 0 failed
+   python -m pytest tests/ -q                      # should show 1069 passed, 0 failed
    python scripts/step3b_validate_engine.py        # Nov 2017 KPI numbers should match exactly
    python scripts/step3c_validate_engine.py        # Nov 2017 anomaly verdict should be CRITICAL
    python scripts/step3d_validate_engine.py        # Nov 2017 PVM numbers should match exactly
@@ -765,6 +928,11 @@ Full detail: [STEP6_VALIDATION.md](STEP6_VALIDATION.md),
    python scripts/step6_causal_validation.py       # runs the 4 required Nov 2017 causal
                                                         # hypotheses; every one should land at
                                                         # T1/T2 with causal_claim_allowed=false
+   python scripts/step7_decision_engine_demo.py    # runs the decision/action pipeline demo
+   python scripts/step8_persona_storytelling_demo.py  # generates all 4 persona KPI stories
+   python scripts/step9_feedback_learning_demo.py  # runs the 5 required feedback fixtures through
+                                                        # the full capture -> classify -> correct ->
+                                                        # evaluate -> regression-test loop
    ```
 4. Update this file's "Where we are right now" section and add a new entry to
    the Timeline table at the end of whatever step comes next.
