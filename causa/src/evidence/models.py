@@ -140,7 +140,13 @@ class Confidence(str, Enum):
 
 class RelationshipType(str, Enum):
     """Task §16's edge types, reused for both EvidenceObject.relationships and
-    graph.py's NetworkX edges so the two stay vocabulary-consistent."""
+    graph.py's NetworkX edges so the two stay vocabulary-consistent.
+
+    TESTED_BY/REJECTED_BY/HAS_ASSUMPTION/HAS_DIAGNOSTIC/UPGRADED_TO/
+    DOWNGRADED_TO were added in Step 6 (src/causal/) for the governed
+    causal-analysis layer's evidence-graph integration -- purely additive,
+    every pre-existing member's value is unchanged
+    (tests/test_provenance.py::test_evidence_models_extensions_are_additive_only)."""
     HAS_MOVEMENT = "HAS_MOVEMENT"
     EXPLAINED_BY = "EXPLAINED_BY"
     SUPPORTED_BY = "SUPPORTED_BY"
@@ -149,11 +155,21 @@ class RelationshipType(str, Enum):
     DERIVED_FROM = "DERIVED_FROM"
     HAS_CONFIDENCE = "HAS_CONFIDENCE"
     RECOMMENDS = "RECOMMENDS"
+    TESTED_BY = "TESTED_BY"
+    REJECTED_BY = "REJECTED_BY"
+    HAS_ASSUMPTION = "HAS_ASSUMPTION"
+    HAS_DIAGNOSTIC = "HAS_DIAGNOSTIC"
+    UPGRADED_TO = "UPGRADED_TO"
+    DOWNGRADED_TO = "DOWNGRADED_TO"
 
 
+# CAUSAL_ANALYSIS/CAUSAL_RESULT/ASSUMPTION/DIAGNOSTIC were added in Step 6
+# for the governed causal-analysis layer -- purely additive, every
+# pre-existing member is unchanged (see RelationshipType's docstring above).
 GRAPH_NODE_TYPES = frozenset({
     "INVESTIGATION", "KPI", "MOVEMENT", "DRIVER", "SEGMENT",
     "EVIDENCE", "BUSINESS_CONTEXT", "CONFIDENCE", "ACTION",
+    "CAUSAL_ANALYSIS", "CAUSAL_RESULT", "ASSUMPTION", "DIAGNOSTIC",
 })
 
 

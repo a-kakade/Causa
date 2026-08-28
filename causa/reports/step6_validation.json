@@ -1,0 +1,587 @@
+{
+  "generated_at": "2026-08-28T09:04:40.508333+00:00",
+  "run_seconds": 1.78,
+  "required_value_checks": {
+    "C1_order_volume": {
+      "expected": {
+        "method": "PVM",
+        "evidence_tier": "T2_ARITHMETIC",
+        "status": "ARITHMETIC_ONLY",
+        "causal_claim_allowed": false
+      },
+      "actual": {
+        "method": "PVM",
+        "evidence_tier": "T2_ARITHMETIC",
+        "status": "ARITHMETIC_ONLY",
+        "causal_claim_allowed": false
+      },
+      "match": true
+    },
+    "C2_category_growth": {
+      "expected": {
+        "method": "DESCRIPTIVE_ASSOCIATION",
+        "evidence_tier": "T1_DESCRIPTIVE",
+        "status": "DESCRIPTIVE_ONLY",
+        "causal_claim_allowed": false
+      },
+      "actual": {
+        "method": "DESCRIPTIVE_ASSOCIATION",
+        "evidence_tier": "T1_DESCRIPTIVE",
+        "status": "DESCRIPTIVE_ONLY",
+        "causal_claim_allowed": false
+      },
+      "match": true
+    },
+    "C3_delivery_review": {
+      "expected": {
+        "method": "DESCRIPTIVE_ASSOCIATION",
+        "evidence_tier": "T1_DESCRIPTIVE",
+        "status": "DESCRIPTIVE_ONLY",
+        "causal_claim_allowed": false
+      },
+      "actual": {
+        "method": "DESCRIPTIVE_ASSOCIATION",
+        "evidence_tier": "T1_DESCRIPTIVE",
+        "status": "DESCRIPTIVE_ONLY",
+        "causal_claim_allowed": false
+      },
+      "match": true
+    },
+    "C4_geographic": {
+      "expected": {
+        "method": "DESCRIPTIVE_ASSOCIATION",
+        "evidence_tier": "T1_DESCRIPTIVE",
+        "status": "DESCRIPTIVE_ONLY",
+        "causal_claim_allowed": false
+      },
+      "actual": {
+        "method": "DESCRIPTIVE_ASSOCIATION",
+        "evidence_tier": "T1_DESCRIPTIVE",
+        "status": "DESCRIPTIVE_ONLY",
+        "causal_claim_allowed": false
+      },
+      "match": true
+    },
+    "all_checks_pass": true,
+    "no_hypothesis_reaches_causal_claim_allowed_true": true,
+    "no_hypothesis_reaches_t3_or_t4": true
+  },
+  "results_by_hypothesis": {
+    "C1_order_volume": {
+      "hypothesis_id": "C1_order_volume",
+      "method": "PVM",
+      "evidence_tier": "T2_ARITHMETIC",
+      "status": "ARITHMETIC_ONLY",
+      "estimate": {
+        "volume_effect": 417227.65,
+        "price_effect": 4674.63,
+        "mix_effect": -75850.34,
+        "unit": "absolute_revenue"
+      },
+      "uncertainty": null,
+      "assumptions": [
+        "mix/price/volume decomposition is exhaustive and reconciles exactly (reconciled=True)"
+      ],
+      "diagnostics": [],
+      "confounders": [
+        "black_friday_2017_11"
+      ],
+      "evidence_ids": [
+        "ev_driver_54a8543fbf210bd2",
+        "ev_driver_ed8a50170f1901a8",
+        "ev_driver_3d20a0db2283c1ec",
+        "ev_segment_cdd5ac4d9c03a315",
+        "ev_segment_84f9abe877c56120",
+        "ev_segment_cc8c4e7a1ac82ba4",
+        "ev_segment_c002871fa3c739a0",
+        "ev_segment_9a3c54385978e7f2",
+        "ev_segment_30dc6e49bf6af2fc",
+        "ev_segment_9547bec85d284b95",
+        "ev_segment_b3d12768c6b07cc9",
+        "ev_segment_f4661b07b182ff39",
+        "ev_segment_10f617c6294512e0",
+        "ev_segment_95a34c443d1c9c99",
+        "ev_segment_253779e96135c1ae",
+        "ev_segment_188f84825a2333b3",
+        "ev_segment_d292239238a37eae",
+        "ev_segment_c7300ae8cf3fbb08",
+        "ev_segment_e3966fe1b1c32c17",
+        "ev_segment_6cd04df69dc22c82",
+        "ev_segment_feedbbede804645d",
+        "ev_segment_ac6f57dcc0485a36",
+        "ev_segment_193a59952bb2a128",
+        "ev_segment_1db0460677c9b35a",
+        "ev_segment_71f2c564dd60b346",
+        "ev_segment_92a4f32f2d5bff95",
+        "ev_segment_6d44a2bc50c1e987",
+        "ev_segment_fc7ed4a78b98398a",
+        "ev_segment_ad9273a6d7a92546",
+        "ev_segment_ec3ad5fb5340405e",
+        "ev_segment_fba1aae3b899fd30",
+        "ev_segment_950bb51ce4a56dbf",
+        "ev_segment_f10bc0193a51ab96",
+        "ev_segment_27c0d1e37fee0120",
+        "ev_segment_ba211f8c5c47af13",
+        "ev_segment_bf19c17d2d9ad361",
+        "ev_segment_7c4f6e1a5e6da434",
+        "ev_segment_322e76bad990c580",
+        "ev_segment_3b35f8458ac9c47d",
+        "ev_segment_09f90576b0b7be8d",
+        "ev_segment_982135c4694de156",
+        "ev_segment_5421eedfce2d88f6",
+        "ev_segment_576c17b760946158",
+        "ev_concurrent_1d6186079ef9846a",
+        "ev_concurrent_e4b1590163b62063",
+        "ev_concurrent_6205cf0477f8175b",
+        "ev_concurrent_6b7e619697dfeda6",
+        "ev_concurrent_9dd3c4a2e7dc7f38"
+      ],
+      "limitations": [
+        "This is a mathematical decomposition of a revenue movement into volume/price/mix components. It does not identify why volume, price, or mix changed, and is never a causal claim."
+      ],
+      "causal_claim_allowed": false,
+      "eligibility_report": {
+        "hypothesis_id": "C1_order_volume",
+        "verdict": "PARTIALLY_ELIGIBLE",
+        "checks": [
+          {
+            "check_name": "treatment_exists",
+            "status": "PASS",
+            "reason": "treatment 'orders' is a governed kpi_id.",
+            "evidence_ids": []
+          },
+          {
+            "check_name": "outcome_exists",
+            "status": "PASS",
+            "reason": "outcome 'revenue' is a governed kpi_id.",
+            "evidence_ids": []
+          },
+          {
+            "check_name": "treatment_precedes_outcome",
+            "status": "PASS",
+            "reason": "treatment period ends 2017-10-31, at or before outcome period starts 2017-11-01.",
+            "evidence_ids": []
+          },
+          {
+            "check_name": "sufficient_pre_period",
+            "status": "PASS",
+            "reason": "9 pre-period months available.",
+            "evidence_ids": []
+          },
+          {
+            "check_name": "sufficient_post_period",
+            "status": "PASS",
+            "reason": "10 post-period months available.",
+            "evidence_ids": []
+          },
+          {
+            "check_name": "treatment_variation",
+            "status": "PASS",
+            "reason": "treatment group has 4631 observations, value=4631.0.",
+            "evidence_ids": []
+          },
+          {
+            "check_name": "control_variation",
+            "status": "NOT_APPLICABLE",
+            "reason": "this hypothesis's proposed method does not require a control group.",
+            "evidence_ids": []
+          },
+          {
+            "check_name": "sample_size",
+            "status": "PASS",
+            "reason": "sample_size=8665 meets the KPI contract's minimum_observations=30.",
+            "evidence_ids": []
+          },
+          {
+            "check_name": "missingness",
+            "status": "PASS",
+            "reason": "coverage=98.77% meets the contract's 95.0% threshold.",
+            "evidence_ids": []
+          },
+          {
+            "check_name": "confounders",
+            "status": "SOFT_FAIL",
+            "reason": "known/suspected confounder(s) detected: black_friday_2017_11.",
+            "evidence_ids": []
+          },
+          {
+            "check_name": "consistent_grain",
+            "status": "PASS",
+            "reason": "unit_of_analysis 'order' matches a base time/record grain.",
+            "evidence_ids": []
+          },
+          {
+            "check_name": "consistent_kpi_definition",
+            "status": "PASS",
+            "reason": "treatment/outcome share a governed KPI definition and window.",
+            "evidence_ids": []
+          }
+        ],
+        "hard_fail_checks": [],
+        "soft_fail_checks": [
+          "confounders"
+        ]
+      }
+    },
+    "C2_category_growth": {
+      "hypothesis_id": "C2_category_growth",
+      "method": "DESCRIPTIVE_ASSOCIATION",
+      "evidence_tier": "T1_DESCRIPTIVE",
+      "status": "DESCRIPTIVE_ONLY",
+      "estimate": {
+        "value": 1674490.8000000003,
+        "sample_size": 13987,
+        "unit": "observed"
+      },
+      "uncertainty": null,
+      "assumptions": [
+        "association does not imply causation"
+      ],
+      "diagnostics": [],
+      "confounders": [
+        "black_friday_2017_11",
+        "product_category_membership_is_preexisting"
+      ],
+      "evidence_ids": [],
+      "limitations": [
+        "No quasi-experimental structure (control group, time-only intervention, or randomization) is available for this hypothesis -- only an observed association is reported."
+      ],
+      "causal_claim_allowed": false,
+      "eligibility_report": {
+        "hypothesis_id": "C2_category_growth",
+        "verdict": "INELIGIBLE",
+        "checks": [
+          {
+            "check_name": "treatment_exists",
+            "status": "PASS",
+            "reason": "treatment dimension 'product_category' is a governed, supported dimension of outcome 'revenue'.",
+            "evidence_ids": []
+          },
+          {
+            "check_name": "outcome_exists",
+            "status": "PASS",
+            "reason": "outcome 'revenue' is a governed kpi_id.",
+            "evidence_ids": []
+          },
+          {
+            "check_name": "treatment_precedes_outcome",
+            "status": "HARD_FAIL",
+            "reason": "treatment 'product_category=bed_bath_table' is a pre-existing group characteristic with no assignment timing -- treatment cannot be shown to precede outcome.",
+            "evidence_ids": []
+          },
+          {
+            "check_name": "sufficient_pre_period",
+            "status": "HARD_FAIL",
+            "reason": "only 0 pre-period months available (< 2), cannot estimate even a naive baseline.",
+            "evidence_ids": []
+          },
+          {
+            "check_name": "sufficient_post_period",
+            "status": "PASS",
+            "reason": "9 post-period months available.",
+            "evidence_ids": []
+          },
+          {
+            "check_name": "treatment_variation",
+            "status": "PASS",
+            "reason": "treatment group has 4671 observations, value=447934.58.",
+            "evidence_ids": []
+          },
+          {
+            "check_name": "control_variation",
+            "status": "PASS",
+            "reason": "control group 'all_other_categories' has 39885 observations, value=4963958.23.",
+            "evidence_ids": []
+          },
+          {
+            "check_name": "sample_size",
+            "status": "PASS",
+            "reason": "sample_size=1520 meets the KPI contract's minimum_observations=30.",
+            "evidence_ids": []
+          },
+          {
+            "check_name": "missingness",
+            "status": "PASS",
+            "reason": "coverage=98.72% meets the contract's 95.0% threshold.",
+            "evidence_ids": []
+          },
+          {
+            "check_name": "confounders",
+            "status": "SOFT_FAIL",
+            "reason": "known/suspected confounder(s) detected: black_friday_2017_11, product_category_membership_is_preexisting.",
+            "evidence_ids": []
+          },
+          {
+            "check_name": "consistent_grain",
+            "status": "PASS",
+            "reason": "unit_of_analysis 'product_category' is a supported dimension of 'revenue'.",
+            "evidence_ids": []
+          },
+          {
+            "check_name": "consistent_kpi_definition",
+            "status": "PASS",
+            "reason": "treatment/outcome share a governed KPI definition and window.",
+            "evidence_ids": []
+          }
+        ],
+        "hard_fail_checks": [
+          "treatment_precedes_outcome",
+          "sufficient_pre_period"
+        ],
+        "soft_fail_checks": [
+          "confounders"
+        ]
+      }
+    },
+    "C3_delivery_review": {
+      "hypothesis_id": "C3_delivery_review",
+      "method": "DESCRIPTIVE_ASSOCIATION",
+      "evidence_tier": "T1_DESCRIPTIVE",
+      "status": "DESCRIPTIVE_ONLY",
+      "estimate": {
+        "value": 3.9106951871657754,
+        "sample_size": 7480,
+        "unit": "observed"
+      },
+      "uncertainty": null,
+      "assumptions": [
+        "association does not imply causation"
+      ],
+      "diagnostics": [],
+      "confounders": [
+        "black_friday_2017_11"
+      ],
+      "evidence_ids": [],
+      "limitations": [
+        "No quasi-experimental structure (control group, time-only intervention, or randomization) is available for this hypothesis -- only an observed association is reported."
+      ],
+      "causal_claim_allowed": false,
+      "eligibility_report": {
+        "hypothesis_id": "C3_delivery_review",
+        "verdict": "INELIGIBLE",
+        "checks": [
+          {
+            "check_name": "treatment_exists",
+            "status": "PASS",
+            "reason": "treatment 'on_time_delivery_rate' is a governed kpi_id.",
+            "evidence_ids": []
+          },
+          {
+            "check_name": "outcome_exists",
+            "status": "PASS",
+            "reason": "outcome 'avg_review_score' is a governed kpi_id.",
+            "evidence_ids": []
+          },
+          {
+            "check_name": "treatment_precedes_outcome",
+            "status": "PASS",
+            "reason": "treatment period ends 2017-10-31, at or before outcome period starts 2017-11-01.",
+            "evidence_ids": []
+          },
+          {
+            "check_name": "sufficient_pre_period",
+            "status": "PASS",
+            "reason": "9 pre-period months available.",
+            "evidence_ids": []
+          },
+          {
+            "check_name": "sufficient_post_period",
+            "status": "PASS",
+            "reason": "10 post-period months available.",
+            "evidence_ids": []
+          },
+          {
+            "check_name": "treatment_variation",
+            "status": "PASS",
+            "reason": "treatment group has 4478 observations, value=0.947074586869138.",
+            "evidence_ids": []
+          },
+          {
+            "check_name": "control_variation",
+            "status": "HARD_FAIL",
+            "reason": "no control_group_value specified on the hypothesis -- a control group is required for any quasi-experimental method.",
+            "evidence_ids": []
+          },
+          {
+            "check_name": "sample_size",
+            "status": "PASS",
+            "reason": "sample_size=7480 meets the KPI contract's minimum_observations=30.",
+            "evidence_ids": []
+          },
+          {
+            "check_name": "missingness",
+            "status": "PASS",
+            "reason": "coverage=99.15% meets the contract's 90.0% threshold.",
+            "evidence_ids": []
+          },
+          {
+            "check_name": "confounders",
+            "status": "SOFT_FAIL",
+            "reason": "known/suspected confounder(s) detected: black_friday_2017_11.",
+            "evidence_ids": []
+          },
+          {
+            "check_name": "consistent_grain",
+            "status": "PASS",
+            "reason": "unit_of_analysis 'order' matches a base time/record grain.",
+            "evidence_ids": []
+          },
+          {
+            "check_name": "consistent_kpi_definition",
+            "status": "PASS",
+            "reason": "treatment/outcome share a governed KPI definition and window.",
+            "evidence_ids": []
+          }
+        ],
+        "hard_fail_checks": [
+          "control_variation"
+        ],
+        "soft_fail_checks": [
+          "confounders"
+        ]
+      }
+    },
+    "C4_geographic": {
+      "hypothesis_id": "C4_geographic",
+      "method": "DESCRIPTIVE_ASSOCIATION",
+      "evidence_tier": "T1_DESCRIPTIVE",
+      "status": "DESCRIPTIVE_ONLY",
+      "estimate": {
+        "value": 1674490.8000000003,
+        "sample_size": 13987,
+        "unit": "observed"
+      },
+      "uncertainty": null,
+      "assumptions": [
+        "association does not imply causation"
+      ],
+      "diagnostics": [],
+      "confounders": [
+        "black_friday_2017_11",
+        "customer_state_membership_is_preexisting"
+      ],
+      "evidence_ids": [],
+      "limitations": [
+        "No quasi-experimental structure (control group, time-only intervention, or randomization) is available for this hypothesis -- only an observed association is reported."
+      ],
+      "causal_claim_allowed": false,
+      "eligibility_report": {
+        "hypothesis_id": "C4_geographic",
+        "verdict": "INELIGIBLE",
+        "checks": [
+          {
+            "check_name": "treatment_exists",
+            "status": "PASS",
+            "reason": "treatment dimension 'customer_state' is a governed, supported dimension of outcome 'revenue'.",
+            "evidence_ids": []
+          },
+          {
+            "check_name": "outcome_exists",
+            "status": "PASS",
+            "reason": "outcome 'revenue' is a governed kpi_id.",
+            "evidence_ids": []
+          },
+          {
+            "check_name": "treatment_precedes_outcome",
+            "status": "HARD_FAIL",
+            "reason": "treatment 'customer_state=SP' is a pre-existing group characteristic with no assignment timing -- treatment cannot be shown to precede outcome.",
+            "evidence_ids": []
+          },
+          {
+            "check_name": "sufficient_pre_period",
+            "status": "HARD_FAIL",
+            "reason": "only 0 pre-period months available (< 2), cannot estimate even a naive baseline.",
+            "evidence_ids": []
+          },
+          {
+            "check_name": "sufficient_post_period",
+            "status": "PASS",
+            "reason": "9 post-period months available.",
+            "evidence_ids": []
+          },
+          {
+            "check_name": "treatment_variation",
+            "status": "PASS",
+            "reason": "treatment group has 17398 observations, value=1931746.86.",
+            "evidence_ids": []
+          },
+          {
+            "check_name": "control_variation",
+            "status": "PASS",
+            "reason": "control group 'all_other_states' has 27158 observations, value=3480145.95.",
+            "evidence_ids": []
+          },
+          {
+            "check_name": "sample_size",
+            "status": "PASS",
+            "reason": "sample_size=5521 meets the KPI contract's minimum_observations=30.",
+            "evidence_ids": []
+          },
+          {
+            "check_name": "missingness",
+            "status": "PASS",
+            "reason": "coverage=98.72% meets the contract's 95.0% threshold.",
+            "evidence_ids": []
+          },
+          {
+            "check_name": "confounders",
+            "status": "SOFT_FAIL",
+            "reason": "known/suspected confounder(s) detected: black_friday_2017_11, customer_state_membership_is_preexisting.",
+            "evidence_ids": []
+          },
+          {
+            "check_name": "consistent_grain",
+            "status": "PASS",
+            "reason": "unit_of_analysis 'customer_state' is a supported dimension of 'revenue'.",
+            "evidence_ids": []
+          },
+          {
+            "check_name": "consistent_kpi_definition",
+            "status": "PASS",
+            "reason": "treatment/outcome share a governed KPI definition and window.",
+            "evidence_ids": []
+          }
+        ],
+        "hard_fail_checks": [
+          "treatment_precedes_outcome",
+          "sufficient_pre_period"
+        ],
+        "soft_fail_checks": [
+          "confounders"
+        ]
+      }
+    }
+  },
+  "evidence_graph_summary": {
+    "n_nodes": 14,
+    "n_edges": 12,
+    "node_types": [
+      "ASSUMPTION",
+      "CAUSAL_ANALYSIS",
+      "CAUSAL_RESULT",
+      "KPI"
+    ]
+  },
+  "synthetic_method_demonstrations": {
+    "difference_in_differences": {
+      "evidence_tier": "T3_QUASI_EXPERIMENTAL",
+      "causal_claim_allowed": true,
+      "status": "CAUSAL_SUPPORTED",
+      "note": "Synthetic constructed natural experiment -- NOT an Olist finding."
+    },
+    "interrupted_time_series": {
+      "evidence_tier": "T3_QUASI_EXPERIMENTAL",
+      "causal_claim_allowed": true,
+      "status": "CAUSAL_SUPPORTED",
+      "note": "Synthetic constructed natural experiment -- NOT an Olist finding."
+    }
+  },
+  "honest_abstention_note": "All 4 real Olist hypotheses land at T1/T2 with causal_claim_allowed=False. This is the SUCCESSFUL, intended outcome of a governed causal layer applied to an observational dataset with no designed experiment -- see docs/CAUSAL_GOVERNANCE.md #4. The DiD/ITS code paths themselves are verified to reach a genuine T3_QUASI_EXPERIMENTAL result under a constructed synthetic natural experiment (synthetic_method_demonstrations above) -- Olist's own data simply does not contain one for these questions, and this engine does not manufacture one.",
+  "tests": {
+    "returncode": 0,
+    "n_passed": 72,
+    "n_failed": 0,
+    "failed_tests": [],
+    "all_passed": true
+  }
+}
