@@ -7,6 +7,12 @@ archive.zip
 # do not commit (large, fully reproducible from raw data + scripts)
 data/processed/*.parquet
 
+# Evidence fabric (Step 4) rebuildable artifacts — neither is a source of
+# truth (fact_reviews.parquet is); regenerate via scripts/step4_validate_engine.py
+data/evidence/embedding_cache/*.npz
+data/evidence/vector_index/*.npy
+data/evidence/vector_index/*.jsonl
+
 # Python
 __pycache__/
 *.pyc

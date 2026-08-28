@@ -1,0 +1,50 @@
+{
+  "note": "Step 4A extended benchmark \u2014 E5 model comparison + cross-encoder reranking. HF auth required.",
+  "available_cross_encoders": [
+    "amberoad/bert-multilingual-passage-reranking-msmarco",
+    "cross-encoder/ms-marco-MiniLM-L-6-v2",
+    "cross-encoder/ms-marco-MiniLM-L-12-v2"
+  ],
+  "results": {
+    "dense_multilingual-e5-small": {
+      "label": "E5-small (117M)",
+      "p5": 0.0667,
+      "p10": 0.0333,
+      "r10": 0.0486,
+      "mrr": 0.3333,
+      "latency_ms": 19.6
+    },
+    "dense_multilingual-e5-base": {
+      "label": "E5-base (~278M)",
+      "p5": 0.0333,
+      "p10": 0.05,
+      "r10": 0.0694,
+      "mrr": 0.1905,
+      "latency_ms": 27.8133
+    },
+    "dense_multilingual-e5-large": {
+      "label": "E5-large (~560M)",
+      "p5": 0.0333,
+      "p10": 0.0333,
+      "r10": 0.0611,
+      "mrr": 0.1905,
+      "latency_ms": 44.685
+    },
+    "bm25_expand+ce": {
+      "label": "BM25+expand \u2192 CE (bert-multilingual-passage-reranking-msmarco)",
+      "p5": 0.0667,
+      "p10": 0.05,
+      "r10": 0.1,
+      "mrr": 0.3333,
+      "latency_ms": 459.605
+    },
+    "hybrid+ce": {
+      "label": "Hybrid RRF+expand \u2192 CE (bert-multilingual-passage-reranking-msmarco)",
+      "p5": 0.0667,
+      "p10": 0.05,
+      "r10": 0.1,
+      "mrr": 0.3333,
+      "latency_ms": 516.295
+    }
+  }
+}

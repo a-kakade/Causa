@@ -1,0 +1,78 @@
+{
+  "note": "Small, manually curated engineering evaluation set (Step 4 task §23) -- NOT a statistically representative benchmark. Curated by running keyword-anchored pre-filters (e.g. 'atras|demor' for delivery, 'defeito|quebrad' for product quality) over the real October-November 2017 review window and hand-picking on-topic review_row_ids from the top hits. `expected_relevant_review_row_ids` are canonical fact_reviews.parquet review_row_id values; the eval script derives their evidence_ids deterministically via structured_adapter.evidence_id_for('review', row_id).",
+  "corpus_scope": "October-November 2017 review window, same scope as tests/conftest.py's review_corpus/built_vector_index fixtures.",
+  "categories": [
+    {
+      "category": "delivery_complaint",
+      "queries": [
+        {
+          "query_id": "dc1",
+          "question": "Which reviews complain about late delivery in October-November 2017?",
+          "structured_filters": {},
+          "semantic_query": "atraso na entrega, demora",
+          "expected_relevant_review_row_ids": [128, 2567, 3595, 3648, 5999]
+        }
+      ]
+    },
+    {
+      "category": "product_quality_complaint",
+      "queries": [
+        {
+          "query_id": "pq1",
+          "question": "Which reviews describe a defective or broken product?",
+          "structured_filters": {},
+          "semantic_query": "produto com defeito, quebrado, veio estragado",
+          "expected_relevant_review_row_ids": [859, 1098, 1291, 1454, 3740, 5435]
+        }
+      ]
+    },
+    {
+      "category": "low_satisfaction",
+      "queries": [
+        {
+          "query_id": "ls1",
+          "question": "Which reviews express strong dissatisfaction?",
+          "structured_filters": {"review_score_max": "2"},
+          "semantic_query": "péssimo, horrível, não recomendo",
+          "expected_relevant_review_row_ids": [7237, 10588, 11701, 12404, 15045]
+        }
+      ]
+    },
+    {
+      "category": "positive_experience",
+      "queries": [
+        {
+          "query_id": "pe1",
+          "question": "Which reviews describe a strongly positive customer experience?",
+          "structured_filters": {"review_score_min": "4"},
+          "semantic_query": "excelente, ótimo, entrega rápida, adorei",
+          "expected_relevant_review_row_ids": [724, 800, 823, 901, 1008, 1343, 1783, 1832]
+        }
+      ]
+    },
+    {
+      "category": "shipping_delay",
+      "queries": [
+        {
+          "query_id": "sd1",
+          "question": "Which reviews specifically describe a shipping/delivery-window delay?",
+          "structured_filters": {},
+          "semantic_query": "passou do prazo, atraso no envio",
+          "expected_relevant_review_row_ids": [688, 4318, 3648, 5128, 6297]
+        }
+      ]
+    },
+    {
+      "category": "category_specific_complaint",
+      "queries": [
+        {
+          "query_id": "csc1",
+          "question": "What complaints exist about bed_bath_table products in November 2017?",
+          "structured_filters": {"category": "bed_bath_table"},
+          "semantic_query": "problema, qualidade ruim, atraso",
+          "expected_relevant_review_row_ids": [2072, 3595, 5128, 4529, 664]
+        }
+      ]
+    }
+  ]
+}

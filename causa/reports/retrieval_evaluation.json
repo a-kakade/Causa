@@ -1,0 +1,141 @@
+{
+  "note": "Engineering evaluation set (Step 4 task \u00a723) -- small, manually curated, NOT a statistically representative benchmark.",
+  "eval_set_path": "data/evidence/eval/retrieval_eval_set.json",
+  "n_queries": 6,
+  "per_query": [
+    {
+      "category": "delivery_complaint",
+      "query_id": "dc1",
+      "question": "Which reviews complain about late delivery in October-November 2017?",
+      "expected_count": 5,
+      "retrieved_count": 10,
+      "precision_at_5": 0.0,
+      "precision_at_10": 0.0,
+      "mrr": 0.0,
+      "irrelevant_retrieval_rate": 1.0,
+      "candidates_before_filter": 5019,
+      "candidates_after_filter": 5019,
+      "latency_ms": 189.845
+    },
+    {
+      "category": "product_quality_complaint",
+      "query_id": "pq1",
+      "question": "Which reviews describe a defective or broken product?",
+      "expected_count": 6,
+      "retrieved_count": 10,
+      "precision_at_5": 0.2,
+      "precision_at_10": 0.1,
+      "mrr": 1.0,
+      "irrelevant_retrieval_rate": 0.9,
+      "candidates_before_filter": 5019,
+      "candidates_after_filter": 5019,
+      "latency_ms": 32.946
+    },
+    {
+      "category": "low_satisfaction",
+      "query_id": "ls1",
+      "question": "Which reviews express strong dissatisfaction?",
+      "expected_count": 5,
+      "retrieved_count": 10,
+      "precision_at_5": 0.0,
+      "precision_at_10": 0.0,
+      "mrr": 0.0,
+      "irrelevant_retrieval_rate": 1.0,
+      "candidates_before_filter": 5019,
+      "candidates_after_filter": 1486,
+      "latency_ms": 36.175
+    },
+    {
+      "category": "positive_experience",
+      "query_id": "pe1",
+      "question": "Which reviews describe a strongly positive customer experience?",
+      "expected_count": 8,
+      "retrieved_count": 10,
+      "precision_at_5": 0.2,
+      "precision_at_10": 0.1,
+      "mrr": 1.0,
+      "irrelevant_retrieval_rate": 0.9,
+      "candidates_before_filter": 5019,
+      "candidates_after_filter": 3079,
+      "latency_ms": 27.85
+    },
+    {
+      "category": "shipping_delay",
+      "query_id": "sd1",
+      "question": "Which reviews specifically describe a shipping/delivery-window delay?",
+      "expected_count": 5,
+      "retrieved_count": 10,
+      "precision_at_5": 0.0,
+      "precision_at_10": 0.0,
+      "mrr": 0.0,
+      "irrelevant_retrieval_rate": 1.0,
+      "candidates_before_filter": 5019,
+      "candidates_after_filter": 5019,
+      "latency_ms": 17.56
+    },
+    {
+      "category": "category_specific_complaint",
+      "query_id": "csc1",
+      "question": "What complaints exist about bed_bath_table products in November 2017?",
+      "expected_count": 5,
+      "retrieved_count": 10,
+      "precision_at_5": 0.0,
+      "precision_at_10": 0.0,
+      "mrr": 0.0,
+      "irrelevant_retrieval_rate": 1.0,
+      "candidates_before_filter": 5019,
+      "candidates_after_filter": 553,
+      "latency_ms": 35.933
+    }
+  ],
+  "per_category_summary": {
+    "delivery_complaint": {
+      "n_queries": 1,
+      "mean_precision_at_5": 0.0,
+      "mean_precision_at_10": 0.0,
+      "mean_mrr": 0.0
+    },
+    "product_quality_complaint": {
+      "n_queries": 1,
+      "mean_precision_at_5": 0.2,
+      "mean_precision_at_10": 0.1,
+      "mean_mrr": 1.0
+    },
+    "low_satisfaction": {
+      "n_queries": 1,
+      "mean_precision_at_5": 0.0,
+      "mean_precision_at_10": 0.0,
+      "mean_mrr": 0.0
+    },
+    "positive_experience": {
+      "n_queries": 1,
+      "mean_precision_at_5": 0.2,
+      "mean_precision_at_10": 0.1,
+      "mean_mrr": 1.0
+    },
+    "shipping_delay": {
+      "n_queries": 1,
+      "mean_precision_at_5": 0.0,
+      "mean_precision_at_10": 0.0,
+      "mean_mrr": 0.0
+    },
+    "category_specific_complaint": {
+      "n_queries": 1,
+      "mean_precision_at_5": 0.0,
+      "mean_precision_at_10": 0.0,
+      "mean_mrr": 0.0
+    }
+  },
+  "overall": {
+    "mean_precision_at_5": 0.0667,
+    "mean_precision_at_10": 0.0333,
+    "mean_mrr": 0.3333,
+    "mean_irrelevant_retrieval_rate": 0.9667,
+    "mean_latency_ms": 56.7182
+  },
+  "embedding_cache_stats": {
+    "hits": 5019,
+    "misses": 0,
+    "entries": 4592
+  }
+}
