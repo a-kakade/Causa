@@ -13,6 +13,55 @@ has skipped ahead of what the prior step actually established.
 
 ## Where we are right now
 
+**Step 6 complete (2026-08-28): the Causal Analysis and Evidence-Tier
+Engine.** A governed layer that answers "what's the strongest evidence tier
+the data can defensibly support?" for a specific causal hypothesis — never
+"is this causal?" for its own sake. `src/causal/` (9 files): a 12-check
+eligibility gate (treatment/outcome exist, temporal order, sufficient
+pre/post period, treatment/control variation, sample size, missingness,
+confounders, consistent grain/KPI definition), a deterministic, no-LLM
+method selector (PVM/DiD/ITS/CausalImpact/Descriptive/Experimental/None),
+hand-rolled DiD (2×2 arithmetic + parallel-trends diagnostic) and
+Interrupted-Time-Series (OLS segmented regression + autocorrelation +
+concurrent-intervention checks) estimators, an optional CausalImpact probe
+that never becomes a hard dependency, and a causal-language gate reusing
+Step 5's existing regex rather than adding a third copy. PVM is Step 3D's
+`decompose()` called unmodified, locked to `T2_ARITHMETIC` with no code path
+able to call it causal.
+
+**Real result on the 4 required November 2017 hypotheses: every one lands
+at T1/T2 with `causal_claim_allowed=False`.** Order-volume routes to PVM
+(exact Step 3D values reused). Category-growth and geographic both fail
+eligibility outright — a product category or a customer's state is a
+pre-existing group characteristic with no assignment timing, so
+`treatment_precedes_outcome` hard-fails honestly. Delivery/review is the one
+hypothesis with genuinely well-formed temporal order (October delivery
+precedes November review) but has no clean treatment/control split and is
+confounded by the same documented November 2017 Black Friday volume surge.
+This is the task's own definition of success for a governed causal layer
+applied to an observational dataset with no designed experiment — Step 5's
+`causal_selector.py` reached the identical conclusion (never T3/T4 on this
+data) by a completely different mechanism, which is itself a form of
+cross-validation. The DiD/ITS code paths are independently proven correct
+against synthetic constructed natural experiments, reaching a genuine
+`T3_QUASI_EXPERIMENTAL`/`CAUSAL_SUPPORTED` result — so "Olist doesn't
+support this" is a fact about the data, not a gap in the engine.
+
+**One deliberate, additive touch to a "completed" step:**
+`evidence.models.GRAPH_NODE_TYPES`/`RelationshipType` gained new members
+(`CAUSAL_ANALYSIS`/`CAUSAL_RESULT`/`ASSUMPTION`/`DIAGNOSTIC` nodes;
+`TESTED_BY`/`REJECTED_BY`/`HAS_ASSUMPTION`/`HAS_DIAGNOSTIC`/`UPGRADED_TO`/
+`DOWNGRADED_TO` edges) so the causal engine can extend Step 4's evidence
+graph — every pre-existing member's value is unchanged, verified by a
+dedicated additive-only test.
+
+72/72 Step 6 tests pass across all 7 required files. Full repository suite:
+**758 tests pass, 0 regressions** against Steps 1–5.
+
+Full detail: [STEP6_VALIDATION.md](STEP6_VALIDATION.md).
+
+---
+
 **Step 5 complete (2026-08-28): the Secure Multi-Agent Investigation Engine.**
 Six agents investigate a KPI movement end-to-end — Orchestrator, Causal
 Method Selector, and Confidence Judge are 100% deterministic (no LLM call
@@ -104,8 +153,9 @@ verified byte-identical to a fresh full-corpus re-encode.
   untouched.
 
 **(As of Step 4A: still no causal inference, LLM, agents, or frontend
-anywhere — Step 5, above, is what added agents/LLM. Causal inference
-execution and a frontend still don't exist.)**
+anywhere — Step 5, above, added agents/LLM; Step 6, above that, added the
+governed causal-analysis layer. Action recommendations, persona narratives,
+feedback learning, and a frontend still don't exist.)**
 
 ---
 
@@ -122,7 +172,8 @@ execution and a frontend still don't exist.)**
 | 4 | Evidence Fabric (structured + unstructured RAG) | ✅ Complete | [STEP4_VALIDATION.md](STEP4_VALIDATION.md) |
 | 4A | Retrieval failure analysis + BM25 + hybrid architecture | ✅ Complete | [STEP4A_VALIDATION.md](STEP4A_VALIDATION.md) |
 | 5 | Secure Multi-Agent Investigation Engine | ✅ Complete | [STEP5_VALIDATION.md](STEP5_VALIDATION.md) |
-| — | Causal inference execution, action recommendations, frontend | ⬜ Not started | — |
+| 6 | Causal Analysis and Evidence-Tier Engine | ✅ Complete | [STEP6_VALIDATION.md](STEP6_VALIDATION.md) |
+| — | Action recommendations, persona narratives, feedback learning, frontend | ⬜ Not started | — |
 
 ---
 
@@ -552,6 +603,104 @@ Full detail: [STEP5_VALIDATION.md](STEP5_VALIDATION.md),
 
 ---
 
+## Step 6 — Causal Analysis and Evidence-Tier Engine
+
+**What was built:** `src/causal/` (9 files) — `models.py` (`CausalHypothesis`,
+`CausalTier`/`EligibilityVerdict`/`CausalMethod`/`CausalStatus` enums,
+`EligibilityReport`, `MethodSelectionResult`, `CausalResult`), `eligibility.py`
+(12 checks, always run, always fixed order, rolling up to
+ELIGIBLE/PARTIALLY_ELIGIBLE/INELIGIBLE/CAUSAL_INELIGIBLE),
+`method_selector.py` (a fixed-order decision table over 7 methods, no LLM
+import), `did.py` (2×2 arithmetic + a hand-rolled parallel-trends
+diagnostic), `interrupted_series.py` (OLS segmented regression +
+autocorrelation + concurrent-intervention checks), `causal_impact.py` (an
+optional-dependency probe that never becomes a hard requirement),
+`diagnostics.py` (shared OLS/autocorrelation utilities + the confounder
+registry), `language_gate.py` (reuses Step 5's causal-language regex),
+`engine.py` (the single entry point + evidence-graph integration). 72 new
+tests across the 7 required files.
+
+**Governing principle carried forward, made mechanical:** "LLM proposes
+hypotheses. Deterministic/statistical systems test them. LLM cannot declare
+causality." No file in `src/causal/` imports an LLM client anywhere — an AST
+scan across every module in the package proves it, mirroring the same
+technique `tests/test_orchestrator.py` already used for Step 5's
+Orchestrator.
+
+**Three tier enums kept deliberately distinct, not conflated:**
+`evidence.models.EvidenceTier` (per-evidence-item quality, Step 4),
+`agents.models.AnalyticalMethod` (Step 5's hypothesis-support rigor label),
+and the new `causal.models.CausalTier` (what one specific method run can
+defensibly support after eligibility + diagnostics, Step 6) — a DiD run can
+compute a T3-shaped estimate that gets capped back down to T1 because
+parallel trends failed, a judgment neither of the other two enums has any
+vocabulary for.
+
+**Real result on the 4 required November 2017 hypotheses** (all real data,
+`scripts/step6_causal_validation.py`):
+
+| Hypothesis | Verdict | Method | Tier | `causal_claim_allowed` |
+|---|---|---|---|---|
+| C1 order-volume | PARTIALLY_ELIGIBLE | PVM | T2_ARITHMETIC | false |
+| C2 category-growth | INELIGIBLE | DESCRIPTIVE_ASSOCIATION | T1_DESCRIPTIVE | false |
+| C3 delivery/review | INELIGIBLE | DESCRIPTIVE_ASSOCIATION | T1_DESCRIPTIVE | false |
+| C4 geographic | INELIGIBLE | DESCRIPTIVE_ASSOCIATION | T1_DESCRIPTIVE | false |
+
+Order-volume cites 48 real Step 4 evidence_ids and reproduces Step 3D's
+exact PVM values (`volume_effect=417227.65`, `price_effect=4674.63`,
+`mix_effect=-75850.34`) via `drivers.engine.decompose()` called unmodified.
+Category-growth and geographic both fail on `treatment_precedes_outcome` —
+a product category or a customer's state is a pre-existing group
+characteristic with no assignment timing, so temporal order cannot be
+established; the eligibility checker catches this by construction, not by
+an arbitrary threshold. Delivery/review is the one hypothesis with a
+genuinely well-formed temporal order (October delivery precedes November
+review — the check **passes**) but fails on `control_variation` (no clean
+group split for a continuous delivery-rate KPI) and honestly reports the
+documented November 2017 Black Friday volume surge as a confounder rather
+than ignoring it.
+
+**This is the task's own definition of success, not a shortfall**: a
+governed causal layer applied to an observational dataset with no designed
+experiment is *supposed* to land here. Step 5's `causal_selector.py` reached
+the same "never T3/T4 on this dataset" conclusion through a completely
+different, LLM-adjacent mechanism — the two independent systems agreeing is
+itself a form of cross-validation. To prove the DiD/ITS machinery itself is
+correct (not just conservative), both are separately exercised against
+small **synthetic** constructed natural experiments and genuinely reach
+`T3_QUASI_EXPERIMENTAL`/`CAUSAL_SUPPORTED` — so "Olist doesn't support a
+causal claim here" is demonstrably a fact about the data, not a limitation
+of the engine.
+
+**One deliberate, additive touch to a "completed" step:** Step 4's
+`evidence.models.GRAPH_NODE_TYPES` gained 4 new members
+(`CAUSAL_ANALYSIS`/`CAUSAL_RESULT`/`ASSUMPTION`/`DIAGNOSTIC`) and
+`RelationshipType` gained 6 (`TESTED_BY`/`REJECTED_BY`/`HAS_ASSUMPTION`/
+`HAS_DIAGNOSTIC`/`UPGRADED_TO`/`DOWNGRADED_TO`), needed so
+`engine._extend_graph()` can wire a `CausalResult` into the existing
+evidence graph. Purely additive — no pre-existing member's value changed,
+verified by a dedicated test that snapshots the frozenset/enum before
+asserting Step 6's new members are simply present alongside them.
+
+**Confounder policy, made an assertion, not just a convention:**
+`diagnostics.report_confounders_never_controlled()` raises if any
+`ConfounderReport.controlled_for` is ever `True` — no method in this version
+implements covariate adjustment, so claiming a confounder was "controlled
+for" merely because it appears in the data would be a false governance
+claim. The literal implementation of the task's own words: "Do not claim
+they were controlled merely because they exist in the data."
+
+72/72 Step 6 tests pass. Full repository suite: **758 tests pass, 0
+regressions** against Steps 1–5 (686 prior + 72 new).
+
+Full detail: [STEP6_VALIDATION.md](STEP6_VALIDATION.md),
+[docs/CAUSAL_ARCHITECTURE.md](docs/CAUSAL_ARCHITECTURE.md),
+[docs/CAUSAL_METHOD_SELECTION.md](docs/CAUSAL_METHOD_SELECTION.md),
+[docs/CAUSAL_GOVERNANCE.md](docs/CAUSAL_GOVERNANCE.md),
+[reports/step6_validation.json](reports/step6_validation.json).
+
+---
+
 ## Running list of things intentionally left undone (don't rediscover these as surprises)
 
 - No profit/margin KPI — no cost-of-goods field exists anywhere in the source data.
@@ -561,11 +710,23 @@ Full detail: [STEP5_VALIDATION.md](STEP5_VALIDATION.md),
 - Geolocation is not in the canonical layer (see Step 2).
 - `order_status` default filtering for "recognized revenue" is an open question,
   deliberately exposed as a filter rather than decided (see Step 3A).
-- No causal inference EXECUTION, action recommendations, persona-specific
-  narratives, feedback learning, or frontend exist anywhere in this
-  repository yet (Step 5's Causal Method Selector only ever *selects* a
-  rigor label — T1_DESCRIPTIVE/T2_ARITHMETIC/INSUFFICIENT_DATA, never T3/T4
-  — it never runs a causal estimation procedure).
+- No action recommendations, persona-specific narratives, feedback learning,
+  or frontend exist anywhere in this repository yet. Step 6 added causal
+  inference EXECUTION (`src/causal/` — eligibility, method selection,
+  DiD/ITS/CausalImpact estimators) on top of Step 5's Causal Method
+  Selector (which only ever *selected* a rigor label and never ran an
+  estimation procedure of its own).
+- `causal.did._build_did_inputs` (Step 6, called from `engine.py`) only
+  assembles a single pre/post value pair from canonical data, not a real
+  multi-period pre-trend series — so `did.py`'s parallel-trends diagnostic
+  fails by default whenever engine.py drives it against real data (it is
+  proven correct against synthetic multi-period fixtures instead). Building
+  the same monthly panel `interrupted_series._build_its_inputs` already
+  constructs, grouped by treatment/control value, is the natural next step.
+- `causal_impact.py` (Step 6) has no installed Bayesian structural
+  time-series package to call into — `requirements.txt` carries none by
+  design (task explicitly says "do not make it a hard dependency"), so every
+  real run takes the `METHOD_UNAVAILABLE` branch today.
 - The KPI engine (Step 3B) cannot compute `repeat_purchase_rate` by cohort
   month (no ready query, by design) or `avg_review_score`'s `review_level_average`
   variant grouped by dimension (not built) — both raise explicit errors
@@ -589,11 +750,11 @@ Full detail: [STEP5_VALIDATION.md](STEP5_VALIDATION.md),
 
 1. Read this file top to bottom.
 2. Read the most recent step's own validation doc in full (currently
-   [STEP5_VALIDATION.md](STEP5_VALIDATION.md)).
+   [STEP6_VALIDATION.md](STEP6_VALIDATION.md)).
 3. Reproduce the current state if needed:
    ```bash
    python scripts/step2_04_build_canonical.py     # rebuild data/processed/
-   python -m pytest tests/ -q                      # should show 686 passed, 0 failed
+   python -m pytest tests/ -q                      # should show 758 passed, 0 failed
    python scripts/step3b_validate_engine.py        # Nov 2017 KPI numbers should match exactly
    python scripts/step3c_validate_engine.py        # Nov 2017 anomaly verdict should be CRITICAL
    python scripts/step3d_validate_engine.py        # Nov 2017 PVM numbers should match exactly
@@ -601,6 +762,9 @@ Full detail: [STEP5_VALIDATION.md](STEP5_VALIDATION.md),
    python scripts/step5_investigate_november_2017.py  # needs GROQ_API_KEYS in causa/.env for a
                                                         # real LLM run; falls back to a clearly-
                                                         # labeled dry run otherwise
+   python scripts/step6_causal_validation.py       # runs the 4 required Nov 2017 causal
+                                                        # hypotheses; every one should land at
+                                                        # T1/T2 with causal_claim_allowed=false
    ```
 4. Update this file's "Where we are right now" section and add a new entry to
    the Timeline table at the end of whatever step comes next.

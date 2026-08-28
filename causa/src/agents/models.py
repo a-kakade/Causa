@@ -203,6 +203,10 @@ UNSUPPORTED_CAUSAL_PATTERN = re.compile(
 ALLOWED_HEDGED_PHRASES = (
     "associated with", "consistent with", "coincides with",
     "contributed mathematically", "supports the hypothesis", "may be associated with",
+    # Added in Step 6 (src/causal/language_gate.py) -- verified against
+    # UNSUPPORTED_CAUSAL_PATTERN above to contain no "mathematically"/
+    # "explain" token, so it can never be spuriously flagged.
+    "mathematically explains",
 )
 
 
