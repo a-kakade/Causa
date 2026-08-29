@@ -2,12 +2,14 @@ import { Area, AreaChart, CartesianGrid, ReferenceArea, ResponsiveContainer, Too
 import { LoadingState } from '@/components/common/LoadingState'
 import { useKpiTrend } from '@/hooks/useKpis'
 import { formatMonthLabel, formatNumber } from '@/lib/format'
-import { DEMO_PERIOD_CURRENT, DEMO_PERIOD_PREVIOUS } from '@/api'
+import { getApiPeriod } from '@/api/productionApi/client'
 
 export function KPITrend({ kpiId, valueFormatter }: { kpiId: string; valueFormatter?: (v: number) => string }) {
   const { data, isLoading } = useKpiTrend(kpiId)
   if (isLoading) return <LoadingState label="Loading trend" />
   if (!data || data.length === 0) return null
+
+  const { period: currentPeriod, previousPeriod } = getApiPeriod()
 
   const fmt = valueFormatter ?? ((v: number) => formatNumber(Math.round(v)))
 
@@ -22,7 +24,7 @@ export function KPITrend({ kpiId, valueFormatter }: { kpiId: string; valueFormat
             </linearGradient>
           </defs>
           <CartesianGrid strokeDasharray="3 3" stroke="var(--color-border)" vertical={false} />
-          <ReferenceArea x1={DEMO_PERIOD_PREVIOUS} x2={DEMO_PERIOD_CURRENT} fill="var(--color-accent)" fillOpacity={0.06} />
+          <ReferenceArea x1={previousPeriod} x2={currentPeriod} fill="var(--color-accent)" fillOpacity={0.06} />
           <XAxis
             dataKey="period"
             tickFormatter={formatMonthLabel}

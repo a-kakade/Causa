@@ -176,6 +176,36 @@ export async function getTelemetrySummary(role: 'ANALYST' | 'EXECUTIVE'): Promis
   }
 }
 
+export interface AskQuestionResult {
+  investigationId: string
+  kpiId: string
+  periodCurrent: string
+  periodPrevious: string
+  question: string
+  resolver: 'openai' | 'keyword'
+  state: InvestigationState
+}
+
+/** Free-form "ask your own question" entry point. Posts straight text to
+ * /api/investigations/ask, which resolves it server-side (src/agents/
+ * question_router.py) to a governed {kpi_id, period} pair and runs the same
+ * real investigation path the KPI-card flow uses -- this never fabricates
+ * an answer client-side. */
+export async function askInvestigationQuestion(question: string): Promise<AskQuestionResult> {
+  const raw = await apiPost<
+    InvestigationResponse & { question: string; resolution: { kpi_id: string; period_current: string; period_previous: string; resolver: 'openai' | 'keyword' } }
+  >('/api/investigations/ask', { question })
+  return {
+    investigationId: raw.investigation_id,
+    kpiId: raw.resolution.kpi_id,
+    periodCurrent: raw.resolution.period_current,
+    periodPrevious: raw.resolution.period_previous,
+    question: raw.question,
+    resolver: raw.resolution.resolver,
+    state: mapInvestigation(raw.state),
+  }
+}
+
 export async function getRunMeta() {
   return { generatedAt: new Date().toISOString(), llmProvider: 'groq (or replay of a validated real run)', llmModel: 'see /api/investigations/{id}' }
 }

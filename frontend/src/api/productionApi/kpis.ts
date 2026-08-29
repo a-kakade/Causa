@@ -1,6 +1,5 @@
 import type { KPIMovement } from '@/types/kpi'
-import { apiFetch } from './client'
-import { DEMO_PERIOD_CURRENT, DEMO_PERIOD_PREVIOUS } from './kpiRegistry'
+import { apiFetch, getApiPeriod } from './client'
 
 interface RawComparisonResult {
   kpi_id: string
@@ -39,8 +38,9 @@ function mapMovement(raw: RawComparisonResult, period: string, previousPeriod: s
 }
 
 export async function getKpiMovements(): Promise<KPIMovement[]> {
+  const { period, previousPeriod } = getApiPeriod()
   const r = await apiFetch<OverviewResponse>(
-    `/api/overview?period=${DEMO_PERIOD_CURRENT}&previous_period=${DEMO_PERIOD_PREVIOUS}`,
+    `/api/overview?period=${period}&previous_period=${previousPeriod}`,
   )
   const verdict = r.headline_anomaly?.materiality?.verdict ?? null
   return r.kpi_movements.map((m) => mapMovement(m, r.period, r.previous_period, verdict))

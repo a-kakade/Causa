@@ -31,10 +31,30 @@ export function getApiRequesterRole(): string {
   return currentRole
 }
 
+// Same one-place-of-truth pattern as the role above, for the analysis
+// period the user picked in the Header's period selector. Defaults match
+// the backend's own DEFAULT_CURRENT/DEFAULT_PREVIOUS (routes/kpis.py,
+// routes/overview.py) so nothing changes until the user actually picks one.
+let currentPeriod = '2017-11'
+let previousPeriod = '2017-10'
+
+export function setApiPeriod(period: string, previous: string): void {
+  currentPeriod = period
+  previousPeriod = previous
+}
+
+export function getApiPeriod(): { period: string; previousPeriod: string } {
+  return { period: currentPeriod, previousPeriod }
+}
+
 export async function apiFetch<T = unknown>(path: string, init: RequestInit = {}): Promise<T> {
   const url = new URL(path, BASE_URL)
   if (!url.searchParams.has('requester_role')) {
     url.searchParams.set('requester_role', currentRole)
+  }
+  if (!url.searchParams.has('period') && (url.pathname === '/api/overview' || url.pathname === '/api/kpis')) {
+    url.searchParams.set('period', currentPeriod)
+    url.searchParams.set('previous_period', previousPeriod)
   }
   const res = await fetch(url.toString(), {
     ...init,

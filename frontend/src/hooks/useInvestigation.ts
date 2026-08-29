@@ -1,4 +1,6 @@
+import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useQuery } from '@tanstack/react-query'
+import { askInvestigationQuestion } from '@/api'
 import { getInvestigation } from '@/api'
 import { useAppState } from '@/state/AppStateContext'
 import type { RequesterRole } from '@/types/common'
@@ -18,4 +20,17 @@ export function useCurrentInvestigation() {
 
 export function useInvestigationByRole(role: 'ANALYST' | 'EXECUTIVE') {
   return useQuery({ queryKey: ['investigation', role], queryFn: () => getInvestigation(role) })
+}
+
+/** "Ask your own question" -- runs a fresh, real investigation resolved
+ * server-side from free text (see api.productionApi.investigations
+ * .askInvestigationQuestion) rather than picking a KPI card. */
+export function useAskQuestion() {
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationFn: (question: string) => askInvestigationQuestion(question),
+    onSuccess: () => {
+      void queryClient.invalidateQueries({ queryKey: ['investigation'] })
+    },
+  })
 }

@@ -26,6 +26,7 @@ from pydantic import BaseModel
 
 from api.bootstrap import REPO_ROOT, EngineBundle
 from api.dependencies import get_engine_bundle, get_investigation_store, get_requester_clearance, get_requester_role
+from api.routes.kpis import TRACKED_KPI_IDS
 from api.serializers import audit_entry_dict, investigation_state_dict, telemetry_record_dict
 from api.store import InvestigationRecord, InvestigationStore
 
@@ -219,6 +220,40 @@ def _fresh_run(bundle: EngineBundle, investigation_id: str, role_value: str, kpi
     return state
 
 
+def _run_and_record(bundle: EngineBundle, store: InvestigationStore, requester_role: str,
+                     kpi_id: str, period_current: str, period_previous: str, mode: str) -> dict:
+    if kpi_id not in bundle.registry.list_kpi_ids():
+        raise HTTPException(status_code=400, detail=f"Unknown kpi_id {kpi_id!r}")
+
+    is_canonical_scenario = (kpi_id, period_current, period_previous) == REVENUE_NOV_2017
+
+    if mode == "live":
+        state = _fresh_run(bundle, f"api_{uuid.uuid4().hex[:12]}", requester_role, kpi_id,
+                            period_current, period_previous, live=True)
+        source = "live_llm"
+    elif mode == "auto" and is_canonical_scenario:
+        state = _replay_state(requester_role)
+        source = "replay"
+        if state is None:
+            # No validated report on disk yet (e.g. fresh checkout before any
+            # scripts/step5_investigate_november_2017.py run) -- fall back to
+            # a real FakeLLMClient run rather than fabricating a result.
+            state = _fresh_run(bundle, f"api_{uuid.uuid4().hex[:12]}", requester_role, kpi_id,
+                                period_current, period_previous, live=False)
+            source = "fake_llm"
+    else:
+        state = _fresh_run(bundle, f"api_{uuid.uuid4().hex[:12]}", requester_role, kpi_id,
+                            period_current, period_previous, live=False)
+        source = "fake_llm"
+
+    record = InvestigationRecord(
+        investigation_id=state.investigation_id, requester_role=requester_role, kpi_id=kpi_id,
+        period_current=period_current, period_previous=period_previous, source=source, state=state,
+    )
+    store.create(record)
+    return {**record.to_summary_dict(), "state": investigation_state_dict(state)}
+
+
 @router.post("")
 def create_investigation(
     body: CreateInvestigationRequest,
@@ -226,36 +261,42 @@ def create_investigation(
     store: InvestigationStore = Depends(get_investigation_store),
     requester_role: str = Depends(get_requester_role),
 ):
-    if body.kpi_id not in bundle.registry.list_kpi_ids():
-        raise HTTPException(status_code=400, detail=f"Unknown kpi_id {body.kpi_id!r}")
+    return _run_and_record(bundle, store, requester_role, body.kpi_id, body.period_current,
+                            body.period_previous, body.mode)
 
-    is_canonical_scenario = (body.kpi_id, body.period_current, body.period_previous) == REVENUE_NOV_2017
 
-    if body.mode == "live":
-        state = _fresh_run(bundle, f"api_{uuid.uuid4().hex[:12]}", requester_role, body.kpi_id,
-                            body.period_current, body.period_previous, live=True)
-        source = "live_llm"
-    elif body.mode == "auto" and is_canonical_scenario:
-        state = _replay_state(requester_role)
-        source = "replay"
-        if state is None:
-            # No validated report on disk yet (e.g. fresh checkout before any
-            # scripts/step5_investigate_november_2017.py run) -- fall back to
-            # a real FakeLLMClient run rather than fabricating a result.
-            state = _fresh_run(bundle, f"api_{uuid.uuid4().hex[:12]}", requester_role, body.kpi_id,
-                                body.period_current, body.period_previous, live=False)
-            source = "fake_llm"
-    else:
-        state = _fresh_run(bundle, f"api_{uuid.uuid4().hex[:12]}", requester_role, body.kpi_id,
-                            body.period_current, body.period_previous, live=False)
-        source = "fake_llm"
+class AskQuestionRequest(BaseModel):
+    question: str
 
-    record = InvestigationRecord(
-        investigation_id=state.investigation_id, requester_role=requester_role, kpi_id=body.kpi_id,
-        period_current=body.period_current, period_previous=body.period_previous, source=source, state=state,
+
+@router.post("/ask")
+def ask_question(
+    body: AskQuestionRequest,
+    bundle: EngineBundle = Depends(get_engine_bundle),
+    store: InvestigationStore = Depends(get_investigation_store),
+    requester_role: str = Depends(get_requester_role),
+):
+    """Free-form NL entry point: 'ask your own question' instead of picking a
+    KPI card. Resolves the question to a governed {kpi_id, period} pair
+    (src/agents/question_router.py -- OpenAI-assisted with a keyword-matching
+    fallback, and always validated against the real KPI/month allowlists),
+    then runs the exact same investigation path create_investigation uses --
+    this never lets free text reach the causal engine directly."""
+    from agents.question_router import resolve_question
+
+    question = body.question.strip()
+    if not question:
+        raise HTTPException(status_code=400, detail="question must not be empty")
+
+    kpi_ids = [k for k in TRACKED_KPI_IDS if k in bundle.registry.list_kpi_ids()]
+    months = [f"2017-{m:02d}" for m in range(1, 13)]
+
+    resolution = resolve_question(question, kpi_ids, months)
+    result = _run_and_record(
+        bundle, store, requester_role, resolution["kpi_id"],
+        resolution["period_current"], resolution["period_previous"], mode="auto",
     )
-    store.create(record)
-    return {**record.to_summary_dict(), "state": investigation_state_dict(state)}
+    return {**result, "question": question, "resolution": resolution}
 
 
 @router.get("")
