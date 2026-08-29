@@ -32,19 +32,20 @@ export function getApiRequesterRole(): string {
 }
 
 // Same one-place-of-truth pattern as the role above, for the analysis
-// period the user picked in the Header's period selector. Defaults match
-// the backend's own DEFAULT_CURRENT/DEFAULT_PREVIOUS (routes/kpis.py,
+// period range the user picked in the Header's period selector. Defaults
+// match the backend's own DEFAULT_CURRENT/DEFAULT_PREVIOUS (routes/kpis.py,
 // routes/overview.py) so nothing changes until the user actually picks one.
-let currentPeriod = '2017-11'
-let previousPeriod = '2017-10'
+// A single month is just a range where start === end.
+let currentRange = { start: '2017-11', end: '2017-11' }
+let previousRange = { start: '2017-10', end: '2017-10' }
 
-export function setApiPeriod(period: string, previous: string): void {
-  currentPeriod = period
-  previousPeriod = previous
+export function setApiPeriod(range: { start: string; end: string }, previous: { start: string; end: string }): void {
+  currentRange = range
+  previousRange = previous
 }
 
-export function getApiPeriod(): { period: string; previousPeriod: string } {
-  return { period: currentPeriod, previousPeriod }
+export function getApiPeriod(): { period: string; previousPeriod: string; range: { start: string; end: string }; previousRange: { start: string; end: string } } {
+  return { period: currentRange.end, previousPeriod: previousRange.end, range: currentRange, previousRange }
 }
 
 export async function apiFetch<T = unknown>(path: string, init: RequestInit = {}): Promise<T> {
@@ -52,9 +53,20 @@ export async function apiFetch<T = unknown>(path: string, init: RequestInit = {}
   if (!url.searchParams.has('requester_role')) {
     url.searchParams.set('requester_role', currentRole)
   }
-  if (!url.searchParams.has('period') && (url.pathname === '/api/overview' || url.pathname === '/api/kpis')) {
-    url.searchParams.set('period', currentPeriod)
-    url.searchParams.set('previous_period', previousPeriod)
+  if (url.pathname === '/api/overview' || url.pathname === '/api/kpis') {
+    // Legacy single-month params (= range end) for back-compat, plus the
+    // explicit range so the backend can serve a true multi-month aggregate.
+    // Each param is set independently (not gated behind a single "has
+    // period already been set" check) so a caller that builds the URL with
+    // its own ?period=&previous_period= (getKpiMovements, etc.) still gets
+    // the range params attached instead of silently falling back to a
+    // single month.
+    if (!url.searchParams.has('period')) url.searchParams.set('period', currentRange.end)
+    if (!url.searchParams.has('previous_period')) url.searchParams.set('previous_period', previousRange.end)
+    if (!url.searchParams.has('start_period')) url.searchParams.set('start_period', currentRange.start)
+    if (!url.searchParams.has('end_period')) url.searchParams.set('end_period', currentRange.end)
+    if (!url.searchParams.has('previous_start_period')) url.searchParams.set('previous_start_period', previousRange.start)
+    if (!url.searchParams.has('previous_end_period')) url.searchParams.set('previous_end_period', previousRange.end)
   }
   const res = await fetch(url.toString(), {
     ...init,

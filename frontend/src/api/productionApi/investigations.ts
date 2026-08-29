@@ -71,6 +71,8 @@ interface ListItem {
   investigation_id: string
   requester_role: string
   kpi_id: string
+  period_current: string
+  period_previous: string
   status: string
 }
 
@@ -141,20 +143,41 @@ function mapInvestigation(raw: RawInvestigation): InvestigationState {
   }
 }
 
-/** Real backend investigations are keyed by investigation_id, not role --
- * this preserves demoAdapter's getInvestigation(role) call-site contract by
- * fetching (or, on first call for a role, creating) that role's most recent
- * investigation via the server's own `?role=&latest=true` convenience query. */
-export async function getInvestigation(role: 'ANALYST' | 'EXECUTIVE'): Promise<InvestigationState> {
-  const existing = await apiFetch<ListItem[]>(`/api/investigations?role=${role}&latest=true`)
-  if (existing.length > 0) {
-    const full = await apiFetch<InvestigationResponse>(`/api/investigations/${existing[0].investigation_id}?requester_role=${role}`)
-    return mapInvestigation(full.state)
-  }
+/** Issues a real, synchronous investigation run for an explicit
+ * (kpiId, periodCurrent, periodPrevious) triple -- always creates a fresh
+ * investigation, never reuses a cached one. Backend picks the fast replay
+ * path automatically for the canonical revenue/Nov-2017 scenario; every
+ * other KPI/period runs the real pipeline (mode='auto' = free FakeLLMClient,
+ * 'live' = real Groq call). */
+export async function createInvestigation(
+  role: 'ANALYST' | 'EXECUTIVE', kpiId: string, periodCurrent: string, periodPrevious: string,
+  mode: 'auto' | 'live' | 'fresh' = 'auto',
+): Promise<InvestigationState> {
   const created = await apiPost<InvestigationResponse>(`/api/investigations?requester_role=${role}`, {
-    kpi_id: 'revenue', period_current: '2017-11', period_previous: '2017-10', mode: 'auto',
+    kpi_id: kpiId, period_current: periodCurrent, period_previous: periodPrevious, mode,
   })
   return mapInvestigation(created.state)
+}
+
+/** Real backend investigations are keyed by investigation_id, not role or
+ * KPI -- this looks for an existing investigation matching (role, kpiId,
+ * periodCurrent, periodPrevious) among the role's investigations (server
+ * only filters by role, so the KPI/period match happens here), and creates
+ * one via createInvestigation() if none exists yet. kpiId/period default to
+ * the original revenue/Nov-2017 demo scenario for back-compat call sites
+ * that don't care which KPI they get. */
+export async function getInvestigation(
+  role: 'ANALYST' | 'EXECUTIVE', kpiId = 'revenue', periodCurrent = '2017-11', periodPrevious = '2017-10',
+): Promise<InvestigationState> {
+  const existing = await apiFetch<ListItem[]>(`/api/investigations?role=${role}`)
+  const match = existing.find(
+    (r) => r.kpi_id === kpiId && r.period_current === periodCurrent && r.period_previous === periodPrevious,
+  )
+  if (match) {
+    const full = await apiFetch<InvestigationResponse>(`/api/investigations/${match.investigation_id}?requester_role=${role}`)
+    return mapInvestigation(full.state)
+  }
+  return createInvestigation(role, kpiId, periodCurrent, periodPrevious, 'auto')
 }
 
 export async function getCurrentInvestigationId(role: 'ANALYST' | 'EXECUTIVE'): Promise<string> {

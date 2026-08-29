@@ -1,0 +1,1255 @@
+{
+  "revenue__2017-03": {
+    "investigation_id": "api_cbf9e5ee9879",
+    "requester_role": "ANALYST",
+    "kpi_id": "revenue",
+    "period": "2017-03",
+    "movement": {
+      "absolute": 127041.27999999997,
+      "percentage": 51.37069494743734,
+      "current_value": 374344.3,
+      "previous_value": 247303.02000000002
+    },
+    "hypotheses": [
+      {
+        "hypothesis_id": "H1",
+        "statement": "revenue movement may be associated with a change in order volume.",
+        "driver": "volume",
+        "dimension": "orders",
+        "mechanism": "order-count expansion",
+        "expected_evidence": [
+          "DRIVER_CONTRIBUTION:volume"
+        ],
+        "falsification_evidence": [],
+        "evidence_types_expected": [],
+        "status": "PROPOSED"
+      },
+      {
+        "hypothesis_id": "H2",
+        "statement": "The revenue movement may be concentrated in a small number of customer states.",
+        "driver": "geography",
+        "dimension": "customer_state",
+        "mechanism": "regional concentration",
+        "expected_evidence": [
+          "SEGMENT_CONTRIBUTION:customer_state"
+        ],
+        "falsification_evidence": [],
+        "evidence_types_expected": [],
+        "status": "PROPOSED"
+      }
+    ],
+    "evidence_ids": [
+      "ev_concurrent_c7ef531963f5a0a5",
+      "ev_driver_b0c41dfd608c1491",
+      "ev_driver_db0b4b68f6845adc",
+      "ev_driver_6b458b5ffcf491ee"
+    ],
+    "classified_evidence": [
+      {
+        "evidence_id": "ev_concurrent_c7ef531963f5a0a5",
+        "hypothesis_id": "H1",
+        "classification": "CONTEXT",
+        "rationale": "consistent direction [forced CONTEXT: concurrent-KPI evidence is never support/contradict]"
+      },
+      {
+        "evidence_id": "ev_driver_b0c41dfd608c1491",
+        "hypothesis_id": "H2",
+        "classification": "SUPPORTS",
+        "rationale": "consistent direction"
+      },
+      {
+        "evidence_id": "ev_driver_db0b4b68f6845adc",
+        "hypothesis_id": "H2",
+        "classification": "SUPPORTS",
+        "rationale": "consistent direction"
+      },
+      {
+        "evidence_id": "ev_driver_6b458b5ffcf491ee",
+        "hypothesis_id": "H2",
+        "classification": "SUPPORTS",
+        "rationale": "consistent direction"
+      }
+    ],
+    "counter_evidence_reports": [
+      {
+        "hypothesis_id": "H2",
+        "supporting_evidence": [],
+        "contradicting_evidence": [],
+        "unresolved_questions": [],
+        "contradiction_level": "NONE"
+      }
+    ],
+    "contradictions": [
+      {
+        "contradiction_id": "CR-H1",
+        "hypothesis_id": "H1",
+        "supporting_evidence": [],
+        "contradicting_evidence": [],
+        "severity": "NONE",
+        "unresolved": true
+      },
+      {
+        "contradiction_id": "CR-H2",
+        "hypothesis_id": "H2",
+        "supporting_evidence": [
+          "ev_driver_6b458b5ffcf491ee",
+          "ev_driver_b0c41dfd608c1491",
+          "ev_driver_db0b4b68f6845adc"
+        ],
+        "contradicting_evidence": [],
+        "severity": "NONE",
+        "unresolved": true
+      }
+    ],
+    "selected_methods": [
+      {
+        "hypothesis_id": "H1",
+        "method": "INSUFFICIENT_DATA",
+        "justification": "no SUPPORTS-classified evidence -- nothing to select a method for",
+        "downgraded": false,
+        "downgrade_reason": null
+      },
+      {
+        "hypothesis_id": "H2",
+        "method": "T2_ARITHMETIC",
+        "justification": "supported by a T2_ARITHMETIC (deterministic decomposition, e.g. PVM or segment contribution) item",
+        "downgraded": false,
+        "downgrade_reason": null
+      }
+    ],
+    "hypothesis_results": [
+      {
+        "hypothesis_id": "H1",
+        "status": "INCONCLUSIVE",
+        "confidence": "ABSTAIN",
+        "evidence_ids": [],
+        "reasons": [
+          "score=0.000",
+          "completeness=0.000",
+          "n_supports=0",
+          "contradiction_severity=NONE",
+          "method=INSUFFICIENT_DATA"
+        ],
+        "method": "INSUFFICIENT_DATA",
+        "contradiction_severity": "NONE"
+      },
+      {
+        "hypothesis_id": "H2",
+        "status": "SUPPORTED",
+        "confidence": "MEDIUM",
+        "evidence_ids": [
+          "ev_driver_b0c41dfd608c1491",
+          "ev_driver_db0b4b68f6845adc",
+          "ev_driver_6b458b5ffcf491ee"
+        ],
+        "reasons": [
+          "score=0.615",
+          "completeness=1.000",
+          "n_supports=3",
+          "contradiction_severity=NONE",
+          "method=T2_ARITHMETIC"
+        ],
+        "method": "T2_ARITHMETIC",
+        "contradiction_severity": "NONE"
+      }
+    ],
+    "confidence": "ABSTAIN",
+    "status": "ABSTAINED",
+    "budgets": {
+      "max_iterations": 20,
+      "max_agent_calls": 120,
+      "max_tool_calls": 200,
+      "max_retrieval_calls": 60,
+      "max_tokens": 200000,
+      "max_latency_seconds": 60.0,
+      "used_iterations": 7,
+      "used_agent_calls": 13,
+      "used_tool_calls": 4,
+      "used_retrieval_calls": 0,
+      "used_tokens": 0,
+      "used_latency_seconds": 0.0
+    },
+    "audit_trace": [
+      {
+        "agent_id": "EVIDENCE",
+        "agent_role": "EVIDENCE",
+        "timestamp": "2026-08-29T14:26:18.628142+00:00",
+        "input_state_hash": "ff7d0724d8d14f8e",
+        "tool_call": "compare_kpi",
+        "tool_arguments_hash": "2ed689c668e84c18",
+        "tool_result_ids": [
+          "ev_kpimove_072e9d5ce2844d4f"
+        ],
+        "output": "1 result item(s)",
+        "token_usage": 0,
+        "latency_ms": 1.577,
+        "security_decision": "ALLOWED"
+      },
+      {
+        "agent_id": "EVIDENCE",
+        "agent_role": "EVIDENCE",
+        "timestamp": "2026-08-29T14:26:18.659813+00:00",
+        "input_state_hash": "c96874b3fcf9a63a",
+        "tool_call": "get_concurrent_kpis",
+        "tool_arguments_hash": "b0611219974707b1",
+        "tool_result_ids": [
+          "ev_concurrent_c7ef531963f5a0a5"
+        ],
+        "output": "1 result item(s)",
+        "token_usage": 0,
+        "latency_ms": 0.282,
+        "security_decision": "ALLOWED"
+      },
+      {
+        "agent_id": "EVIDENCE",
+        "agent_role": "EVIDENCE",
+        "timestamp": "2026-08-29T14:26:18.815793+00:00",
+        "input_state_hash": "419deb491fe9ffee",
+        "tool_call": "get_driver_decomposition",
+        "tool_arguments_hash": "c8056a4b4dc1544f",
+        "tool_result_ids": [
+          "ev_driver_b0c41dfd608c1491",
+          "ev_driver_db0b4b68f6845adc",
+          "ev_driver_6b458b5ffcf491ee",
+          "ev_segment_e755b683c3998ca7",
+          "ev_segment_4fa03a122dcd81f6",
+          "ev_segment_d3a230ceda878af2",
+          "ev_segment_3efc7cdc443bbf13",
+          "ev_segment_faeb02f297a85ec7",
+          "ev_segment_4a77ac1e3c2c0ef6",
+          "ev_segment_51923eef8a8b2cf9",
+          "ev_segment_b14845fa34c3e83c",
+          "ev_segment_96668cb12ffc7fec",
+          "ev_segment_feaa53b8bd7eec71",
+          "ev_concurrent_241561e329b1de3e",
+          "ev_concurrent_1eb2b521b2546f6a",
+          "ev_concurrent_69aff478b59dfcf9",
+          "ev_concurrent_b99dad0777432e17",
+          "ev_concurrent_a396223c200bab68"
+        ],
+        "output": "18 result item(s)",
+        "token_usage": 0,
+        "latency_ms": 139.077,
+        "security_decision": "ALLOWED"
+      },
+      {
+        "agent_id": "COUNTER_EVIDENCE",
+        "agent_role": "COUNTER_EVIDENCE",
+        "timestamp": "2026-08-29T14:26:18.929077+00:00",
+        "input_state_hash": "5822efced83d2b8b",
+        "tool_call": "get_driver_decomposition",
+        "tool_arguments_hash": "c8056a4b4dc1544f",
+        "tool_result_ids": [
+          "ev_driver_b0c41dfd608c1491",
+          "ev_driver_db0b4b68f6845adc",
+          "ev_driver_6b458b5ffcf491ee",
+          "ev_segment_e755b683c3998ca7",
+          "ev_segment_4fa03a122dcd81f6",
+          "ev_segment_d3a230ceda878af2",
+          "ev_segment_3efc7cdc443bbf13",
+          "ev_segment_faeb02f297a85ec7",
+          "ev_segment_4a77ac1e3c2c0ef6",
+          "ev_segment_51923eef8a8b2cf9",
+          "ev_segment_b14845fa34c3e83c",
+          "ev_segment_96668cb12ffc7fec",
+          "ev_segment_feaa53b8bd7eec71",
+          "ev_concurrent_241561e329b1de3e",
+          "ev_concurrent_1eb2b521b2546f6a",
+          "ev_concurrent_69aff478b59dfcf9",
+          "ev_concurrent_b99dad0777432e17",
+          "ev_concurrent_a396223c200bab68"
+        ],
+        "output": "18 result item(s)",
+        "token_usage": 0,
+        "latency_ms": 99.931,
+        "security_decision": "ALLOWED"
+      },
+      {
+        "agent_id": "COUNTER_EVIDENCE",
+        "agent_role": "COUNTER_EVIDENCE",
+        "timestamp": "2026-08-29T14:26:18.929143+00:00",
+        "input_state_hash": "5822efced83d2b8b",
+        "tool_call": "submit_evidence_classification",
+        "tool_arguments_hash": "7acc3586bf08a49f",
+        "tool_result_ids": [],
+        "output": "UNKNOWN_TOOL",
+        "token_usage": 0,
+        "latency_ms": 0.005,
+        "security_decision": "DENIED"
+      },
+      {
+        "agent_id": "COUNTER_EVIDENCE",
+        "agent_role": "COUNTER_EVIDENCE",
+        "timestamp": "2026-08-29T14:26:18.929172+00:00",
+        "input_state_hash": "5822efced83d2b8b",
+        "tool_call": "submit_evidence_classification",
+        "tool_arguments_hash": "efcbaecace762682",
+        "tool_result_ids": [],
+        "output": "UNKNOWN_TOOL",
+        "token_usage": 0,
+        "latency_ms": 0.0,
+        "security_decision": "DENIED"
+      },
+      {
+        "agent_id": "COUNTER_EVIDENCE",
+        "agent_role": "COUNTER_EVIDENCE",
+        "timestamp": "2026-08-29T14:26:18.929188+00:00",
+        "input_state_hash": "5822efced83d2b8b",
+        "tool_call": "submit_evidence_classification",
+        "tool_arguments_hash": "efcbaecace762682",
+        "tool_result_ids": [],
+        "output": "UNKNOWN_TOOL",
+        "token_usage": 0,
+        "latency_ms": 0.0,
+        "security_decision": "DENIED"
+      },
+      {
+        "agent_id": "COUNTER_EVIDENCE",
+        "agent_role": "COUNTER_EVIDENCE",
+        "timestamp": "2026-08-29T14:26:18.929203+00:00",
+        "input_state_hash": "5822efced83d2b8b",
+        "tool_call": "submit_evidence_classification",
+        "tool_arguments_hash": "efcbaecace762682",
+        "tool_result_ids": [],
+        "output": "UNKNOWN_TOOL",
+        "token_usage": 0,
+        "latency_ms": 0.0,
+        "security_decision": "DENIED"
+      },
+      {
+        "agent_id": "COUNTER_EVIDENCE",
+        "agent_role": "COUNTER_EVIDENCE",
+        "timestamp": "2026-08-29T14:26:18.929217+00:00",
+        "input_state_hash": "5822efced83d2b8b",
+        "tool_call": "submit_evidence_classification",
+        "tool_arguments_hash": "efcbaecace762682",
+        "tool_result_ids": [],
+        "output": "UNKNOWN_TOOL",
+        "token_usage": 0,
+        "latency_ms": 0.0,
+        "security_decision": "DENIED"
+      },
+      {
+        "agent_id": "COUNTER_EVIDENCE",
+        "agent_role": "COUNTER_EVIDENCE",
+        "timestamp": "2026-08-29T14:26:18.929233+00:00",
+        "input_state_hash": "5822efced83d2b8b",
+        "tool_call": "submit_evidence_classification",
+        "tool_arguments_hash": "efcbaecace762682",
+        "tool_result_ids": [],
+        "output": "UNKNOWN_TOOL",
+        "token_usage": 0,
+        "latency_ms": 0.0,
+        "security_decision": "DENIED"
+      },
+      {
+        "agent_id": "COUNTER_EVIDENCE",
+        "agent_role": "COUNTER_EVIDENCE",
+        "timestamp": "2026-08-29T14:26:18.929247+00:00",
+        "input_state_hash": "5822efced83d2b8b",
+        "tool_call": "submit_evidence_classification",
+        "tool_arguments_hash": "efcbaecace762682",
+        "tool_result_ids": [],
+        "output": "UNKNOWN_TOOL",
+        "token_usage": 0,
+        "latency_ms": 0.0,
+        "security_decision": "DENIED"
+      }
+    ],
+    "telemetry": [
+      {
+        "agent_role": "HYPOTHESIS",
+        "model": "api_scripted_fallback",
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "total_tokens": 0,
+        "estimated_cost": 0.0,
+        "tool_calls": 0,
+        "retrieval_calls": 0,
+        "agent_latency_ms": 0.082,
+        "total_latency_ms": 0.082
+      },
+      {
+        "agent_role": "ORCHESTRATOR",
+        "model": "deterministic_rule_engine_v1",
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "total_tokens": 0,
+        "estimated_cost": 0.0,
+        "tool_calls": 0,
+        "retrieval_calls": 0,
+        "agent_latency_ms": 31.064,
+        "total_latency_ms": 31.064
+      },
+      {
+        "agent_role": "EVIDENCE",
+        "model": "api_scripted_fallback",
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "total_tokens": 0,
+        "estimated_cost": 0.0,
+        "tool_calls": 0,
+        "retrieval_calls": 0,
+        "agent_latency_ms": 0.045,
+        "total_latency_ms": 0.045
+      },
+      {
+        "agent_role": "EVIDENCE",
+        "model": "api_scripted_fallback",
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "total_tokens": 0,
+        "estimated_cost": 0.0,
+        "tool_calls": 0,
+        "retrieval_calls": 0,
+        "agent_latency_ms": 0.038,
+        "total_latency_ms": 0.038
+      },
+      {
+        "agent_role": "EVIDENCE",
+        "model": "api_scripted_fallback",
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "total_tokens": 0,
+        "estimated_cost": 0.0,
+        "tool_calls": 0,
+        "retrieval_calls": 0,
+        "agent_latency_ms": 0.03,
+        "total_latency_ms": 0.03
+      },
+      {
+        "agent_role": "EVIDENCE",
+        "model": "api_scripted_fallback",
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "total_tokens": 0,
+        "estimated_cost": 0.0,
+        "tool_calls": 0,
+        "retrieval_calls": 0,
+        "agent_latency_ms": 0.018,
+        "total_latency_ms": 0.018
+      },
+      {
+        "agent_role": "ORCHESTRATOR",
+        "model": "deterministic_rule_engine_v1",
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "total_tokens": 0,
+        "estimated_cost": 0.0,
+        "tool_calls": 0,
+        "retrieval_calls": 0,
+        "agent_latency_ms": 169.628,
+        "total_latency_ms": 169.628
+      },
+      {
+        "agent_role": "COUNTER_EVIDENCE",
+        "model": "api_scripted_fallback",
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "total_tokens": 0,
+        "estimated_cost": 0.0,
+        "tool_calls": 0,
+        "retrieval_calls": 0,
+        "agent_latency_ms": 0.022,
+        "total_latency_ms": 0.022
+      },
+      {
+        "agent_role": "COUNTER_EVIDENCE",
+        "model": "api_scripted_fallback",
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "total_tokens": 0,
+        "estimated_cost": 0.0,
+        "tool_calls": 0,
+        "retrieval_calls": 0,
+        "agent_latency_ms": 0.017,
+        "total_latency_ms": 0.017
+      },
+      {
+        "agent_role": "COUNTER_EVIDENCE",
+        "model": "api_scripted_fallback",
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "total_tokens": 0,
+        "estimated_cost": 0.0,
+        "tool_calls": 0,
+        "retrieval_calls": 0,
+        "agent_latency_ms": 0.006,
+        "total_latency_ms": 0.006
+      },
+      {
+        "agent_role": "COUNTER_EVIDENCE",
+        "model": "api_scripted_fallback",
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "total_tokens": 0,
+        "estimated_cost": 0.0,
+        "tool_calls": 0,
+        "retrieval_calls": 0,
+        "agent_latency_ms": 0.004,
+        "total_latency_ms": 0.004
+      },
+      {
+        "agent_role": "COUNTER_EVIDENCE",
+        "model": "api_scripted_fallback",
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "total_tokens": 0,
+        "estimated_cost": 0.0,
+        "tool_calls": 0,
+        "retrieval_calls": 0,
+        "agent_latency_ms": 0.003,
+        "total_latency_ms": 0.003
+      },
+      {
+        "agent_role": "COUNTER_EVIDENCE",
+        "model": "api_scripted_fallback",
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "total_tokens": 0,
+        "estimated_cost": 0.0,
+        "tool_calls": 0,
+        "retrieval_calls": 0,
+        "agent_latency_ms": 0.003,
+        "total_latency_ms": 0.003
+      },
+      {
+        "agent_role": "COUNTER_EVIDENCE",
+        "model": "api_scripted_fallback",
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "total_tokens": 0,
+        "estimated_cost": 0.0,
+        "tool_calls": 0,
+        "retrieval_calls": 0,
+        "agent_latency_ms": 0.004,
+        "total_latency_ms": 0.004
+      },
+      {
+        "agent_role": "COUNTER_EVIDENCE",
+        "model": "api_scripted_fallback",
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "total_tokens": 0,
+        "estimated_cost": 0.0,
+        "tool_calls": 0,
+        "retrieval_calls": 0,
+        "agent_latency_ms": 0.003,
+        "total_latency_ms": 0.003
+      },
+      {
+        "agent_role": "ORCHESTRATOR",
+        "model": "deterministic_rule_engine_v1",
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "total_tokens": 0,
+        "estimated_cost": 0.0,
+        "tool_calls": 0,
+        "retrieval_calls": 0,
+        "agent_latency_ms": 100.196,
+        "total_latency_ms": 100.196
+      },
+      {
+        "agent_role": "ORCHESTRATOR",
+        "model": "deterministic_rule_engine_v1",
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "total_tokens": 0,
+        "estimated_cost": 0.0,
+        "tool_calls": 0,
+        "retrieval_calls": 0,
+        "agent_latency_ms": 0.038,
+        "total_latency_ms": 0.038
+      },
+      {
+        "agent_role": "ORCHESTRATOR",
+        "model": "deterministic_rule_engine_v1",
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "total_tokens": 0,
+        "estimated_cost": 0.0,
+        "tool_calls": 0,
+        "retrieval_calls": 0,
+        "agent_latency_ms": 0.023,
+        "total_latency_ms": 0.023
+      },
+      {
+        "agent_role": "ORCHESTRATOR",
+        "model": "deterministic_rule_engine_v1",
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "total_tokens": 0,
+        "estimated_cost": 0.0,
+        "tool_calls": 0,
+        "retrieval_calls": 0,
+        "agent_latency_ms": 0.054,
+        "total_latency_ms": 0.054
+      }
+    ],
+    "retrieval_insufficiency_events": [],
+    "security_events": [],
+    "status_history": [
+      "PLANNED",
+      "SECURITY_VALIDATED",
+      "HYPOTHESES_GENERATED",
+      "EVIDENCE_COLLECTION",
+      "COUNTER_EVIDENCE",
+      "CONTRADICTION_ANALYSIS",
+      "METHOD_SELECTION",
+      "CONFIDENCE_EVALUATION",
+      "ABSTAINED (confidence judge abstained on every hypothesis)"
+    ]
+  },
+  "orders__2017-03": {
+    "investigation_id": "api_4f1cff10cd3c",
+    "requester_role": "ANALYST",
+    "kpi_id": "orders",
+    "period": "2017-03",
+    "movement": {
+      "absolute": 902.0,
+      "percentage": 50.674157303370784,
+      "current_value": 2682.0,
+      "previous_value": 1780.0
+    },
+    "hypotheses": [
+      {
+        "hypothesis_id": "H1",
+        "statement": "orders movement may be associated with a change in order volume.",
+        "driver": "volume",
+        "dimension": "orders",
+        "mechanism": "order-count expansion",
+        "expected_evidence": [
+          "DRIVER_CONTRIBUTION:volume"
+        ],
+        "falsification_evidence": [],
+        "evidence_types_expected": [],
+        "status": "PROPOSED"
+      },
+      {
+        "hypothesis_id": "H2",
+        "statement": "The orders movement may be concentrated in a small number of customer states.",
+        "driver": "geography",
+        "dimension": "customer_state",
+        "mechanism": "regional concentration",
+        "expected_evidence": [
+          "SEGMENT_CONTRIBUTION:customer_state"
+        ],
+        "falsification_evidence": [],
+        "evidence_types_expected": [],
+        "status": "PROPOSED"
+      }
+    ],
+    "evidence_ids": [
+      "ev_concurrent_241561e329b1de3e"
+    ],
+    "classified_evidence": [
+      {
+        "evidence_id": "ev_concurrent_241561e329b1de3e",
+        "hypothesis_id": "H1",
+        "classification": "CONTEXT",
+        "rationale": "consistent direction [forced CONTEXT: concurrent-KPI evidence is never support/contradict]"
+      }
+    ],
+    "counter_evidence_reports": [],
+    "contradictions": [
+      {
+        "contradiction_id": "CR-H1",
+        "hypothesis_id": "H1",
+        "supporting_evidence": [],
+        "contradicting_evidence": [],
+        "severity": "NONE",
+        "unresolved": true
+      },
+      {
+        "contradiction_id": "CR-H2",
+        "hypothesis_id": "H2",
+        "supporting_evidence": [],
+        "contradicting_evidence": [],
+        "severity": "NONE",
+        "unresolved": true
+      }
+    ],
+    "selected_methods": [
+      {
+        "hypothesis_id": "H1",
+        "method": "INSUFFICIENT_DATA",
+        "justification": "no SUPPORTS-classified evidence -- nothing to select a method for",
+        "downgraded": false,
+        "downgrade_reason": null
+      },
+      {
+        "hypothesis_id": "H2",
+        "method": "INSUFFICIENT_DATA",
+        "justification": "no SUPPORTS-classified evidence -- nothing to select a method for",
+        "downgraded": false,
+        "downgrade_reason": null
+      }
+    ],
+    "hypothesis_results": [
+      {
+        "hypothesis_id": "H1",
+        "status": "INCONCLUSIVE",
+        "confidence": "ABSTAIN",
+        "evidence_ids": [],
+        "reasons": [
+          "score=0.000",
+          "completeness=0.000",
+          "n_supports=0",
+          "contradiction_severity=NONE",
+          "method=INSUFFICIENT_DATA"
+        ],
+        "method": "INSUFFICIENT_DATA",
+        "contradiction_severity": "NONE"
+      },
+      {
+        "hypothesis_id": "H2",
+        "status": "INCONCLUSIVE",
+        "confidence": "ABSTAIN",
+        "evidence_ids": [],
+        "reasons": [
+          "score=0.000",
+          "completeness=0.000",
+          "n_supports=0",
+          "contradiction_severity=NONE",
+          "method=INSUFFICIENT_DATA"
+        ],
+        "method": "INSUFFICIENT_DATA",
+        "contradiction_severity": "NONE"
+      }
+    ],
+    "confidence": "ABSTAIN",
+    "status": "ABSTAINED",
+    "budgets": {
+      "max_iterations": 20,
+      "max_agent_calls": 120,
+      "max_tool_calls": 200,
+      "max_retrieval_calls": 60,
+      "max_tokens": 200000,
+      "max_latency_seconds": 60.0,
+      "used_iterations": 7,
+      "used_agent_calls": 5,
+      "used_tool_calls": 3,
+      "used_retrieval_calls": 0,
+      "used_tokens": 0,
+      "used_latency_seconds": 0.0
+    },
+    "audit_trace": [
+      {
+        "agent_id": "EVIDENCE",
+        "agent_role": "EVIDENCE",
+        "timestamp": "2026-08-29T14:26:18.949227+00:00",
+        "input_state_hash": "149337ce28874479",
+        "tool_call": "compare_kpi",
+        "tool_arguments_hash": "4964fcbbae5db5e2",
+        "tool_result_ids": [
+          "ev_kpimove_507141011067ba2d"
+        ],
+        "output": "1 result item(s)",
+        "token_usage": 0,
+        "latency_ms": 0.099,
+        "security_decision": "ALLOWED"
+      },
+      {
+        "agent_id": "EVIDENCE",
+        "agent_role": "EVIDENCE",
+        "timestamp": "2026-08-29T14:26:18.963449+00:00",
+        "input_state_hash": "4e206aa51cb593c5",
+        "tool_call": "get_concurrent_kpis",
+        "tool_arguments_hash": "aa981fedeaf1260e",
+        "tool_result_ids": [
+          "ev_concurrent_241561e329b1de3e"
+        ],
+        "output": "1 result item(s)",
+        "token_usage": 0,
+        "latency_ms": 0.15,
+        "security_decision": "ALLOWED"
+      },
+      {
+        "agent_id": "EVIDENCE",
+        "agent_role": "EVIDENCE",
+        "timestamp": "2026-08-29T14:26:18.977001+00:00",
+        "input_state_hash": "9b9eea143e24990c",
+        "tool_call": "get_driver_decomposition",
+        "tool_arguments_hash": "d2220ffe826f0bc8",
+        "tool_result_ids": [],
+        "output": "PVM decomposition is implemented for 'revenue' only in this step (task \u00a71's explicit scope), got kpi_id='orders'.",
+        "token_usage": 0,
+        "latency_ms": 0.03,
+        "security_decision": "DENIED"
+      }
+    ],
+    "telemetry": [
+      {
+        "agent_role": "HYPOTHESIS",
+        "model": "api_scripted_fallback",
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "total_tokens": 0,
+        "estimated_cost": 0.0,
+        "tool_calls": 0,
+        "retrieval_calls": 0,
+        "agent_latency_ms": 0.01,
+        "total_latency_ms": 0.01
+      },
+      {
+        "agent_role": "ORCHESTRATOR",
+        "model": "deterministic_rule_engine_v1",
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "total_tokens": 0,
+        "estimated_cost": 0.0,
+        "tool_calls": 0,
+        "retrieval_calls": 0,
+        "agent_latency_ms": 13.914,
+        "total_latency_ms": 13.914
+      },
+      {
+        "agent_role": "EVIDENCE",
+        "model": "api_scripted_fallback",
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "total_tokens": 0,
+        "estimated_cost": 0.0,
+        "tool_calls": 0,
+        "retrieval_calls": 0,
+        "agent_latency_ms": 0.029,
+        "total_latency_ms": 0.029
+      },
+      {
+        "agent_role": "EVIDENCE",
+        "model": "api_scripted_fallback",
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "total_tokens": 0,
+        "estimated_cost": 0.0,
+        "tool_calls": 0,
+        "retrieval_calls": 0,
+        "agent_latency_ms": 0.012,
+        "total_latency_ms": 0.012
+      },
+      {
+        "agent_role": "EVIDENCE",
+        "model": "api_scripted_fallback",
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "total_tokens": 0,
+        "estimated_cost": 0.0,
+        "tool_calls": 0,
+        "retrieval_calls": 0,
+        "agent_latency_ms": 0.019,
+        "total_latency_ms": 0.019
+      },
+      {
+        "agent_role": "EVIDENCE",
+        "model": "api_scripted_fallback",
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "total_tokens": 0,
+        "estimated_cost": 0.0,
+        "tool_calls": 0,
+        "retrieval_calls": 0,
+        "agent_latency_ms": 0.007,
+        "total_latency_ms": 0.007
+      },
+      {
+        "agent_role": "ORCHESTRATOR",
+        "model": "deterministic_rule_engine_v1",
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "total_tokens": 0,
+        "estimated_cost": 0.0,
+        "tool_calls": 0,
+        "retrieval_calls": 0,
+        "agent_latency_ms": 26.994,
+        "total_latency_ms": 26.994
+      },
+      {
+        "agent_role": "ORCHESTRATOR",
+        "model": "deterministic_rule_engine_v1",
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "total_tokens": 0,
+        "estimated_cost": 0.0,
+        "tool_calls": 0,
+        "retrieval_calls": 0,
+        "agent_latency_ms": 0.016,
+        "total_latency_ms": 0.016
+      },
+      {
+        "agent_role": "ORCHESTRATOR",
+        "model": "deterministic_rule_engine_v1",
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "total_tokens": 0,
+        "estimated_cost": 0.0,
+        "tool_calls": 0,
+        "retrieval_calls": 0,
+        "agent_latency_ms": 0.012,
+        "total_latency_ms": 0.012
+      },
+      {
+        "agent_role": "ORCHESTRATOR",
+        "model": "deterministic_rule_engine_v1",
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "total_tokens": 0,
+        "estimated_cost": 0.0,
+        "tool_calls": 0,
+        "retrieval_calls": 0,
+        "agent_latency_ms": 0.011,
+        "total_latency_ms": 0.011
+      },
+      {
+        "agent_role": "ORCHESTRATOR",
+        "model": "deterministic_rule_engine_v1",
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "total_tokens": 0,
+        "estimated_cost": 0.0,
+        "tool_calls": 0,
+        "retrieval_calls": 0,
+        "agent_latency_ms": 0.016,
+        "total_latency_ms": 0.016
+      }
+    ],
+    "retrieval_insufficiency_events": [],
+    "security_events": [],
+    "status_history": [
+      "PLANNED",
+      "SECURITY_VALIDATED",
+      "HYPOTHESES_GENERATED",
+      "EVIDENCE_COLLECTION",
+      "COUNTER_EVIDENCE",
+      "CONTRADICTION_ANALYSIS",
+      "METHOD_SELECTION",
+      "CONFIDENCE_EVALUATION",
+      "ABSTAINED (confidence judge abstained on every hypothesis)"
+    ]
+  },
+  "on_time_delivery_rate__2017-03": {
+    "investigation_id": "api_b826103163d1",
+    "requester_role": "ANALYST",
+    "kpi_id": "on_time_delivery_rate",
+    "period": "2017-03",
+    "movement": {
+      "absolute": -0.023710846854655965,
+      "percentage": -2.4496268656716444,
+      "current_value": 0.9442262372348782,
+      "previous_value": 0.9679370840895342
+    },
+    "hypotheses": [
+      {
+        "hypothesis_id": "H1",
+        "statement": "on_time_delivery_rate movement may be associated with a change in order volume.",
+        "driver": "volume",
+        "dimension": "orders",
+        "mechanism": "order-count expansion",
+        "expected_evidence": [
+          "DRIVER_CONTRIBUTION:volume"
+        ],
+        "falsification_evidence": [],
+        "evidence_types_expected": [],
+        "status": "PROPOSED"
+      },
+      {
+        "hypothesis_id": "H2",
+        "statement": "The on_time_delivery_rate movement may be concentrated in a small number of customer states.",
+        "driver": "geography",
+        "dimension": "customer_state",
+        "mechanism": "regional concentration",
+        "expected_evidence": [
+          "SEGMENT_CONTRIBUTION:customer_state"
+        ],
+        "falsification_evidence": [],
+        "evidence_types_expected": [],
+        "status": "PROPOSED"
+      }
+    ],
+    "evidence_ids": [
+      "ev_concurrent_581c79104246acb5"
+    ],
+    "classified_evidence": [
+      {
+        "evidence_id": "ev_concurrent_581c79104246acb5",
+        "hypothesis_id": "H1",
+        "classification": "CONTEXT",
+        "rationale": "consistent direction [forced CONTEXT: concurrent-KPI evidence is never support/contradict]"
+      }
+    ],
+    "counter_evidence_reports": [],
+    "contradictions": [
+      {
+        "contradiction_id": "CR-H1",
+        "hypothesis_id": "H1",
+        "supporting_evidence": [],
+        "contradicting_evidence": [],
+        "severity": "NONE",
+        "unresolved": true
+      },
+      {
+        "contradiction_id": "CR-H2",
+        "hypothesis_id": "H2",
+        "supporting_evidence": [],
+        "contradicting_evidence": [],
+        "severity": "NONE",
+        "unresolved": true
+      }
+    ],
+    "selected_methods": [
+      {
+        "hypothesis_id": "H1",
+        "method": "INSUFFICIENT_DATA",
+        "justification": "no SUPPORTS-classified evidence -- nothing to select a method for",
+        "downgraded": false,
+        "downgrade_reason": null
+      },
+      {
+        "hypothesis_id": "H2",
+        "method": "INSUFFICIENT_DATA",
+        "justification": "no SUPPORTS-classified evidence -- nothing to select a method for",
+        "downgraded": false,
+        "downgrade_reason": null
+      }
+    ],
+    "hypothesis_results": [
+      {
+        "hypothesis_id": "H1",
+        "status": "INCONCLUSIVE",
+        "confidence": "ABSTAIN",
+        "evidence_ids": [],
+        "reasons": [
+          "score=0.000",
+          "completeness=0.000",
+          "n_supports=0",
+          "contradiction_severity=NONE",
+          "method=INSUFFICIENT_DATA"
+        ],
+        "method": "INSUFFICIENT_DATA",
+        "contradiction_severity": "NONE"
+      },
+      {
+        "hypothesis_id": "H2",
+        "status": "INCONCLUSIVE",
+        "confidence": "ABSTAIN",
+        "evidence_ids": [],
+        "reasons": [
+          "score=0.000",
+          "completeness=0.000",
+          "n_supports=0",
+          "contradiction_severity=NONE",
+          "method=INSUFFICIENT_DATA"
+        ],
+        "method": "INSUFFICIENT_DATA",
+        "contradiction_severity": "NONE"
+      }
+    ],
+    "confidence": "ABSTAIN",
+    "status": "ABSTAINED",
+    "budgets": {
+      "max_iterations": 20,
+      "max_agent_calls": 120,
+      "max_tool_calls": 200,
+      "max_retrieval_calls": 60,
+      "max_tokens": 200000,
+      "max_latency_seconds": 60.0,
+      "used_iterations": 7,
+      "used_agent_calls": 5,
+      "used_tool_calls": 3,
+      "used_retrieval_calls": 0,
+      "used_tokens": 0,
+      "used_latency_seconds": 0.0
+    },
+    "audit_trace": [
+      {
+        "agent_id": "EVIDENCE",
+        "agent_role": "EVIDENCE",
+        "timestamp": "2026-08-29T14:26:19.006524+00:00",
+        "input_state_hash": "9b255e8cbf0d91bc",
+        "tool_call": "compare_kpi",
+        "tool_arguments_hash": "7da0d19c12bef1d6",
+        "tool_result_ids": [
+          "ev_kpimove_4137e1ebf50cb63f"
+        ],
+        "output": "1 result item(s)",
+        "token_usage": 0,
+        "latency_ms": 0.122,
+        "security_decision": "ALLOWED"
+      },
+      {
+        "agent_id": "EVIDENCE",
+        "agent_role": "EVIDENCE",
+        "timestamp": "2026-08-29T14:26:19.020649+00:00",
+        "input_state_hash": "5fbc6767fd81ac78",
+        "tool_call": "get_concurrent_kpis",
+        "tool_arguments_hash": "d3a93f7ae240ddad",
+        "tool_result_ids": [
+          "ev_concurrent_581c79104246acb5"
+        ],
+        "output": "1 result item(s)",
+        "token_usage": 0,
+        "latency_ms": 0.149,
+        "security_decision": "ALLOWED"
+      },
+      {
+        "agent_id": "EVIDENCE",
+        "agent_role": "EVIDENCE",
+        "timestamp": "2026-08-29T14:26:19.034311+00:00",
+        "input_state_hash": "c974b8b147784caa",
+        "tool_call": "get_driver_decomposition",
+        "tool_arguments_hash": "f601ca6432ff81fe",
+        "tool_result_ids": [],
+        "output": "PVM decomposition is implemented for 'revenue' only in this step (task \u00a71's explicit scope), got kpi_id='on_time_delivery_rate'.",
+        "token_usage": 0,
+        "latency_ms": 0.036,
+        "security_decision": "DENIED"
+      }
+    ],
+    "telemetry": [
+      {
+        "agent_role": "HYPOTHESIS",
+        "model": "api_scripted_fallback",
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "total_tokens": 0,
+        "estimated_cost": 0.0,
+        "tool_calls": 0,
+        "retrieval_calls": 0,
+        "agent_latency_ms": 0.009,
+        "total_latency_ms": 0.009
+      },
+      {
+        "agent_role": "ORCHESTRATOR",
+        "model": "deterministic_rule_engine_v1",
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "total_tokens": 0,
+        "estimated_cost": 0.0,
+        "tool_calls": 0,
+        "retrieval_calls": 0,
+        "agent_latency_ms": 13.882,
+        "total_latency_ms": 13.882
+      },
+      {
+        "agent_role": "EVIDENCE",
+        "model": "api_scripted_fallback",
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "total_tokens": 0,
+        "estimated_cost": 0.0,
+        "tool_calls": 0,
+        "retrieval_calls": 0,
+        "agent_latency_ms": 0.022,
+        "total_latency_ms": 0.022
+      },
+      {
+        "agent_role": "EVIDENCE",
+        "model": "api_scripted_fallback",
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "total_tokens": 0,
+        "estimated_cost": 0.0,
+        "tool_calls": 0,
+        "retrieval_calls": 0,
+        "agent_latency_ms": 0.014,
+        "total_latency_ms": 0.014
+      },
+      {
+        "agent_role": "EVIDENCE",
+        "model": "api_scripted_fallback",
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "total_tokens": 0,
+        "estimated_cost": 0.0,
+        "tool_calls": 0,
+        "retrieval_calls": 0,
+        "agent_latency_ms": 0.023,
+        "total_latency_ms": 0.023
+      },
+      {
+        "agent_role": "EVIDENCE",
+        "model": "api_scripted_fallback",
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "total_tokens": 0,
+        "estimated_cost": 0.0,
+        "tool_calls": 0,
+        "retrieval_calls": 0,
+        "agent_latency_ms": 0.008,
+        "total_latency_ms": 0.008
+      },
+      {
+        "agent_role": "ORCHESTRATOR",
+        "model": "deterministic_rule_engine_v1",
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "total_tokens": 0,
+        "estimated_cost": 0.0,
+        "tool_calls": 0,
+        "retrieval_calls": 0,
+        "agent_latency_ms": 27.302,
+        "total_latency_ms": 27.302
+      },
+      {
+        "agent_role": "ORCHESTRATOR",
+        "model": "deterministic_rule_engine_v1",
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "total_tokens": 0,
+        "estimated_cost": 0.0,
+        "tool_calls": 0,
+        "retrieval_calls": 0,
+        "agent_latency_ms": 0.019,
+        "total_latency_ms": 0.019
+      },
+      {
+        "agent_role": "ORCHESTRATOR",
+        "model": "deterministic_rule_engine_v1",
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "total_tokens": 0,
+        "estimated_cost": 0.0,
+        "tool_calls": 0,
+        "retrieval_calls": 0,
+        "agent_latency_ms": 0.034,
+        "total_latency_ms": 0.034
+      },
+      {
+        "agent_role": "ORCHESTRATOR",
+        "model": "deterministic_rule_engine_v1",
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "total_tokens": 0,
+        "estimated_cost": 0.0,
+        "tool_calls": 0,
+        "retrieval_calls": 0,
+        "agent_latency_ms": 0.013,
+        "total_latency_ms": 0.013
+      },
+      {
+        "agent_role": "ORCHESTRATOR",
+        "model": "deterministic_rule_engine_v1",
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "total_tokens": 0,
+        "estimated_cost": 0.0,
+        "tool_calls": 0,
+        "retrieval_calls": 0,
+        "agent_latency_ms": 0.019,
+        "total_latency_ms": 0.019
+      }
+    ],
+    "retrieval_insufficiency_events": [],
+    "security_events": [],
+    "status_history": [
+      "PLANNED",
+      "SECURITY_VALIDATED",
+      "HYPOTHESES_GENERATED",
+      "EVIDENCE_COLLECTION",
+      "COUNTER_EVIDENCE",
+      "CONTRADICTION_ANALYSIS",
+      "METHOD_SELECTION",
+      "CONFIDENCE_EVALUATION",
+      "ABSTAINED (confidence judge abstained on every hypothesis)"
+    ]
+  }
+}

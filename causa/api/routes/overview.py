@@ -15,7 +15,7 @@ from fastapi import APIRouter, Depends, Query
 from api.bootstrap import EngineBundle
 from api.dependencies import get_engine_bundle, get_requester_clearance
 from api.kpi_support import build_anomaly_result
-from api.routes.kpis import TRACKED_KPI_IDS, _month_bounds
+from api.routes.kpis import TRACKED_KPI_IDS, _range_bounds
 from api.serializers import (
     anomaly_result_dict, comparison_result_dict, driver_decomposition_dict,
 )
@@ -30,11 +30,13 @@ HEADLINE_KPI = "revenue"
 @router.get("")
 def get_overview(
     period: str = Query(default=DEFAULT_CURRENT), previous_period: str = Query(default=DEFAULT_PREVIOUS),
+    start_period: str | None = Query(default=None), end_period: str | None = Query(default=None),
+    previous_start_period: str | None = Query(default=None), previous_end_period: str | None = Query(default=None),
     bundle: EngineBundle = Depends(get_engine_bundle),
     requester_clearance: str = Depends(get_requester_clearance),
 ):
-    cur_start, cur_end = _month_bounds(period)
-    prev_start, prev_end = _month_bounds(previous_period)
+    cur_start, cur_end = _range_bounds(start_period or period, end_period or period)
+    prev_start, prev_end = _range_bounds(previous_start_period or previous_period, previous_end_period or previous_period)
 
     movements = []
     for kpi_id in TRACKED_KPI_IDS:

@@ -24,10 +24,16 @@ import { KPITrend } from '@/components/kpi/KPITrend'
 import { useCausalResults } from '@/hooks/useCausal'
 import { useConcurrentKpiMovements, useDriverDecomposition } from '@/hooks/useDrivers'
 import { useContradictionChecks } from '@/hooks/useEvidence'
-import { useCurrentInvestigation } from '@/hooks/useInvestigation'
+import { useCreateInvestigation, useCurrentInvestigation } from '@/hooks/useInvestigation'
 import { useKpiMovement } from '@/hooks/useKpis'
 import { useAllLogs } from '@/hooks/useLogs'
-import { formatCurrency } from '@/lib/format'
+import { useAppState } from '@/state/AppStateContext'
+import { formatKpiValue } from '@/lib/format'
+import type { RequesterRole } from '@/types/common'
+
+function runFor(role: RequesterRole): 'ANALYST' | 'EXECUTIVE' {
+  return role === 'EXECUTIVE' ? 'EXECUTIVE' : 'ANALYST'
+}
 
 export function InvestigatePage() {
   const { kpiId = 'revenue' } = useParams()
@@ -39,23 +45,62 @@ export function InvestigatePage() {
 
   const def = kpiDef(kpiId)
   const { data: movement, isLoading: loadingMovement } = useKpiMovement(kpiId)
-  const isRevenue = kpiId === 'revenue'
+  const { requesterRole, endPeriod, previousEndPeriod } = useAppState()
+  const role = runFor(requesterRole)
 
   const { data: decomposition } = useDriverDecomposition()
   const { data: concurrent } = useConcurrentKpiMovements()
-  const { data: investigation } = useCurrentInvestigation()
+  const { data: investigation } = useCurrentInvestigation(kpiId)
   const { data: causalResults } = useCausalResults()
   const { data: contradictionChecks } = useContradictionChecks()
   const { data: logs } = useAllLogs()
+  const createInvestigation = useCreateInvestigation()
 
   if (!def) return <ErrorState title="Unknown KPI" message={`No governed KPI contract for "${kpiId}".`} />
   if (loadingMovement || !movement) return <LoadingState label="Loading KPI movement" />
 
+  // investigation != null alone signals a real investigation has run for
+  // this (role, kpiId, period) -- not investigation.hypotheses.length > 0,
+  // since a legitimate real run can abstain with zero hypotheses generated
+  // (e.g. the canonical revenue/Nov-2017 fixture) and that's still a real
+  // result, not an "hasn't been run yet" state. The kpiId check guards
+  // against demoAdapter's fallback: when Demo mode has no baked scenario for
+  // the requested KPI/period, getInvestigation() hands back the one
+  // canonical Revenue/Nov-2017 investigation regardless of what was asked
+  // for -- without this check, an Orders page would render hypotheses that
+  // literally talk about "revenue rise" under an Orders header. Live mode
+  // never mismatches (the backend always creates/returns a real investigation
+  // scoped to the requested kpiId), so this is a no-op there.
+  const hasInvestigation = investigation != null && investigation.kpiId === kpiId
+  // PVM decomposition, counter-evidence/contradiction checks, and the causal
+  // (T1-T4) analysis panel are still backed by revenue-only endpoints in
+  // this build (see api/productionApi/drivers.ts, evidence.ts, causal.ts) --
+  // unlike the Confidence/Hypotheses panels above, which now run a real,
+  // per-KPI investigation via useCurrentInvestigation.
+  const isRevenue = kpiId === 'revenue'
   const scopedLogs = (logs ?? []).filter((l) => l.investigationId === investigation?.investigationId)
 
-  function handleInvestigate() {
+  function handleInvestigate(mode?: 'auto' | 'live' | 'fresh') {
     setRevealed(false)
+    // Mount the live panel immediately, before the mutation resolves --
+    // a real run can take anywhere from under a second to several minutes
+    // (mode=live makes genuine Groq round-trips), so the panel needs to be
+    // showing real elapsed time from the moment the call starts, not just
+    // played back as a fixed-length animation once the result is already in.
     setLiveMode(true)
+    createInvestigation.mutate(
+      { role, kpiId, periodCurrent: endPeriod, periodPrevious: previousEndPeriod, mode },
+      { onError: () => { setLiveMode(false); setRevealed(true) } },
+    )
+  }
+
+  // "Investigate further" (from the abstained/leading-candidates view) has
+  // to bypass the canonical Revenue/Nov-2017 replay path -- mode='auto'
+  // there just plays back the same cached reports/step5_validation.json
+  // every time, so a re-run would look frozen. mode='fresh' forces a real,
+  // non-replayed pipeline run instead (see api/routes/investigations.py).
+  function handleInvestigateFresh() {
+    handleInvestigate('fresh')
   }
 
   return (
@@ -63,14 +108,17 @@ export function InvestigatePage() {
       <InvestigationHeader
         def={def}
         movement={movement}
-        investigationStatus={isRevenue ? investigation?.status : undefined}
-        onInvestigate={handleInvestigate}
+        investigationStatus={hasInvestigation ? investigation?.status : undefined}
+        investigation={hasInvestigation ? investigation : undefined}
+        onInvestigate={() => handleInvestigate()}
       />
 
       {liveMode ? (
         <div className="px-6 pt-4">
           <LiveInvestigationPanel
             hypotheses={investigation?.hypotheses ?? []}
+            kpiName={def.name}
+            pending={createInvestigation.isPending}
             onDone={() => {
               setLiveMode(false)
               setRevealed(true)
@@ -91,15 +139,18 @@ export function InvestigatePage() {
           <TabsContent value="overview" className="mt-4 space-y-4">
             <div className="grid grid-cols-[1.4fr_1fr] gap-4">
               <Card>
-                <CardHeader title="What changed" subtitle={`${formatCurrency(movement.previousValue)} → ${formatCurrency(movement.currentValue)}`} />
+                <CardHeader title="What changed" subtitle={`${formatKpiValue(movement.previousValue, def.unit)} → ${formatKpiValue(movement.currentValue, def.unit)}`} />
                 <CardBody>
-                  <KPITrend kpiId={kpiId} valueFormatter={def.unit === 'currency_brl' ? formatCurrency : undefined} />
+                  <KPITrend kpiId={kpiId} valueFormatter={(v) => formatKpiValue(v, def.unit)} />
                 </CardBody>
               </Card>
               <Card>
-                <CardHeader title="Confidence" subtitle={isRevenue ? 'From the real Step 5 agent run' : 'No investigation run for this KPI yet'} />
+                <CardHeader
+                  title="Confidence"
+                  subtitle={hasInvestigation ? (isRevenue ? 'From the real Step 5 agent run' : 'From a real investigation run') : 'No investigation run for this KPI yet'}
+                />
                 <CardBody>
-                  {isRevenue && investigation ? (
+                  {hasInvestigation && investigation ? (
                     <ConfidencePanel overall={investigation.confidence} results={investigation.hypothesisResults} />
                   ) : (
                     <EmptyState title="Not investigated" description="Click Investigate to run this KPI through the pipeline." />
@@ -124,14 +175,19 @@ export function InvestigatePage() {
               <Card>
                 <CardHeader title="Investigation" subtitle="Hypotheses generated and tested" />
                 <CardBody className="space-y-2.5">
-                  {isRevenue && investigation ? (
-                    investigation.status === 'ABSTAINED' && investigation.hypothesisResults.every((r) => r.evidenceIds.length === 0) ? (
+                  {hasInvestigation && investigation ? (
+                    investigation.status === 'ABSTAINED' ? (
                       <AbstentionState
                         hypotheses={investigation.hypotheses}
+                        results={investigation.hypothesisResults}
+                        contradictions={investigation.contradictions}
                         reasons={[
                           'Additional evidence retrieval rounds for this KPI/period',
                           'Segment-level evidence beyond the concurrent-KPI signals already gathered',
                         ]}
+                        kpiName={def.name}
+                        onInvestigateFurther={handleInvestigateFresh}
+                        investigateFurtherPending={createInvestigation.isPending}
                       />
                     ) : (
                       investigation.hypotheses.map((h) => (

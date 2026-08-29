@@ -64,7 +64,7 @@ function AttentionPanel() {
                   </div>
                   <div className="flex items-center gap-2">
                     {m.materiality ? (
-                      <Badge tone={m.materiality === 'CRITICAL' ? 'negative' : 'warning'}>{m.materiality} MATERIALITY</Badge>
+                      <Badge tone={m.materiality === 'CRITICAL' ? 'negative' : 'warning'}>{m.materiality?.replaceAll('_', ' ')} MATERIALITY</Badge>
                     ) : (
                       <Badge tone="neutral">not assessed</Badge>
                     )}

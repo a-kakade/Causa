@@ -1,7 +1,7 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useQuery } from '@tanstack/react-query'
 import { askInvestigationQuestion } from '@/api'
-import { getInvestigation } from '@/api'
+import { createInvestigation, getInvestigation } from '@/api'
 import { useAppState } from '@/state/AppStateContext'
 import type { RequesterRole } from '@/types/common'
 
@@ -12,14 +12,37 @@ function runFor(role: RequesterRole): 'ANALYST' | 'EXECUTIVE' {
   return role === 'EXECUTIVE' ? 'EXECUTIVE' : 'ANALYST'
 }
 
-export function useCurrentInvestigation() {
-  const { requesterRole } = useAppState()
+/** Looks up (creating if needed) the investigation for the given KPI under
+ * the current period/role -- keyed by (role, kpiId, period) so switching
+ * KPIs never shows a stale cached result for a different one. */
+export function useCurrentInvestigation(kpiId = 'revenue') {
+  const { requesterRole, endPeriod, previousEndPeriod } = useAppState()
   const role = runFor(requesterRole)
-  return useQuery({ queryKey: ['investigation', role], queryFn: () => getInvestigation(role) })
+  return useQuery({
+    queryKey: ['investigation', role, kpiId, endPeriod, previousEndPeriod],
+    queryFn: () => getInvestigation(role, kpiId, endPeriod, previousEndPeriod),
+  })
 }
 
 export function useInvestigationByRole(role: 'ANALYST' | 'EXECUTIVE') {
   return useQuery({ queryKey: ['investigation', role], queryFn: () => getInvestigation(role) })
+}
+
+/** Explicitly triggers a fresh, real investigation run for a given KPI/
+ * period (used by the "Investigate" button so it never silently reuses a
+ * stale cached result). */
+export function useCreateInvestigation() {
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationFn: ({ role, kpiId, periodCurrent, periodPrevious, mode }: {
+      role: 'ANALYST' | 'EXECUTIVE'; kpiId: string; periodCurrent: string; periodPrevious: string
+      mode?: 'auto' | 'live' | 'fresh'
+    }) => createInvestigation(role, kpiId, periodCurrent, periodPrevious, mode),
+    onSuccess: (state, { role, kpiId, periodCurrent, periodPrevious }) => {
+      queryClient.setQueryData(['investigation', role, kpiId, periodCurrent, periodPrevious], state)
+      void queryClient.invalidateQueries({ queryKey: ['investigation'] })
+    },
+  })
 }
 
 /** "Ask your own question" -- runs a fresh, real investigation resolved

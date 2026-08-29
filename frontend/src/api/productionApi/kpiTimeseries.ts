@@ -7,6 +7,10 @@ export interface MonthlyPoint {
   avgDeliveryDays: number | null
   avgReviewScore: number | null
   aov: number | null
+  freightRevenue: number | null
+  onTimeDeliveryRate: number | null
+  reviewVolume: number | null
+  repeatPurchaseRate: number | null
 }
 
 const MONTHS = [
@@ -16,6 +20,8 @@ const MONTHS = [
 const KPI_IDS: Array<{ id: string; field: keyof MonthlyPoint }> = [
   { id: 'revenue', field: 'revenue' }, { id: 'orders', field: 'orders' }, { id: 'aov', field: 'aov' },
   { id: 'avg_delivery_days', field: 'avgDeliveryDays' }, { id: 'avg_review_score', field: 'avgReviewScore' },
+  { id: 'freight_revenue', field: 'freightRevenue' }, { id: 'on_time_delivery_rate', field: 'onTimeDeliveryRate' },
+  { id: 'review_volume', field: 'reviewVolume' }, { id: 'repeat_purchase_rate', field: 'repeatPurchaseRate' },
 ]
 
 interface TimeseriesResponse {
@@ -39,6 +45,7 @@ export async function getMonthlyKpiTimeseries(): Promise<MonthlyPoint[]> {
       })
       return MONTHS.map((m) => ({
         period: m, orders: null, revenue: null, avgDeliveryDays: null, avgReviewScore: null, aov: null,
+        freightRevenue: null, onTimeDeliveryRate: null, reviewVolume: null, repeatPurchaseRate: null,
         ...byMonthField[m],
       }))
     })
@@ -49,6 +56,8 @@ export async function getMonthlyKpiTimeseries(): Promise<MonthlyPoint[]> {
 const FIELD_BY_KPI: Record<string, keyof MonthlyPoint> = {
   revenue: 'revenue', orders: 'orders', aov: 'aov',
   avg_delivery_days: 'avgDeliveryDays', avg_review_score: 'avgReviewScore',
+  freight_revenue: 'freightRevenue', on_time_delivery_rate: 'onTimeDeliveryRate',
+  review_volume: 'reviewVolume', repeat_purchase_rate: 'repeatPurchaseRate',
 }
 
 export async function getKpiTrendSeries(kpiId: string): Promise<{ period: string; value: number | null }[]> {

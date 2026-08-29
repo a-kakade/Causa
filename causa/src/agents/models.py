@@ -381,9 +381,9 @@ class BudgetExceeded(Exception):
 @dataclass
 class Budgets:
     max_iterations: int = 20
-    max_agent_calls: int = 40
-    max_tool_calls: int = 60
-    max_retrieval_calls: int = 20
+    max_agent_calls: int = 120
+    max_tool_calls: int = 200
+    max_retrieval_calls: int = 60
     max_tokens: int = 200_000          # scaffolding for a future LLM-backed version; unused (0 tokens) today
     max_latency_seconds: float = 60.0
 

@@ -21,19 +21,29 @@ TRACKED_KPI_IDS = ("revenue", "orders", "aov", "freight_revenue", "avg_delivery_
                     "on_time_delivery_rate", "avg_review_score", "review_volume", "repeat_purchase_rate")
 
 
-def _month_bounds(month: str) -> tuple[str, str]:
+def _range_bounds(start_month: str, end_month: str) -> tuple[str, str]:
+    """Expands a start/end month pair (inclusive, 'YYYY-MM') into a full
+    date range: first day of start_month through last day of end_month.
+    A single month (start_month == end_month) reduces to the old
+    _month_bounds behavior."""
     from calendar import monthrange
-    year, mon = (int(x) for x in month.split("-"))
-    return f"{month}-01", f"{month}-{monthrange(year, mon)[1]:02d}"
+    end_year, end_mon = (int(x) for x in end_month.split("-"))
+    return f"{start_month}-01", f"{end_month}-{monthrange(end_year, end_mon)[1]:02d}"
+
+
+def _month_bounds(month: str) -> tuple[str, str]:
+    return _range_bounds(month, month)
 
 
 @router.get("")
 def list_kpi_movements(
     period: str = Query(default=DEFAULT_CURRENT), previous_period: str = Query(default=DEFAULT_PREVIOUS),
+    start_period: str | None = Query(default=None), end_period: str | None = Query(default=None),
+    previous_start_period: str | None = Query(default=None), previous_end_period: str | None = Query(default=None),
     bundle: EngineBundle = Depends(get_engine_bundle),
 ):
-    cur_start, cur_end = _month_bounds(period)
-    prev_start, prev_end = _month_bounds(previous_period)
+    cur_start, cur_end = _range_bounds(start_period or period, end_period or period)
+    prev_start, prev_end = _range_bounds(previous_start_period or previous_period, previous_end_period or previous_period)
     out = []
     for kpi_id in TRACKED_KPI_IDS:
         if kpi_id not in bundle.registry.list_kpi_ids():
@@ -46,12 +56,14 @@ def list_kpi_movements(
 @router.get("/{kpi_id}")
 def get_kpi_movement(
     kpi_id: str, period: str = Query(default=DEFAULT_CURRENT), previous_period: str = Query(default=DEFAULT_PREVIOUS),
+    start_period: str | None = Query(default=None), end_period: str | None = Query(default=None),
+    previous_start_period: str | None = Query(default=None), previous_end_period: str | None = Query(default=None),
     bundle: EngineBundle = Depends(get_engine_bundle),
 ):
     if kpi_id not in bundle.registry.list_kpi_ids():
         raise HTTPException(status_code=404, detail=f"Unknown kpi_id {kpi_id!r}")
-    cur_start, cur_end = _month_bounds(period)
-    prev_start, prev_end = _month_bounds(previous_period)
+    cur_start, cur_end = _range_bounds(start_period or period, end_period or period)
+    prev_start, prev_end = _range_bounds(previous_start_period or previous_period, previous_end_period or previous_period)
     cmp = bundle.kpi_engine.compare_periods(kpi_id, cur_start, cur_end, prev_start, prev_end)
     return comparison_result_dict(cmp)
 
@@ -72,5 +84,11 @@ def get_kpi_timeseries(
         result = bundle.kpi_engine.compute(KPIRequest(kpi_id=kpi_id, start_date=start, end_date=end))
         if isinstance(result, list):
             continue
-        points.append({"period": month, **kpi_result_dict(result)})
+        # kpi_result_dict(result) carries its own "period" key (a
+        # {start, end} date-range object) -- put the simple 'YYYY-MM' month
+        # label AFTER the spread so it wins, instead of being silently
+        # shadowed by the result's own period object (which previously left
+        # every point's "period" as {start, end} instead of the month
+        # string every caller keys its chart data by).
+        points.append({**kpi_result_dict(result), "period": month})
     return {"kpi_id": kpi_id, "points": points}

@@ -72,6 +72,44 @@ export function formatMonthLabel(period: string): string {
   return d.toLocaleDateString('en-US', { month: 'short', year: 'numeric' })
 }
 
+/** Kept in sync with KPIDef['unit'] (types/kpi.ts) without importing it, to
+ * avoid coupling this low-level formatting module to the KPI type layer. */
+export type KPIUnit = 'currency_brl' | 'count' | 'days' | 'score_1_5' | 'percent' | 'ratio'
+
+/** Formats a raw KPI value for display according to its governed unit.
+ * 'percent'/'ratio' values arrive from the backend as a 0-1 fraction (e.g.
+ * 0.0118 for a 1.18% repeat purchase rate) -- NOT already scaled to 0-100,
+ * unlike percentage_change/movement deltas, which the backend already
+ * returns pre-scaled (e.g. -19.7 for -19.7%). Mixing the two up is what
+ * makes a percent KPI render as "0.0%" or a raw "0.012". */
+export function formatKpiValue(value: number, unit: KPIUnit): string {
+  if (Number.isNaN(value)) return '—'
+  switch (unit) {
+    case 'currency_brl':
+      return formatCurrency(value)
+    case 'count':
+      return formatNumber(Math.round(value))
+    case 'days':
+      return `${value.toFixed(2)} days`
+    case 'score_1_5':
+      return value.toFixed(2)
+    case 'percent':
+    case 'ratio':
+      return formatPercent(value * 100)
+    default:
+      return formatNumber(value)
+  }
+}
+
+/** Same unit-awareness as formatKpiValue, but for a signed delta (e.g. "What
+ * changed" / "Change:" rows) -- never assumes currency. */
+export function formatKpiChange(value: number, unit: KPIUnit): string {
+  if (Number.isNaN(value)) return '—'
+  if (unit === 'currency_brl') return formatSignedCurrency(value)
+  const sign = value > 0 ? '+' : value < 0 ? '−' : ''
+  return `${sign}${formatKpiValue(Math.abs(value), unit)}`
+}
+
 export function titleCase(s: string): string {
   return s
     .replace(/_/g, ' ')

@@ -1,14 +1,14 @@
 import { FlaskConical, Radio } from 'lucide-react'
-import { DEMO_MODE } from '@/api'
+import { useAppState } from '@/state/AppStateContext'
 
 /** Spec §52: the app's current data source must be clearly, persistently
  * identified — and that identification must be TRUE, not a hardcoded claim.
- * `DEMO_MODE` is exported by whichever adapter `@/api/index.ts` currently
- * points at (`true` for `demoAdapter`'s static fixtures, `false` for
- * `productionApi`'s live FastAPI calls) — this banner reads that, it never
- * asserts a mode independently of the actual wiring. */
+ * Reads the same `apiMode` the Header's Live/Demo toggle sets (@/api/mode.ts
+ * is the actual dispatch) — this banner never asserts a mode independently
+ * of the real wiring. */
 export function DemoModeBanner() {
-  if (DEMO_MODE) {
+  const { apiMode } = useAppState()
+  if (apiMode === 'demo') {
     return (
       <div className="flex items-center gap-2 border-b border-(--color-accent-border) bg-(--color-accent-soft) px-4 py-1.5 text-[11px] font-medium text-(--color-accent-strong)">
         <FlaskConical className="size-3" />

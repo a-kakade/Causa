@@ -13,6 +13,105 @@ has skipped ahead of what the prior step actually established.
 
 ## Where we are right now
 
+**Session note (2026-08-29, latest): live-mode reliability/latency fixes, two
+broken frontend actions fixed, and a batch of pre-existing uncommitted
+frontend/API fixes swept up into this note.** Two separate problems reported
+against `mode=live` investigations were root-caused and fixed, both in
+`src/agents/llm_client.py`, plus their upstream symptoms in the frontend:
+
+- **`BudgetExceeded` (limit=40)`** — `agents/models.py`'s `Budgets` defaults
+  (`max_agent_calls`, `max_tool_calls`, `max_retrieval_calls`) were still at
+  their original Step 5 single-hypothesis-run sizing (40/60/20), too small
+  for a real multi-hypothesis `mode=live` investigation against any
+  non-canonical KPI/period. Raised to 120/200/60. All 1097 (now 1104) tests
+  still pass.
+- **Wasteful Groq retry storm.** `GroqLLMClient.create()` used to sleep 1.5s
+  before *every* key rotation and treat every `groq.APIStatusError` the
+  same, regardless of whether a different key could plausibly help — so a
+  single non-retryable error (malformed request, unknown model) burned
+  through the whole 17-key pool at ~1.5s+ each (~25-40s) for a failure that
+  was going to happen on every key anyway. Now: retryable statuses
+  (401/403/408/413/429/500/502/503/504 — rate limits, transient
+  server errors, AND per-credential problems, since one bad/revoked key
+  shouldn't block the rest of the pool) rotate immediately with no sleep;
+  non-retryable ones (400/404/409/422 — a property of the request, not the
+  key) fail fast instead of exhausting the pool. Measured live: an error
+  that used to cost ~25-40s of wasted retries now fails in ~2-3s.
+- **Silent hypothesis-round abandonment on a disallowed-tool hallucination.**
+  Separately (and it turned out to be the *dominant* live-mode failure
+  mode once the retry storm above stopped masking it): the model
+  (`openai/gpt-oss-20b` via Groq) periodically proposes a tool outside the
+  `tools` list it was sent for its agent role (e.g. HYPOTHESIS reaching for
+  `get_evidence`, which `tools/policy.ALLOWED_TOOLS_PER_AGENT` correctly
+  never grants that role) — Groq's own request-shape validation rejects
+  this as an HTTP 400 (`code: "tool_use_failed"`) before a completion is
+  even produced, so it never reaches `tools/gateway.call_tool()`'s own
+  DENY-and-recover path. `run_tool_loop` used to treat this exactly like a
+  network failure (`LLMUnavailable` → the whole agent round returns nothing,
+  e.g. zero hypotheses generated). Added `ToolCallRejected` (raised by
+  `GroqLLMClient.create()` when it recognizes this specific error shape,
+  parsed via `_as_tool_call_rejection`): `run_tool_loop` now catches it,
+  logs a `tool_call_rejected` security event, and feeds the model back a
+  synthetic corrective tool-result ("DENIED: X is not authorized; choose
+  from: ...") so it can self-correct within its own remaining tool
+  iterations — recoverable exactly like a governed gateway DENIAL already
+  is, instead of discarding the whole round. New test file
+  `tests/test_llm_client_retry.py` (7 tests, real `groq`/`httpx` exception
+  shapes, no network) covers both fixes; full suite now 1104 passed (was
+  1097). Verified live end-to-end against real Groq multiple times in this
+  session: one run hit the rejection once (`EVIDENCE` role reaching for
+  `get_driver_decomposition`), recovered, and still completed a full
+  4-hypothesis investigation through to an honest `ABSTAINED` in 3m42s —
+  before this fix, that exact event would have ended the round with zero
+  hypotheses and no diagnostic beyond an opaque `llm_unavailable` event.
+- **Two dead/misleading buttons on the abstention screen**
+  (`AbstentionState.tsx`, surfaced via `InvestigatePage.tsx`): "Investigate
+  further" had no `onClick` at all (fully inert); "Ask a clarifying
+  question" just linked to the generic `/evidence` Explorer, unrelated to
+  actually asking anything. Fixed: "Investigate further" now re-runs the
+  same investigation for real; "Ask a clarifying question" opens the
+  existing "Ask your own question" modal pre-filled with a question about
+  the current KPI. That modal's open/prefill state was local to
+  `Header.tsx`, so it was lifted into `AppStateContext` (`askQuestionOpen`/
+  `openAskQuestion()`/`closeAskQuestion()`) so any screen can trigger it,
+  not just the header. Both verified working live in-browser (screenshots
+  taken; "Ask a clarifying question" correctly opens the modal pre-filled
+  with "Why did Revenue move the way it did?").
+- **Misleading live-investigation progress UI**
+  (`LiveInvestigationPanel.tsx`): used to mount only *after* the backend
+  call had already finished, then play a fixed ~3.4s stage animation
+  regardless of how long the real call took — so a multi-minute
+  `mode=live` run would show a plain unresponsive "Investigate" button
+  for its whole duration, then a progress bar that lied about having "just
+  happened" quickly. Now the panel mounts the instant Investigate is
+  clicked, holds honestly at "Gathering evidence" with a live elapsed-time
+  counter for as long as the real call is pending, and only advances once
+  the actual result is back.
+- **Swept up in this note (pre-existing uncommitted work, not authored this
+  session, found sitting in the working tree and left as-is/still
+  uncommitted):** `api/routes/kpis.py` and `overview.py` gained multi-month
+  range query params (`start_period`/`end_period`/…) alongside the original
+  single-month ones, backing the Header's period-range selector;
+  `api/routes/kpis.py`'s per-point timeseries dict also had a real bug
+  fixed — `{"period": month, **kpi_result_dict(result)}` let the KPI
+  engine's own `period` key (a `{start, end}` object) silently clobber the
+  intended `"YYYY-MM"` month label the frontend charts key on, now fixed by
+  spreading first and setting `"period"` after. `frontend/src/lib/format.ts`
+  gained unit-aware `formatKpiValue`/`formatKpiChange` (replacing
+  ad hoc formatting duplicated in `KPICard.tsx`/`InvestigationHeader.tsx`)
+  that also fixed a percent/ratio scaling bug (`percent`/`ratio` KPIs like
+  `repeat_purchase_rate` arrive from the backend as a 0-1 fraction and were
+  rendering as `"0.0%"` instead of being multiplied by 100 first).
+  `kpiTimeseries.ts` was extended to carry `freight_revenue`/
+  `on_time_delivery_rate`/`review_volume`/`repeat_purchase_rate` for the new
+  interactive charts. `useInvestigation.ts` gained `useCreateInvestigation`
+  (per-KPI, not revenue-only) and made `useCurrentInvestigation` take a
+  `kpiId` so switching KPIs doesn't show a stale different-KPI result.
+- **Separately flagged, not fixed:** `causa/.env` holds real Groq/OpenAI API
+  keys in plaintext in the working tree — confirmed reason to check it's
+  actually gitignored and never touched a remote, and to rotate the keys if
+  it ever did.
+
 **Session note (2026-08-29, later): FastAPI backend (`api/`) built and wired
 to the frontend.** A new `api/` package (FastAPI + Pydantic request models)
 now sits between `frontend/` and `src/`, exposing health/overview/kpis/

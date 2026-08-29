@@ -29,6 +29,6 @@ export interface KPIMovement {
   favorable: boolean
   /** null when the Step 3C materiality/anomaly engine was not run for this
    * KPI in this demo build — the UI must show "not assessed", never guess. */
-  materiality: 'CRITICAL' | 'MATERIAL' | 'WATCH' | 'NORMAL' | 'INSUFFICIENT_DATA' | null
+  materiality: 'CRITICAL' | 'MATERIAL' | 'WATCH' | 'NORMAL' | 'INSUFFICIENT_DATA' | 'BASELINE_DISAGREEMENT' | null
   evidenceId?: string
 }

@@ -26,6 +26,7 @@ import itertools
 import json
 import os
 import time
+import uuid
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any, Callable, Optional, Protocol
@@ -80,6 +81,23 @@ class LLMUnavailable(Exception):
     agent produced nothing usable this round" -- NEVER a crash of the whole
     investigation (task §9: budgets/graceful degradation, not indefinite
     retry or a hard failure)."""
+
+
+class ToolCallRejected(Exception):
+    """Raised specifically when Groq's OWN request-shape validation rejects
+    the model's proposed tool call before a chat completion is even
+    produced -- observed in practice as the model (gpt-oss-20b) proposing a
+    tool outside the `tools` list it was sent this call (e.g. HYPOTHESIS
+    reaching for `get_evidence`, which tools_for_agent_role() correctly
+    never includes for that role -- see tools/policy.ALLOWED_TOOLS_PER_AGENT).
+    This is recoverable exactly like a governed tools/gateway.call_tool()
+    DENIAL is: the model made an out-of-policy request, not a broken
+    connection or a doomed request shape, so run_tool_loop feeds it back a
+    corrective message and lets the model retry within its own iteration
+    budget instead of discarding the whole round via LLMUnavailable."""
+    def __init__(self, tool_name: str, arguments_raw: str):
+        self.tool_name, self.arguments_raw = tool_name, arguments_raw
+        super().__init__(f"Model proposed disallowed tool {tool_name!r}")
 
 
 # ---------------------------------------------------------------------------
@@ -227,32 +245,71 @@ class GroqLLMClient:
             # round-trip budget) -- "required" removes that escape hatch.
             request_kwargs["tool_choice"] = "required"
 
+        # Status codes where a DIFFERENT key can plausibly succeed: capacity/
+        # rate-limit/transient-server problems (413 included because
+        # live-probing this user's 17 keys found the free tier's
+        # tokens-per-minute limit -- 8000 TPM per key -- surfaces as a plain
+        # APIStatusError with HTTP 413, not RateLimitError; see
+        # STEP5_VALIDATION.md §14/§17), AND per-credential problems (401/403
+        # -- one specific key can be invalid/revoked/lack model access while
+        # the rest of the pool is fine; rotating past a single dead key is
+        # exactly what a 17-key pool is for). Only 400/404/409/422 -- a
+        # malformed request or an unknown model, both properties of the
+        # REQUEST, not the key -- fail identically on every key, so retrying
+        # the whole pool for one of those just burns ~17x the wall-clock
+        # time for the same eventual failure: fail fast instead.
+        _RETRYABLE_STATUS = {401, 403, 408, 413, 429, 500, 502, 503, 504}
+
         last_exc: Optional[Exception] = None
         for _ in range(len(self.key_pool)):
             key = self.key_pool.next_key()
             try:
                 response = self._client_for(key).chat.completions.create(**request_kwargs)
                 return _normalize_groq_response(response)
-            except (groq.APIStatusError, groq.APIConnectionError, groq.APITimeoutError) as exc:
-                # groq.APIStatusError is the base class for RateLimitError/
-                # AuthenticationError/NotFoundError/BadRequestError/
-                # InternalServerError/etc. -- caught broadly rather than
-                # enumerating subclasses because live-probing this user's
-                # own 17 keys found the free tier's tokens-per-minute limit
-                # (8000 TPM per key) surfaces as a plain APIStatusError with
-                # HTTP 413, not the more specific RateLimitError a narrower
-                # catch would have missed (see STEP5_VALIDATION.md §14/§17
-                # for the exact error observed). Rotating to the next key on
-                # ANY status error is the right response here: a different
-                # key may have fresh TPM budget, different model access, or
-                # be valid where this one was rejected outright. A short
-                # pause before the next attempt gives a per-minute token
-                # budget (observed: 8000 TPM on this account) a moment to
-                # recover rather than immediately re-hammering it.
+            except groq.APIStatusError as exc:
                 last_exc = exc
-                time.sleep(1.5)
+                if exc.status_code not in _RETRYABLE_STATUS:
+                    rejected = _as_tool_call_rejection(exc)
+                    if rejected is not None:
+                        raise rejected from exc
+                    raise LLMUnavailable(f"Non-retryable Groq error ({exc.status_code}): {exc}") from exc
+                # Each key has its own independent per-minute token budget,
+                # so there's nothing to wait for before trying the NEXT,
+                # not-yet-attempted key in this same lap -- no sleep here.
+                # If this was the LAST untried key, one more lap won't see
+                # any different keys either, so there's no point sleeping
+                # just to fail the same way a moment later -- fall through
+                # and let the loop end / raise below.
+                continue
+            except (groq.APIConnectionError, groq.APITimeoutError) as exc:
+                # Network-level, not capacity-level -- retrying the same
+                # network path with a different key gains nothing from a
+                # sleep either; move on immediately.
+                last_exc = exc
                 continue
         raise LLMUnavailable(f"Every key in the pool ({len(self.key_pool)}) failed. Last error: {last_exc}")
+
+
+def _as_tool_call_rejection(exc: Any) -> Optional["ToolCallRejected"]:
+    """Recognizes Groq's specific "the model proposed a tool outside the
+    `tools` list sent this request" 400 shape (code "tool_use_failed", with
+    a `failed_generation` field carrying the attempted call as a JSON
+    string) and extracts enough to let run_tool_loop feed it back to the
+    model as a correctable mistake. Returns None for every other shape of
+    APIStatusError (e.g. a genuinely malformed schema/argument set), which
+    callers still treat as a hard LLMUnavailable."""
+    body = getattr(exc, "body", None)
+    if not isinstance(body, dict):
+        return None
+    error = body.get("error")
+    if not isinstance(error, dict) or error.get("code") != "tool_use_failed":
+        return None
+    try:
+        generation = json.loads(error.get("failed_generation") or "{}")
+        tool_name = generation["name"]
+    except (json.JSONDecodeError, KeyError, TypeError):
+        return None
+    return ToolCallRejected(tool_name, error.get("failed_generation") or "{}")
 
 
 def _normalize_groq_response(response: Any) -> LLMResponse:
@@ -346,6 +403,33 @@ def run_tool_loop(state: InvestigationState, agent_role: AgentRole, llm_client: 
         t0 = time.perf_counter()
         try:
             response = llm_client.create(system=system, messages=messages, tools=tool_schemas, max_tokens=4096)
+        except ToolCallRejected as exc:
+            # The model proposed a tool this agent role isn't authorized to
+            # call (Groq's own request-shape validation caught it before a
+            # completion was even produced -- it never reached
+            # tools/gateway.call_tool(), so there's no real call_result to
+            # report). Recoverable the same way a governed DENIAL is: log
+            # it, hand the model back a synthetic assistant/tool-result pair
+            # explaining exactly what went wrong and which tools actually
+            # ARE available, and let it retry within its own remaining
+            # iterations instead of discarding the whole round.
+            state.security_events.append({
+                "type": "tool_call_rejected", "agent_role": agent_role.value,
+                "tool_name": exc.tool_name, "timestamp": now_iso(),
+            })
+            rejected_call_id = f"rejected_{uuid.uuid4().hex[:8]}"
+            messages.append({
+                "role": "assistant", "content": None,
+                "tool_calls": [{"id": rejected_call_id, "type": "function",
+                                 "function": {"name": exc.tool_name, "arguments": exc.arguments_raw}}],
+            })
+            allowed_names = ", ".join(sorted({t["function"]["name"] for t in tool_schemas})) or "(none)"
+            messages.extend(llm_client.build_tool_result_messages([(
+                rejected_call_id,
+                f"DENIED: {exc.tool_name!r} is not an authorized tool for this agent role. "
+                f"Choose only from the tools actually available to you: {allowed_names}.",
+            )]))
+            continue
         except LLMUnavailable as exc:
             state.security_events.append({
                 "type": "llm_unavailable", "agent_role": agent_role.value, "error": str(exc), "timestamp": now_iso(),

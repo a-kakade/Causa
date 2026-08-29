@@ -216,10 +216,80 @@ async function report(): Promise<Step5Report> {
   return cached
 }
 
-export async function getInvestigation(role: 'ANALYST' | 'EXECUTIVE'): Promise<InvestigationState> {
+// demo_investigation_scenarios.json holds a handful of ADDITIONAL real
+// investigation runs (captured once from the actual running FastAPI
+// backend with mode='fresh' -- never fabricated), each showing a different
+// outcome shape: revenue/2017-03 abstains overall but has one hypothesis
+// that individually reached SUPPORTED ("leading candidate"); orders/2017-03
+// and on_time_delivery_rate/2017-03 abstain on every hypothesis with zero
+// evidence (a different KPI's "insufficient evidence" case). Keyed by
+// `${kpiId}__${periodCurrent}`; anything not in this small set falls back
+// to the single canonical Revenue/Nov-2017 report exactly as before.
+let scenarioCache: Promise<Record<string, RawInvestigation>> | null = null
+function scenarios(): Promise<Record<string, RawInvestigation>> {
+  if (!scenarioCache) scenarioCache = loadFixture('demo_investigation_scenarios')
+  return scenarioCache
+}
+
+/** Demo mode's baseline is one baked-in scenario (the same Revenue/Nov-2017
+ * report the backend's own canonical replay path uses), extended with the
+ * small curated set above for kpiId/periodCurrent combos that have one.
+ * Only role='ANALYST' has extra scenarios today -- EXECUTIVE always falls
+ * back to the canonical report, since RBAC-restricted evidence for the
+ * extra scenarios was never captured. This is honest about the tradeoff
+ * rather than silently ignoring it: any KPI/period outside this set still
+ * gets *a* real, previously-validated result back, just not one scoped to
+ * that specific KPI/period, since offline demo mode has no engine to run. */
+export async function getInvestigation(
+  role: 'ANALYST' | 'EXECUTIVE', kpiId?: string, periodCurrent?: string, _periodPrevious?: string,
+): Promise<InvestigationState> {
+  if (role === 'ANALYST' && kpiId && periodCurrent) {
+    const scenario = (await scenarios())[`${kpiId}__${periodCurrent}`]
+    if (scenario) return mapInvestigation(scenario)
+  }
   const r = await report()
   const key: RawRole = role === 'ANALYST' ? 'analyst_investigation' : 'executive_investigation'
   return mapInvestigation(r[key])
+}
+
+/** No fresh run happens in demo mode (there's no backend to call) -- this
+ * just hands back whichever fixture-backed investigation getInvestigation
+ * would (the matching curated scenario, or the canonical one), so
+ * "Investigate"/"Investigate further" still resolve instead of erroring
+ * while Demo mode is on. */
+export async function createInvestigation(
+  role: 'ANALYST' | 'EXECUTIVE', kpiId?: string, periodCurrent?: string, periodPrevious?: string,
+  _mode?: 'auto' | 'live' | 'fresh',
+): Promise<InvestigationState> {
+  return getInvestigation(role, kpiId, periodCurrent, periodPrevious)
+}
+
+export async function getCurrentInvestigationId(role: 'ANALYST' | 'EXECUTIVE'): Promise<string> {
+  const state = await getInvestigation(role)
+  return state.investigationId
+}
+
+export interface AskQuestionResult {
+  investigationId: string
+  kpiId: string
+  periodCurrent: string
+  periodPrevious: string
+  question: string
+  resolver: 'openai' | 'keyword'
+  state: InvestigationState
+}
+
+/** Demo-mode stand-in for the real /api/investigations/ask round trip:
+ * resolves to the same baked-in analyst investigation rather than routing
+ * free text through a real question-resolution + investigation pipeline
+ * (there is none to call offline). */
+export async function askInvestigationQuestion(question: string): Promise<AskQuestionResult> {
+  const state = await getInvestigation('ANALYST')
+  return {
+    investigationId: state.investigationId, kpiId: state.kpiId,
+    periodCurrent: state.period, periodPrevious: state.period,
+    question, resolver: 'keyword', state,
+  }
 }
 
 export async function getTelemetrySummary(role: 'ANALYST' | 'EXECUTIVE'): Promise<TelemetrySummary> {

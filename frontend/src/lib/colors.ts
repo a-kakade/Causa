@@ -39,6 +39,12 @@ export function materialityTone(m: string): { fg: string; bg: string } {
       return { fg: 'text-(--color-warning)', bg: 'bg-(--color-warning-soft)' }
     case 'NORMAL':
       return { fg: 'text-(--color-neutral)', bg: 'bg-(--color-neutral-soft)' }
+    case 'BASELINE_DISAGREEMENT':
+      // Independent baseline methods (previous-period vs rolling/seasonal)
+      // disagree about materiality -- a genuinely distinct state from
+      // "not unusual" (NORMAL) or "not enough history" (INSUFFICIENT_DATA),
+      // so it gets its own tone rather than being folded into WATCH.
+      return { fg: 'text-(--color-warning)', bg: 'bg-(--color-warning-soft)' }
     default:
       return { fg: 'text-(--color-ink-faint)', bg: 'bg-(--color-neutral-soft)' }
   }

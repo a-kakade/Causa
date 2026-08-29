@@ -1,0 +1,17 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "causa-frontend",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["--prefix", "frontend", "run", "dev", "--", "--host"],
+      "port": 5173
+    },
+    {
+      "name": "causa-backend",
+      "runtimeExecutable": "causa/.venv/bin/uvicorn",
+      "runtimeArgs": ["api.main:app", "--app-dir", "causa", "--port", "8000"],
+      "port": 8000
+    }
+  ]
+}

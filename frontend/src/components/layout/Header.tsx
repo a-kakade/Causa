@@ -30,7 +30,7 @@ const PAGES = [
 ]
 
 export function Header() {
-  const { requesterRole, setRequesterRole, period, setPeriod } = useAppState()
+  const { requesterRole, setRequesterRole, startPeriod, endPeriod, setPeriodRange } = useAppState()
   const role = ROLES.find((r) => r.value === requesterRole)!
 
   return (
@@ -41,7 +41,7 @@ export function Header() {
           <span className="font-medium text-(--color-ink)">Revenue Intelligence</span>
         </div>
         <div className="h-4 w-px bg-(--color-border)" />
-        <PeriodSelector period={period} onChange={setPeriod} />
+        <PeriodSelector start={startPeriod} end={endPeriod} onChange={setPeriodRange} />
         <div className="h-4 w-px bg-(--color-border)" />
         <div className="flex items-center gap-1.5">
           <StatusDot tone="positive" />
@@ -50,6 +50,8 @@ export function Header() {
       </div>
 
       <div className="flex items-center gap-3">
+        <ApiModeToggle />
+        <div className="h-4 w-px bg-(--color-border)" />
         <AskQuestionButton />
         <HeaderSearch />
         <button
@@ -101,13 +103,40 @@ export function Header() {
   )
 }
 
-function PeriodSelector({ period, onChange }: { period: string; onChange: (p: string) => void }) {
+/** Live/Demo switch -- Live routes every call through @/api/productionApi
+ * (the real FastAPI backend); Demo routes through @/api/demoAdapter (offline,
+ * reads the static fixture copy of a real validated run, no backend needed).
+ * See @/api/mode.ts for the dispatch this flips. */
+function ApiModeToggle() {
+  const { apiMode, setApiMode } = useAppState()
+  const isDemo = apiMode === 'demo'
+
+  return (
+    <button
+      type="button"
+      onClick={() => setApiMode(isDemo ? 'live' : 'demo')}
+      title={isDemo ? 'Switch to Live (real backend)' : 'Switch to Demo (offline fixtures, no backend needed)'}
+      className="flex items-center gap-1.5 rounded-(--radius-sm) border border-(--color-border) px-2.5 py-1 text-[12px] font-medium transition-colors hover:bg-(--color-surface-2)"
+    >
+      <StatusDot tone={isDemo ? 'warning' : 'positive'} />
+      <span className={isDemo ? 'text-(--color-warning)' : 'text-(--color-ink-muted)'}>
+        {isDemo ? 'Demo mode' : 'Live'}
+      </span>
+    </button>
+  )
+}
+
+function PeriodSelector({ start, end, onChange }: { start: string; end: string; onChange: (start: string, end: string) => void }) {
+  const label = start === end
+    ? formatMonthLabel(end)
+    : `${formatMonthLabel(start)} – ${formatMonthLabel(end)}`
+
   return (
     <DropdownMenu.Root>
       <DropdownMenu.Trigger asChild>
         <button type="button" className="flex items-center gap-1 rounded-(--radius-sm) px-1 py-0.5 hover:bg-(--color-surface-2)">
           <span className="text-(--color-ink-faint)">Period</span>
-          <span className="font-medium text-(--color-ink)">{formatMonthLabel(period)}</span>
+          <span className="font-medium text-(--color-ink)">{label}</span>
           <ChevronDown className="size-3 text-(--color-ink-faint)" />
         </button>
       </DropdownMenu.Trigger>
@@ -115,24 +144,36 @@ function PeriodSelector({ period, onChange }: { period: string; onChange: (p: st
         <DropdownMenu.Content
           align="start"
           sideOffset={8}
-          className="z-50 max-h-72 w-40 overflow-y-auto rounded-(--radius-md) border border-(--color-border) bg-(--color-surface) p-1 shadow-(--shadow-md)"
+          className="z-50 flex w-[21rem] gap-2 rounded-(--radius-md) border border-(--color-border) bg-(--color-surface) p-2 shadow-(--shadow-md)"
         >
-          <p className="px-2.5 py-1.5 text-[10px] font-semibold uppercase tracking-wide text-(--color-ink-faint)">
-            Analysis month
-          </p>
-          {AVAILABLE_PERIODS.map((p) => (
-            <DropdownMenu.Item
-              key={p}
-              onSelect={() => onChange(p)}
-              className="flex cursor-pointer items-center justify-between rounded-(--radius-sm) px-2.5 py-1.5 text-[13px] text-(--color-ink) outline-none data-[highlighted]:bg-(--color-surface-2)"
-            >
-              <span>{formatMonthLabel(p)}</span>
-              {p === period ? <CheckCircle2 className="size-3.5 text-(--color-accent)" /> : null}
-            </DropdownMenu.Item>
-          ))}
+          <MonthColumn label="From" selected={start} options={AVAILABLE_PERIODS.filter((p) => p <= end)} onSelect={(p) => onChange(p, end)} />
+          <MonthColumn label="To" selected={end} options={AVAILABLE_PERIODS.filter((p) => p >= start)} onSelect={(p) => onChange(start, p)} />
         </DropdownMenu.Content>
       </DropdownMenu.Portal>
     </DropdownMenu.Root>
+  )
+}
+
+function MonthColumn({ label, selected, options, onSelect }: {
+  label: string; selected: string; options: string[]; onSelect: (p: string) => void
+}) {
+  return (
+    <div className="max-h-72 flex-1 overflow-y-auto">
+      <p className="px-2.5 py-1.5 text-[10px] font-semibold uppercase tracking-wide text-(--color-ink-faint)">{label}</p>
+      {options.map((p) => (
+        <DropdownMenu.Item
+          key={p}
+          onSelect={(e) => {
+            e.preventDefault()
+            onSelect(p)
+          }}
+          className="flex cursor-pointer items-center justify-between rounded-(--radius-sm) px-2.5 py-1.5 text-[13px] text-(--color-ink) outline-none data-[highlighted]:bg-(--color-surface-2)"
+        >
+          <span>{formatMonthLabel(p)}</span>
+          {p === selected ? <CheckCircle2 className="size-3.5 text-(--color-accent)" /> : null}
+        </DropdownMenu.Item>
+      ))}
+    </div>
   )
 }
 
@@ -227,14 +268,23 @@ function HeaderSearch() {
 }
 
 function AskQuestionButton() {
-  const [open, setOpen] = useState(false)
+  const { askQuestionOpen, askQuestionPrefill, openAskQuestion, closeAskQuestion } = useAppState()
   const [question, setQuestion] = useState('')
   const navigate = useNavigate()
   const { mutate, data, isPending, error, reset } = useAskQuestion()
 
+  // Seed the textarea whenever the modal opens with a prefill (e.g. from
+  // AbstentionState's "Ask a clarifying question" button) or is reopened
+  // fresh from the header's own Sparkles button (prefill === '').
+  useEffect(() => {
+    if (askQuestionOpen) setQuestion(askQuestionPrefill)
+  }, [askQuestionOpen, askQuestionPrefill])
+
   function handleOpenChange(next: boolean) {
-    setOpen(next)
-    if (!next) {
+    if (next) {
+      openAskQuestion()
+    } else {
+      closeAskQuestion()
       setQuestion('')
       reset()
     }
@@ -249,13 +299,13 @@ function AskQuestionButton() {
     <>
       <button
         type="button"
-        onClick={() => setOpen(true)}
+        onClick={() => openAskQuestion()}
         className="flex items-center gap-1.5 rounded-(--radius-sm) border border-(--color-border) px-2.5 py-1 text-[12px] font-medium text-(--color-ink-muted) transition-colors hover:bg-(--color-surface-2) hover:text-(--color-ink)"
       >
         <Sparkles className="size-3.5" />
         Ask a question
       </button>
-      <Modal open={open} onOpenChange={handleOpenChange} title="Ask your own question">
+      <Modal open={askQuestionOpen} onOpenChange={handleOpenChange} title="Ask your own question">
         <div className="space-y-3">
           <p className="text-[12px] text-(--color-ink-faint)">
             Type a question in plain English. It's resolved to a governed KPI and month, then a real

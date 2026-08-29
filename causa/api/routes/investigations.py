@@ -39,13 +39,30 @@ class CreateInvestigationRequest(BaseModel):
     kpi_id: str
     period_current: str = "2017-11"
     period_previous: str = "2017-10"
-    mode: str = "auto"   # "auto" | "live"
+    # Optional multi-month range support: when set, period_current/
+    # period_previous are treated as the START month of their range and
+    # these are the END month (inclusive). Omitted -> single-month behavior,
+    # unchanged from before.
+    period_current_end: Optional[str] = None
+    period_previous_end: Optional[str] = None
+    # "auto" -> fast replay of the validated report for the canonical
+    #   Revenue/Nov-2017 scenario, real FakeLLMClient run for anything else.
+    # "live" -> real Groq call.
+    # "fresh" -> forces a real, non-replayed FakeLLMClient run even for the
+    #   canonical scenario -- used by "Investigate further" so re-running an
+    #   abstained investigation doesn't just hand back the identical cached
+    #   result every time.
+    mode: str = "auto"
+
+
+def _range_bounds(start_month: str, end_month: str) -> tuple[str, str]:
+    from calendar import monthrange
+    end_year, end_mon = (int(x) for x in end_month.split("-"))
+    return f"{start_month}-01", f"{end_month}-{monthrange(end_year, end_mon)[1]:02d}"
 
 
 def _month_bounds(month: str) -> tuple[str, str]:
-    from calendar import monthrange
-    year, mon = (int(x) for x in month.split("-"))
-    return f"{month}-01", f"{month}-{monthrange(year, mon)[1]:02d}"
+    return _range_bounds(month, month)
 
 
 def _replay_state(role_value: str):
@@ -196,7 +213,8 @@ class _ApiScriptedClient:
 
 
 def _fresh_run(bundle: EngineBundle, investigation_id: str, role_value: str, kpi_id: str,
-               period_current: str, period_previous: str, live: bool):
+               period_current: str, period_previous: str, live: bool,
+               period_current_end: Optional[str] = None, period_previous_end: Optional[str] = None):
     from agents import orchestrator
     from agents.llm_client import GroqLLMClient, has_groq_credentials
     from agents.models import RequesterRole
@@ -209,28 +227,41 @@ def _fresh_run(bundle: EngineBundle, investigation_id: str, role_value: str, kpi
     else:
         llm_client = _ApiScriptedClient(kpi_id)
 
-    cur_start, cur_end = _month_bounds(period_current)
-    prev_start, prev_end = _month_bounds(period_previous)
+    cur_start, cur_end = _range_bounds(period_current, period_current_end or period_current)
+    prev_start, prev_end = _range_bounds(period_previous, period_previous_end or period_previous)
+    cur_label = period_current if not period_current_end or period_current_end == period_current \
+        else f"{period_current}..{period_current_end}"
+    prev_label = period_previous if not period_previous_end or period_previous_end == period_previous \
+        else f"{period_previous}..{period_previous_end}"
     state = orchestrator.run_investigation(
         investigation_id=investigation_id, requester_role=RequesterRole(role_value), kpi_id=kpi_id,
-        period_current_start=cur_start, period_current_end=cur_end, period_current_label=period_current,
-        period_previous_start=prev_start, period_previous_end=prev_end, period_previous_label=period_previous,
+        period_current_start=cur_start, period_current_end=cur_end, period_current_label=cur_label,
+        period_previous_start=prev_start, period_previous_end=prev_end, period_previous_label=prev_label,
         ctx=bundle.ctx, llm_client=llm_client,
     )
     return state
 
 
 def _run_and_record(bundle: EngineBundle, store: InvestigationStore, requester_role: str,
-                     kpi_id: str, period_current: str, period_previous: str, mode: str) -> dict:
+                     kpi_id: str, period_current: str, period_previous: str, mode: str,
+                     period_current_end: Optional[str] = None, period_previous_end: Optional[str] = None) -> dict:
     if kpi_id not in bundle.registry.list_kpi_ids():
         raise HTTPException(status_code=400, detail=f"Unknown kpi_id {kpi_id!r}")
 
-    is_canonical_scenario = (kpi_id, period_current, period_previous) == REVENUE_NOV_2017
+    is_range = bool(period_current_end and period_current_end != period_current) or \
+        bool(period_previous_end and period_previous_end != period_previous)
+    is_canonical_scenario = not is_range and (kpi_id, period_current, period_previous) == REVENUE_NOV_2017
 
     if mode == "live":
         state = _fresh_run(bundle, f"api_{uuid.uuid4().hex[:12]}", requester_role, kpi_id,
-                            period_current, period_previous, live=True)
+                            period_current, period_previous, live=True,
+                            period_current_end=period_current_end, period_previous_end=period_previous_end)
         source = "live_llm"
+    elif mode == "fresh":
+        state = _fresh_run(bundle, f"api_{uuid.uuid4().hex[:12]}", requester_role, kpi_id,
+                            period_current, period_previous, live=False,
+                            period_current_end=period_current_end, period_previous_end=period_previous_end)
+        source = "fake_llm_fresh"
     elif mode == "auto" and is_canonical_scenario:
         state = _replay_state(requester_role)
         source = "replay"
@@ -243,7 +274,8 @@ def _run_and_record(bundle: EngineBundle, store: InvestigationStore, requester_r
             source = "fake_llm"
     else:
         state = _fresh_run(bundle, f"api_{uuid.uuid4().hex[:12]}", requester_role, kpi_id,
-                            period_current, period_previous, live=False)
+                            period_current, period_previous, live=False,
+                            period_current_end=period_current_end, period_previous_end=period_previous_end)
         source = "fake_llm"
 
     record = InvestigationRecord(
@@ -262,7 +294,8 @@ def create_investigation(
     requester_role: str = Depends(get_requester_role),
 ):
     return _run_and_record(bundle, store, requester_role, body.kpi_id, body.period_current,
-                            body.period_previous, body.mode)
+                            body.period_previous, body.mode,
+                            period_current_end=body.period_current_end, period_previous_end=body.period_previous_end)
 
 
 class AskQuestionRequest(BaseModel):
