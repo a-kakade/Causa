@@ -1,4 +1,5 @@
-// The one switch: swap this import for `./productionApi` once a real CAUSA
-// HTTP API exists. Every page/hook imports data functions from `@/api`,
-// never from `@/api/demoAdapter` directly, so the swap is a one-line change.
-export * from './demoAdapter'
+// The one switch: `causa/api/` (FastAPI over the real Step 1-9 engines) now
+// exists, so this points at `./productionApi`. Every page/hook imports data
+// functions from `@/api`, never from `@/api/demoAdapter` directly, so this
+// swap (and any future rollback for offline/demo use) is a one-line change.
+export * from './productionApi'

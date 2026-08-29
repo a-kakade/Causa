@@ -2,7 +2,7 @@ import { Area, AreaChart, CartesianGrid, ReferenceArea, ResponsiveContainer, Too
 import { LoadingState } from '@/components/common/LoadingState'
 import { useKpiTrend } from '@/hooks/useKpis'
 import { formatMonthLabel, formatNumber } from '@/lib/format'
-import { DEMO_PERIOD_CURRENT, DEMO_PERIOD_PREVIOUS } from '@/api/demoAdapter/kpiRegistry'
+import { DEMO_PERIOD_CURRENT, DEMO_PERIOD_PREVIOUS } from '@/api'
 
 export function KPITrend({ kpiId, valueFormatter }: { kpiId: string; valueFormatter?: (v: number) => string }) {
   const { data, isLoading } = useKpiTrend(kpiId)

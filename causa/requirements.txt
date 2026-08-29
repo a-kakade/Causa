@@ -14,3 +14,6 @@ networkx>=3.2
 sentence-transformers>=2.7
 torch>=2.2
 groq>=0.11
+fastapi>=0.115
+uvicorn[standard]>=0.32
+httpx>=0.27

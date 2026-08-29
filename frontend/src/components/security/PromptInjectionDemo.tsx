@@ -1,6 +1,6 @@
 import { ShieldAlert } from 'lucide-react'
 import { useState } from 'react'
-import { runPromptInjectionDemo } from '@/api/demoAdapter/security'
+import { runPromptInjectionDemo } from '@/api'
 import { Badge } from '@/components/common/Badge'
 import { LoadingState } from '@/components/common/LoadingState'
 import { usePromptInjectionFixtures } from '@/hooks/useSecurity'
@@ -17,7 +17,7 @@ export function PromptInjectionDemo() {
     const fixture = fixtures!.find((f) => f.fixtureId === fixtureId)
     if (!fixture) return
     setSelectedId(fixtureId)
-    setResult(runPromptInjectionDemo(fixture))
+    void runPromptInjectionDemo(fixture).then(setResult)
   }
 
   return (

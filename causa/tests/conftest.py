@@ -140,3 +140,27 @@ def built_vector_index(review_corpus):
 def agent_ctx(canonical):
     from tools.context import build_tool_context
     return build_tool_context(canonical)
+
+
+# ---------------------------------------------------------------------------
+# API layer (causa/api/) fixtures
+# ---------------------------------------------------------------------------
+#
+# Reuses the SAME real engine_bundle (registry/KPIEngine/ToolContext) the
+# Step 5 tests above already pay the ~90s cost for, instead of building a
+# second one -- api.bootstrap.get_bundle() is a pure cache lookup once
+# api.bootstrap._bundle is pre-populated here.
+
+@pytest.fixture(scope="session")
+def api_client(agent_ctx, engine):
+    from fastapi.testclient import TestClient
+
+    from api import bootstrap as api_bootstrap
+    from api.bootstrap import EngineBundle
+    from api.main import app
+
+    api_bootstrap._bundle = EngineBundle(
+        registry=engine.registry, kpi_engine=engine, ctx=agent_ctx, canonical=agent_ctx.canonical, build_seconds=0.0,
+    )
+    with TestClient(app) as client:
+        yield client

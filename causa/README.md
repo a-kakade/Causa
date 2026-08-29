@@ -1,9 +1,51 @@
 # Causa — Olist Data Foundation
 
-Causa is a KPI Decision Intelligence project, built step by step. This repo does
-**not** touch agents, backend architecture, frontend, RAG, PostgreSQL, or LLM
-workflows yet. **See [PROJECT_JOURNEY.md](PROJECT_JOURNEY.md) for the running,
-always-up-to-date log of every step** — start there. Completed so far:
+Causa is a KPI Decision Intelligence project, built step by step. **See
+[PROJECT_JOURNEY.md](PROJECT_JOURNEY.md) for the running, always-up-to-date
+log of every step** — start there. As of Steps 1-9 plus the API layer below,
+this repo now includes a full FastAPI backend (`api/`) and a connected React
+frontend (`../frontend/`) — see "Running the full system" below.
+
+## Running the full system (backend + frontend)
+
+1. **Install backend dependencies** (from `causa/`):
+   ```bash
+   python -m venv .venv && source .venv/bin/activate   # Windows: .venv\Scripts\activate
+   pip install -r requirements.txt
+   ```
+2. **Build the canonical data layer** (once, if `data/processed/` is empty):
+   ```bash
+   python scripts/step2_04_build_canonical.py
+   ```
+3. **Configure environment** (optional): copy `frontend/.env.example` to
+   `frontend/.env` and adjust `VITE_API_BASE_URL` if not using the default
+   `http://localhost:8000`. Real Groq calls (`mode=live` on investigation
+   creation) additionally need `GROQ_API_KEYS` in `causa/.env` (gitignored).
+4. **Start the backend**:
+   ```bash
+   uvicorn api.main:app --port 8000
+   ```
+   (first request/startup takes ~1-2 minutes: parquet load + embedding model
+   + review-corpus index build — see `docs/API_ARCHITECTURE.md`.)
+5. **Start the frontend** (from `frontend/`):
+   ```bash
+   npm install
+   npm run dev
+   ```
+6. **Open the dashboard** at `http://localhost:5173/overview`.
+7. **Launch the November 2017 Revenue investigation**: click any KPI card, or
+   navigate to `/investigate/revenue` — this replays the already-validated
+   real Step 5 run (see `docs/API_ARCHITECTURE.md`'s investigation trigger
+   policy). Other KPI/period combinations run a fresh, real orchestrator pass.
+
+See `docs/API_INTEGRATION_PLAN.md`, `docs/API_ARCHITECTURE.md`,
+`docs/FRONTEND_BACKEND_INTEGRATION.md`, and `docs/SECURITY_ARCHITECTURE.md`
+for the full design. `frontend/src/api/index.ts` can be flipped back to
+`./demoAdapter` for an offline, fixture-only fallback with no backend running.
+
+## Step-by-step foundation (Steps 1-9)
+
+Completed so far:
 
 - **Step 1 — EDA + Repository/Data Foundation Audit**: understand and validate the
   [Olist Brazilian E-Commerce dataset](https://www.kaggle.com/datasets/olistbr/brazilian-ecommerce).

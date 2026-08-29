@@ -1,4 +1,4 @@
-import { ALLOWED_TOOLS_PER_AGENT, TOOL_REGISTRY } from '@/api/demoAdapter/security'
+import { ALLOWED_TOOLS_PER_AGENT, TOOL_REGISTRY } from '@/api'
 import { Badge } from '@/components/common/Badge'
 import { Card, CardBody, CardHeader } from '@/components/common/Card'
 import { LoadingState } from '@/components/common/LoadingState'
