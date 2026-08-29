@@ -1,5 +1,5 @@
 import { ArrowDown, ArrowUp } from 'lucide-react'
-import { kpiDef } from '@/api/demoAdapter/kpiRegistry'
+import { kpiDef } from '@/api'
 import { formatPercent } from '@/lib/format'
 import type { KPIMovement } from '@/types/kpi'
 

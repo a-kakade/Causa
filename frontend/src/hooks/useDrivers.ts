@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query'
 import { getConcurrentKpiMovements, getDriverDecomposition } from '@/api'
 import { useAppState } from '@/state/AppStateContext'
-import { CLEARANCE_RANK, RBAC_CLEARANCE_FOR_ROLE } from '@/api/demoAdapter/security'
+import { CLEARANCE_RANK, RBAC_CLEARANCE_FOR_ROLE } from '@/api'
 
 /** Whether the current requester's clearance covers the INTERNAL dimensions
  * (seller / seller_state) — governs drill-down visibility everywhere. */

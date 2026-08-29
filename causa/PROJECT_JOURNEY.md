@@ -13,6 +13,26 @@ has skipped ahead of what the prior step actually established.
 
 ## Where we are right now
 
+**Session note (2026-08-29, later): FastAPI backend (`api/`) built and wired
+to the frontend.** A new `api/` package (FastAPI + Pydantic request models)
+now sits between `frontend/` and `src/`, exposing health/overview/kpis/
+drivers/investigations/evidence/causal/decisions/story/feedback/audit/
+security/telemetry endpoints — every one calling straight into the real
+Step 1-9 engines (no engine file modified). `frontend/src/api/productionApi/`
+now mirrors `demoAdapter/`'s function surface over real HTTP calls;
+`frontend/src/api/index.ts` points at it (`demoAdapter`/fixtures remain as an
+explicit offline fallback). Verified live end-to-end in-browser: Overview,
+Active Investigation, Evidence Explorer, Recommendations, Security, Telemetry,
+and Audit Logs all render real backend-computed Nov-2017 numbers, and the
+RBAC role switch genuinely changes what evidence comes back (EXECUTIVE: 383
+items, ANALYST: 12,216, same live call). New Python tests
+(`tests/test_api_*.py`, 28 tests) plus the full existing suite (1069 tests)
+all pass — 1097 passed total. Frontend `npm run build`/`npm run lint` both
+clean. See `docs/API_INTEGRATION_PLAN.md`, `docs/API_ARCHITECTURE.md`,
+`docs/FRONTEND_BACKEND_INTEGRATION.md`, `docs/SECURITY_ARCHITECTURE.md` for
+the full design, and this README's "Running the full system" section to
+start it locally.
+
 **Session note (2026-08-29): frontend verified working; Step 5 pipeline
 live-tested against a fresh Groq key.** A React/Vite frontend
 (`frontend/`, sibling to `causa/` at the repo root) already exists on disk,
@@ -352,7 +372,7 @@ feedback learning, and a frontend still don't exist.)**
 | 7 | Decision & Action Intelligence Engine | ✅ Complete | [STEP7_VALIDATION.md](STEP7_VALIDATION.md) |
 | 8 | Persona-Aware KPI Storytelling | ✅ Complete | [STEP8_VALIDATION.md](STEP8_VALIDATION.md) |
 | 9 | Human Feedback & Learning Loop | ✅ Complete | [STEP9_VALIDATION.md](STEP9_VALIDATION.md) |
-| — | Frontend/API | 🟡 Frontend exists, demo-mode only (untracked); no backend API yet | `frontend/` |
+| — | Frontend/API | ✅ Complete — real FastAPI layer (`api/`) over Steps 1-9, frontend wired via `productionApi/`, `demoAdapter` kept as fallback | `api/`, `frontend/` |
 
 ---
 

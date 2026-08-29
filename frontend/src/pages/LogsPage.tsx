@@ -4,7 +4,7 @@ import { Card, CardBody, CardHeader } from '@/components/common/Card'
 import { Drawer } from '@/components/common/Drawer'
 import { LoadingState } from '@/components/common/LoadingState'
 import { useAllLogs } from '@/hooks/useLogs'
-import type { LogEntry } from '@/api/demoAdapter/logs'
+import type { LogEntry } from '@/api'
 import { formatDateTime } from '@/lib/format'
 
 const PAGE_SIZE = 20

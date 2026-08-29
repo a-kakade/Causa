@@ -1,6 +1,6 @@
 import { Lock, Unlock } from 'lucide-react'
 import { useState } from 'react'
-import { RBAC_CLEARANCE_FOR_ROLE, runRbacDemo } from '@/api/demoAdapter/security'
+import { RBAC_CLEARANCE_FOR_ROLE, runRbacDemo } from '@/api'
 import { Badge } from '@/components/common/Badge'
 import type { RequesterRole, SecurityClassification } from '@/types/common'
 

@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { Link, useParams, useSearchParams } from 'react-router-dom'
-import { kpiDef } from '@/api/demoAdapter/kpiRegistry'
+import { kpiDef } from '@/api'
 import { AbstentionState } from '@/components/causal/AbstentionState'
 import { CausalPanel } from '@/components/causal/CausalPanel'
 import { Card, CardBody, CardHeader } from '@/components/common/Card'

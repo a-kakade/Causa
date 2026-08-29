@@ -19,6 +19,12 @@ data/evidence/vector_index/*.jsonl
 # script hardcodes, which ARE version-controlled as code).
 data/feedback/*.jsonl
 
+# API layer (Step 10+) investigation records -- one JSON snapshot per
+# investigation, mirroring the in-memory InvestigationStore; regenerable by
+# creating a fresh investigation via POST /api/investigations, never a
+# source of truth committed to the repo.
+data/investigations/*.json
+
 # Python
 __pycache__/
 *.pyc

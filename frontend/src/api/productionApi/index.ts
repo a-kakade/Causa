@@ -1,11 +1,22 @@
 /**
- * PRODUCTION API — stub.
- *
- * The CAUSA backend currently exposes no HTTP/REST/GraphQL surface (see
- * docs/FRONTEND_ARCHITECTURE.md) — only an in-process Python Tool Gateway
- * and a script entrypoint (`run_investigation()` in src/agents/orchestrator.py).
- * When a real API exists, implement the same function signatures exported
- * from `../demoAdapter` here, point `src/api/index.ts` at this module
- * instead, and no page or component needs to change.
+ * PRODUCTION API — the real HTTP-backed adapter, matching demoAdapter's
+ * exported function surface 1:1 so `src/api/index.ts` can be a one-line
+ * swap. See docs/FRONTEND_BACKEND_INTEGRATION.md for the full mapping.
  */
-export {}
+export const DEMO_MODE = false
+
+export * from './client'
+export * from './kpiRegistry'
+export * from './kpis'
+export * from './kpiTimeseries'
+export * from './drivers'
+export * from './evidence'
+export * from './evidenceGraph'
+export * from './investigations'
+export * from './causal'
+export * from './decisions'
+export * from './narrative'
+export * from './security'
+export * from './telemetry'
+export * from './logs'
+export * from './feedback'

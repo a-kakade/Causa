@@ -1,7 +1,7 @@
 import { KPICard } from './KPICard'
 import { Skeleton } from '@/components/common/LoadingState'
 import { useKpiMovements } from '@/hooks/useKpis'
-import { kpiDef } from '@/api/demoAdapter/kpiRegistry'
+import { kpiDef } from '@/api'
 
 const HEADLINE_KPI_IDS = ['revenue', 'orders', 'aov', 'avg_delivery_days', 'avg_review_score']
 

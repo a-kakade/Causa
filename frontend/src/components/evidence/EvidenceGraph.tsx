@@ -2,7 +2,7 @@ import { useMemo } from 'react'
 import ReactFlow, { Background, type Edge, MarkerType, type Node, Position } from 'reactflow'
 import 'reactflow/dist/style.css'
 import { formatSignedCurrency } from '@/lib/format'
-import type { EvidenceGraphData } from '@/api/demoAdapter/evidenceGraph'
+import type { EvidenceGraphData } from '@/api'
 
 const NODE_COLOR: Record<string, string> = {
   KPI: 'var(--color-ink)',
